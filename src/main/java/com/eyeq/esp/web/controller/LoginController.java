@@ -19,8 +19,8 @@ import com.eyeq.esp.model.User;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:27
- * @revision $LastChangedRevision: 5843 $
- * @date $LastChangedDate: 2013-01-24 13:23:59 +0900 (목, 24 1월 2013) $
+ * @revision $LastChangedRevision: 5854 $
+ * @date $LastChangedDate: 2013-01-26 02:17:59 +0900 (토, 26 1월 2013) $
  * @by $LastChangedBy: voyaging $
  */
 @Controller
@@ -57,7 +57,6 @@ public class LoginController {
 
 	@RequestMapping(value = { "/dummy/authentication" })
 	public String dummyLoginHandler(@ModelAttribute("user") User user) {
-		user.setId(0);
 		user.setUid("guest");
 		user.setName("게스트");
 		user.setEmail("guest@eyeq.co.kr");

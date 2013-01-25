@@ -17,6 +17,8 @@
 	th:href="@{/static/styles/initializr-style.css}" />
 <link rel="stylesheet" href="./static/styles/esp-main.css"
 	th:href="@{/static/styles/esp-main.css}" />
+<link rel="stylesheet" type="text/css" href="./static/styles/common.css"
+	th:href="@{/static/styles/common.css}">
 
 <script type="text/javascript"
 	src="./static/scripts/modernizr-latest.js"
@@ -28,10 +30,10 @@
 
 	<div id="header-container">
 		<header class="wrapper clearfix">
-			<h1 id="title"><a href="/main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
+			<h1 id="title"><a href="main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
 			<nav>
 				<ul>
-					<li>
+					<li class="e-hide-display">
 						<a href="pages/login.html" th:href="@{/login}" 
 							th:if="${#strings.isEmpty(currentUser.id)}"
 							th:text="#{label.menu.head.login}">로그인</a>
@@ -77,7 +79,9 @@
 							<th class="wd4">
 								<div>아이콘영역</div>
 								<div>TOGA 설치</div>
-								<div><input type="submit" class="btn reg-btn" value="등록"/></div>
+								<div class="radius-box-5 reg-study-outer">
+									<a href="pages/study-reg.html" class="radius-box-5 reg-study">등록</a>
+								</div>
 							</th>
 							<td class="wd6">
 								<div class="table wd10 ct-box">

@@ -362,3 +362,36 @@ ul.tabs li a:hover {
 	margin-left : 10px;
 	padding-left: 10px;
 }
+
+.radius-box-5 {
+	-webkit-border-radius: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+a.reg-study {
+	display: block;
+	color: white;
+	background-color: #E44D26;
+	font-size: 12px;
+	text-align: center;
+	padding: 0;
+	padding-top: 3px;
+	padding-bottom: 4px;
+	text-decoration: none;
+	margin: 0 auto;
+}
+
+div.reg-study-outer {
+	width: 36px;
+	border: 1px solid #E44D26;
+	margin: 0 auto;
+	padding: 1px;
+}
+
+a.reg-study:hover {
+	background-color: #F16529;
+}
