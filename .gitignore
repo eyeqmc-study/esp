@@ -1,1 +1,5 @@
-/target
+target
+
+*.class
+*.war
+*.bak
