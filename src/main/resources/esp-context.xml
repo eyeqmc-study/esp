@@ -13,28 +13,6 @@
 	<context:component-scan base-package="com.eyeq.esp" />
 
 	<!-- Data Source Declaration -->
-	<bean id="dataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		destroy-method="close">
-		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test" />
-		<property name="user" value="test" />
-		<property name="password" value="test" />
-		<property name="maxPoolSize" value="10" />
-		<property name="maxStatements" value="0" />
-		<property name="minPoolSize" value="5" />
-	</bean>
-
-	<bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		destroy-method="close">
-		<property name="driverClass" value="org.hsqldb.jdbcDriver" />
-		<property name="jdbcUrl" value="jdbc:hsqldb:mem:testdb" />
-		<property name="user" value="sa" />
-		<property name="password" value="" />
-		<property name="maxPoolSize" value="10" />
-		<property name="maxStatements" value="0" />
-		<property name="minPoolSize" value="5" />
-	</bean>
-
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
@@ -44,29 +22,6 @@
 		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
 	</bean>
 
-	<bean id="dataSource4" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-		<property name="url" value="jdbc:hsqldb:mem:testdb" />
-		<property name="username" value="sa" />
-		<property name="password" value="" />
-	</bean>
-
-	<!-- Session Factory Declaration -->
-	<!-- <bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
-		p:mappingResources="esp.hbm.xml">
-		<property name="dataSource" ref="dataSource" />
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
-				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.hbm2ddl.auto">create</prop>
-			</props>
-		</property>
-	</bean> -->
-	
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
@@ -82,15 +37,6 @@
 		<property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
 	</bean>
 
-	<!-- Enable the configuration of transactional behavior based on annotations -->
-<!-- 	<tx:annotation-driven transaction-manager="txManager" />
- -->
-	<!-- Transaction Manager is defined -->
-<!-- 	<bean id="txManager"
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean> -->
-	
 	<!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
 
 	<!--
@@ -110,9 +56,5 @@
 		service MBean, using its bean name as JMX object name.
 	-->
 	<context:mbean-export/>
-
-	<!-- PetClinic's central data access object: Hibernate implementation -->
-<!-- 	<bean id="articleManager" class="com.eyeq.esp.service.impl.ArticleManagerImpl" />
-	<bean id="ownerManager" class="com.eyeq.esp.service.impl.UserManagerImpl" /> -->
 
 </beans>
