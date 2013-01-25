@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<security:ldap-server url="ldap://localhost:389/dc=hana,dc=com" />
+
+	<security:http auto-config="true" create-session="always">
+		<security:intercept-url pattern="/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/pages/admin.*"
+			access="ROLE_ADMIN" />
+
+		<security:form-login login-page="/login"
+			default-target-url="/ldap/authentication" />
+		<security:anonymous />
+		<security:logout logout-success-url="/" />
+	</security:http>
+
+	<security:authentication-manager>
+		<security:ldap-authentication-provider
+			group-search-filter="memberUid={0}" group-search-base="ou=group"
+			group-role-attribute="cn" user-search-base="ou=people"
+			user-search-filter="uid={0}" />
+		<security:authentication-provider
+			ref="ldapProvider" />
+	</security:authentication-manager>
+
+	<bean id="contextSource"
+		class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+		<constructor-arg value="ldap://localhost:389/dc=hana,dc=com" />
+		<property name="userDn" value="cn=admin,dc=hana,dc=com" />
+		<property name="password" value="dlgksk" />
+	</bean>
+
+	<bean id="ldapProvider"
+		class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+		<constructor-arg>
+			<bean
+				class="org.springframework.security.ldap.authentication.BindAuthenticator">
+				<constructor-arg ref="contextSource" />
+				<property name="userSearch">
+					<bean id="userSearch"
+						class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+						<constructor-arg index="0" value="ou=People" />
+						<constructor-arg index="1" value="(uid={0})" />
+						<constructor-arg index="2" ref="contextSource" />
+					</bean>
+				</property>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean
+				class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+				<constructor-arg ref="contextSource" />
+				<constructor-arg value="ou=group" />
+				<property name="groupSearchFilter" value="(memberUid={0})" />
+				<property name="searchSubtree" value="true" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+
+	<bean id="usernameMapper"
+		class="org.springframework.security.ldap.DefaultLdapUsernameToDnMapper">
+		<constructor-arg value="ou=people" />
+		<constructor-arg value="uid" />
+	</bean>
+
+	<bean id="userService"
+		class="org.springframework.security.ldap.userdetails.LdapUserDetailsManager">
+		<constructor-arg ref="contextSource" />
+		<property name="usernameMapper" ref="usernameMapper" />
+		<property name="groupSearchBase" value="ou=group" />
+	</bean>
+
+</beans>

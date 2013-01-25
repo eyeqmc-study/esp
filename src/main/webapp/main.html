@@ -1,0 +1,145 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<title th:text="#{title.tab}">ESP</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="stylesheet" href="./static/styles/initializr-style.css"
+	th:href="@{/static/styles/initializr-style.css}" />
+<link rel="stylesheet" href="./static/styles/esp-main.css"
+	th:href="@{/static/styles/esp-main.css}" />
+
+<script type="text/javascript"
+	src="./static/scripts/modernizr-latest.js"
+	th:src="@{/static/scripts/modernizr-latest.js}"></script>
+<script type="text/javascript" src="./static/scripts/esp-main.js"
+	th:src="@{/static/scripts/esp-main.js}"></script>
+</head>
+<body>
+
+	<div id="header-container">
+		<header class="wrapper clearfix">
+			<h1 id="title"><a href="/main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
+			<nav>
+				<ul>
+					<li>
+						<a href="pages/login.html" th:href="@{/login}" 
+							th:if="${#strings.isEmpty(currentUser.id)}"
+							th:text="#{label.menu.head.login}">로그인</a>
+					</li>
+					<li>
+						<a href="/j_spring_security_logout" th:href="@{/j_spring_security_logout}"
+							th:if="${!#strings.isEmpty(currentUser.id)}"
+							th:text="#{label.menu.head.logout}">로그아웃</a>
+					</li>
+					<li>
+						<a href="pages/schedule.html" th:href="@{/schedule}" 
+							th:text="#{label.menu.head.schedule}">일정</a>
+					</li>
+					<li>
+						<a href="pages/statistics.html" th:href="@{/statistics}" 
+							th:text="#{label.menu.head.statistics}">통계</a>
+					</li>
+					<li>
+						<a href="pages/admin.html" th:href="@{/admin}" 
+							th:text="#{label.menu.head.admin}">관리</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+	</div>
+	<div id="main-container">
+		
+		<div id="main" class="wrapper clearfix">
+			<aside id="user-panel">
+				<h3 th:text="${currentUser.name}">이름</h3>
+				<h3 th:text="${currentUser.email}">이메일</h3>
+				<h3><a href="#">게시글(<span th:text="${#lists.size(currentUser.articles)}">0</span>)</a></h3>
+				<h3><a href="#">벌점(<span th:text="${currentUser.penaltyScore}">0</span>)</a></h3>
+			</aside>
+			<p></p>
+			<article th:if="${#lists.isEmpty(allArticles)}">
+				<header class="ct-bg-e44d26">
+					<b>진행중</b>
+				</header>
+				<table class="wd10 ct-box-e44d26" border="1">
+					<tbody>
+						<tr>
+							<th class="wd4">
+								<div>아이콘영역</div>
+								<div>TOGA 설치</div>
+								<div><input type="submit" class="btn reg-btn" value="등록"/></div>
+							</th>
+							<td class="wd6">
+								<div class="table wd10 ct-box">
+									<div class="tr">
+										<div class="td wd3">진행자</div><div class="td wd7">이하나</div>
+									</div>
+									<div class="tr">
+										<div class="td wd3">시작일</div><div class="td wd7">-</div>
+									</div>
+									<div class="tr">
+										<div class="td wd3">종료일</div><div class="td wd7">-</div>
+									</div>
+									<div class="tr">
+										<div class="td wd3">참여자</div><div class="td wd7">-</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>				
+			</article>
+			<article th:if="${#lists.isEmpty(allArticles)}">
+				<header class="ct-bg-f16529">
+					<b>진행예정</b>
+				</header>
+				
+				<table class="wd10 ct-box-f16529">
+					<tbody>
+						<tr>
+							<th class="wd4">
+								<div>아이콘영역</div>
+								<div>타이틀영역</div>
+							</th>
+							<td class="wd6">
+								<div class="table wd10 ct-box">
+									<div class="tr">
+										<div class="td wd3">진행예정자</div><div class="td wd7">임정묵</div>
+									</div>
+									<div class="tr">
+										<div class="td wd3">시작예정일</div><div class="td wd7">-</div>
+									</div>
+									<div class="tr">
+										<div class="td wd3">종료예정일</div><div class="td wd7">-</div>
+									</div>
+									<div class="tr">
+										<div class="td wd3">참여예정자</div><div class="td wd7">-</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>				
+			</article>
+			
+		</div>
+	</div>
+	<!-- #main-container -->
+
+	<div id="footer-container">
+		<footer class="wrapper">
+			<h3>footer</h3>
+		</footer>
+	</div>
+</body>
+</html>

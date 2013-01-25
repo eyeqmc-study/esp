@@ -1,0 +1,110 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<title th:text="#{title.tab}">ESP - 신규스터디 등록</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="stylesheet" href="../static/styles/initializr-style.css"
+	th:href="@{/static/styles/initializr-style.css}" />
+<link rel="stylesheet" href="../static/styles/esp-main.css"
+	th:href="@{/static/styles/esp-main.css}" />
+
+<script type="text/javascript"
+	src="./static/scripts/modernizr-latest.js"
+	th:src="@{/static/scripts/modernizr-latest.js}"></script>
+<script type="text/javascript" src="./static/scripts/esp-main.js"
+	th:src="@{/static/scripts/esp-main.js}"></script>
+</head>
+<body>
+	<div id="header-container">
+		<header class="wrapper clearfix">
+			<h1 id="title"><a href="/main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
+			<nav>
+				<ul>
+					<li>
+						<a href="pages/login.html" th:href="@{/login}" 
+							th:if="${#strings.isEmpty(currentUser.id)}"
+							th:text="#{label.menu.head.login}">로그인</a>
+					</li>
+					<!-- 
+					<li>
+						<a href="/j_spring_security_logout" th:href="@{/j_spring_security_logout}"
+							th:if="${!#strings.isEmpty(currentUser.id)}"
+							th:text="#{label.menu.head.logout}">로그아웃</a>
+					</li>
+					 -->
+					<li>
+						<a href="pages/schedule.html" th:href="@{/schedule}" 
+							th:text="#{label.menu.head.schedule}">일정</a>
+					</li>
+					<li>
+						<a href="pages/statistics.html" th:href="@{/statistics}" 
+							th:text="#{label.menu.head.statistics}">통계</a>
+					</li>
+					<li>
+						<a href="pages/admin.html" th:href="@{/admin}" 
+							th:text="#{label.menu.head.admin}">관리</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+	</div>
+	<div id="main-container">
+		<div id="main" class="wrapper clearfix">
+			<aside id="user-panel">
+				<h3 th:text="${currentUser.name}">이름</h3>
+				<h3 th:text="${currentUser.email}">이메일</h3>
+				<h3><a href="#">게시글(<span th:text="${#lists.size(currentUser.contents)}">0</span>)</a></h3>
+				<h3><a href="#">벌점(<span th:text="${currentUser.penaltyScore}">0</span>)</a></h3>
+			</aside>
+			<p></p>
+			<article th:if="${#lists.isEmpty(allArticles)}">
+				<div class="std-reg">
+					<form action="" method="post" class="well">
+						<fieldset>
+							<label>스터디명</label>
+								<input id="s_nm" name="s_nm"
+									type="text" required="required" autofocus="autofocus"
+									class="input span3" placeholder="스터디명"/>
+							<label>시작일</label>
+								<input id="s_fdate" name="s_fdate"
+									type="date" required="required" autofocus="autofocus"
+									class="input span3" placeholder="날짜"/>
+							<label>종료일</label>
+								<input id="s_tdate" name="s_tdate"
+									type="date" required="required" autofocus="autofocus"
+									class="input span3" placeholder="날짜"/>
+							<label>아이콘</label>
+								<input id="s_icon" name="s_icon"
+									type="file" required="required" autofocus="autofocus"
+									class="input span3" placeholder="아이콘"/>
+							<label>소개글</label>
+								<textarea class="input span3" maxlength="100"
+									rows="3" cols="33" 
+									placeholder="입력가능 한 글자는 100자 입니다."></textarea>
+						</fieldset>
+						<p></p>
+						<input type="submit" class="btn" value="등록"/>
+					</form>
+				</div>
+			</article>
+		</div>
+	</div>
+	<!-- #main-container -->
+
+	<div id="footer-container">
+		<footer class="wrapper">
+			<h3>footer</h3>
+		</footer>
+	</div>
+</body>
+</html>

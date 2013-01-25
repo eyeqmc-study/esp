@@ -1,0 +1,86 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<title th:text="#{title.tab}">ESP</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="stylesheet" href="../static/styles/initializr-style.css"
+	th:href="@{/static/styles/initializr-style.css}" />
+<link rel="stylesheet" href="../static/styles/esp-main.css"
+	th:href="@{/static/styles/esp-main.css}" />
+
+<script type="text/javascript"
+	src="./static/scripts/modernizr-latest.js"
+	th:src="@{/static/scripts/modernizr-latest.js}"></script>
+<script type="text/javascript" src="./static/scripts/esp-main.js"
+	th:src="@{/static/scripts/esp-main.js}"></script>
+</head>
+<body>
+
+	<div id="header-container">
+		<header class="wrapper clearfix">
+			<h1 id="title" th:text="#{title.esp}">h1#title</h1>
+			<nav>
+				<ul>
+					<li>
+						<a href="pages/login.html" th:href="@{/login}" 
+							th:if="${#strings.isEmpty(currentUser.id)}"
+							th:text="#{label.menu.head.login}">로그인</a>
+					</li>
+					<!-- 
+					<li>
+						<a href="/j_spring_security_logout" th:href="@{/j_spring_security_logout}"
+							th:if="${!#strings.isEmpty(currentUser.id)}"
+							th:text="#{label.menu.head.logout}">로그아웃</a>
+					</li>
+					 -->
+					<li>
+						<a href="pages/schedule.html" th:href="@{/schedule}" 
+							th:text="#{label.menu.head.schedule}">일정</a>
+					</li>
+					<li>
+						<a href="pages/statistics.html" th:href="@{/statistics}" 
+							th:text="#{label.menu.head.statistics}">통계</a>
+					</li>
+					<li>
+						<a href="pages/admin.html" th:href="@{/admin}" 
+							th:text="#{label.menu.head.admin}">관리</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+	</div>
+	<div id="main-container">
+		<div id="main" class="wrapper clearfix">
+			<aside>
+				<h3 th:text="${currentUser.name}">이름</h3>
+				<h3 th:text="${currentUser.email}">이메일</h3>
+				<h3>게시글(<span th:text="${#lists.size(currentUser.contents)}">0</span>)</h3>
+				<h3>벌점(<span th:text="${currentUser.penaltyScore}">0</span>)</h3>
+			</aside>
+			
+			<article th:if="${#lists.isEmpty(allArticles)}">
+				<section>
+					
+				</section>
+			</article>
+		</div>
+	</div>
+	<!-- #main-container -->
+
+	<div id="footer-container">
+		<footer class="wrapper">
+			<h3>footer</h3>
+		</footer>
+	</div>
+</body>
+</html>

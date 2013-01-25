@@ -1,0 +1,70 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<title th:text="#{title.tab}">ESP</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="stylesheet" href="../static/styles/initializr-style.css"
+	th:href="@{/static/styles/initializr-style.css}" />
+<link rel="stylesheet" href="../static/styles/esp-main.css"
+	th:href="@{/static/styles/esp-main.css}" />
+
+<script type="text/javascript"
+	src="./static/scripts/modernizr-latest.js"
+	th:src="@{/static/scripts/modernizr-latest.js}"></script>
+<script type="text/javascript" src="./static/scripts/esp-main.js"
+	th:src="@{/static/scripts/esp-main.js}"></script>
+</head>
+<body>
+	<div id="header-container">
+		<header class="wrapper clearfix">
+			<h1 id="title" th:text="#{title.esp}">h1#title</h1>
+		</header>
+	</div>
+	<div id="main-container">
+		<div id="main" class="wrapper clearfix">
+			<div class="signup">
+				<form action="/esp/owner/new" th:object="${owner}" th:action="@{/owner/new}"
+					method="post" class="well">
+					<fieldset>
+						<label th:text="#{label.owner.email}">e-mail :</label>
+							<input id="j_email" name="j_email"
+								type="text" required="required" autofocus="autofocus"
+								class="input span3" placeholder="Your email..." th:field="*{email}"/>
+						<label th:text="#{label.owner.name}">Name :</label>
+							<input id="j_username" name="j_username" type="text"
+								required="required" class="input span3"
+								placeholder="Your name..." th:field="*{name}"/>
+						<label th:text="#{label.owner.password}">Password :</label>
+							<input id="j_password" name="j_password" type="password"
+								required="required" class="input span3"
+								placeholder="Your password..." th:field="*{password}"/>
+						<label th:text="#{label.owner.confirmPassword}">Confirm password :</label>
+							<input id="j_confirm_password" name="j_confirm_password" 
+								type="password"
+								required="required" class="input span3"
+								placeholder="Your password again..." />
+					</fieldset>
+					<input type="submit" class="btn" value="Create" />
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- #main-container -->
+
+	<div id="footer-container">
+		<footer class="wrapper">
+			<h3>footer</h3>
+		</footer>
+	</div>
+</body>
+</html>
