@@ -1,0 +1,195 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html;" charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<title th:text="#{title.tab}">ESP</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.css"
+	th:href="@{/static/bootstrap/css/bootstrap.css}" />
+<link rel="stylesheet" href="../../static/styles/initializr-style.css"
+	th:href="@{/static/styles/initializr-style.css}" />
+<link rel="stylesheet" href="../../static/styles/esp-main.css"
+	th:href="@{/static/styles/esp-main.css}" />
+<link rel="stylesheet" type="text/css" href="../../static/styles/common.css"
+	th:href="@{/static/styles/common.css}" />
+<link rel="stylesheet" type="text/css" href="../../static/styles/article.css"
+th:href="@{/static/styles/article.css}" />
+
+<script type="text/javascript"
+	src="../../static/bootstrap/js/bootstrap.js"
+	th:src="@{/static/bootstrap/js/bootstrap.js}"></script>
+
+<script type="text/javascript"
+	src="../../ckeditor/ckeditor.js"
+	th:src="@{/ckeditor/ckeditor.js}"></script>
+<script type="text/javascript"
+	src="../../static/scripts/modernizr-latest.js"
+	th:src="@{/static/scripts/modernizr-latest.js}"></script>
+<script type="text/javascript" src="../../static/scripts/esp-main.js"
+	th:src="@{/static/scripts/esp-main.js}"></script>
+</head>
+<body>
+	<div id="header-container">
+		<header class="wrapper clearfix">
+			<h1 id="title"><a href="main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
+			<nav>
+				<ul>
+					<li class="e-hide-display">
+						<a href="pages/login.html" th:href="@{/login}" 
+							th:if="${currentUser == null or #strings.isEmpty(currentUser.id)}"
+							th:text="#{label.menu.head.login}">로그인</a>
+					</li>
+					<li>
+						<a href="/j_spring_security_logout" th:href="@{/j_spring_security_logout}"
+							th:if="${currentUser != null and !#strings.isEmpty(currentUser.id)}"
+							th:text="#{label.menu.head.logout}">로그아웃</a>
+					</li>
+					<li>
+						<a href="pages/schedule.html" th:href="@{/schedule}" 
+							th:text="#{label.menu.head.schedule}">일정</a>
+					</li>
+					<li>
+						<a href="pages/statistics.html" th:href="@{/statistics}" 
+							th:text="#{label.menu.head.statistics}">통계</a>
+					</li>
+					<li>
+						<a href="pages/admin.html" th:href="@{/admin}" 
+							th:text="#{label.menu.head.admin}">관리</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+	</div>
+	<div id="main-container">
+		<div id="main" class="wrapper clearfix">
+			<!--<aside id="user-panel">-->
+				<!-- <h3 th:text="${currentUser.name}">이름</h3>
+				<h3 th:text="${currentUser.email}">이메일</h3> -->
+				<!-- <h3><a href="#">게시글(<span th:text="${#lists.size(currentUser.contents)}">0</span>)</a></h3>
+				<h3><a href="#">벌점(<span th:text="${currentUser.penaltyScore}">0</span>)</a></h3> -->
+			<!--</aside>-->
+			<p></p>
+			<!--<header>
+				<div class="td">
+					<h2>아이콘영역</h2>
+				</div>
+				<div class="td">
+					<h2>타이틀영역</h2>
+				</div>
+			</header>-->
+			<article th:if="${#lists.isEmpty(allArticles)}">
+				<section>
+			    	<div id="main-content">
+			        	<ul class="vertical tabs">
+				           <li class="first">
+				                <a href="study-main.html">info</a>
+				            </li>
+				            <li class="active">
+				               	<a href="study-board.html">게시판</a>
+				            </li>
+				            <li>
+				               	<a href="study-member.html">구성원</a>
+				            </li>
+				            <li>
+				               	<a href="study-schedule.html">일정</a>
+				            </li>
+				            <li>
+				               	<a href="study-meeting.html">모임장</a>
+				            </li>
+				        </ul>
+						<div class="active-area">
+							<div>
+								<div class="article-header">
+									<span class="article-title" th:text="${article.title}">제목</span>
+									<span class="article-writer" th:text="${article.owner.uid}">이름</span>
+								</div>
+								<div class="article-body">
+									<div class="article-content" th:text="${article.content}">내용</div>
+								</div>
+								<div class="article-footer">
+									<a th:href="@{/article/edit-form(articleId=${article.id})}" class="btn btn-warning btn-small">
+										글수정
+									</a>
+									<a th:href="@{/article/delete(articleId=${article.id})}" class="btn btn-small btn-danger">
+										글삭제
+									</a>
+									<a th:href="@{/article/list}" class="btn btn-small btn-info">
+										<span>목록</span>
+									</a>
+								</div>
+								<div class="article-reply">
+								
+									<div class="replyItem" th:each="reply : ${replies}">
+										<div class="date">
+											<strong>${reply.updateDate}</strong>
+										</div>
+
+										<div class="author">
+											<div class="member">
+												<img
+													src="${pageContext.request.contextPath}/images/req.png"
+													style="vertical-align: middle; margin-right: 3px;" th:text="${reply.owner.uid}">임정묵</img>
+												<a th:href="@{/}" class="btn btn-small btn-warning" title="수정">&nbsp;<span>수정</span></a> 
+												<a th:href="@{/article-reply/delete(articleId=${article.id},articleReplyId=${reply.articleReplyId})}"
+												class="btn btn-small btn-danger" title="삭제">&nbsp;<span>삭제</span></a>
+											</div>
+										</div>
+
+										<div class="clear"></div>
+
+										<div class="replyContent">
+											<!--BeforeComment(413464231,0)-->
+											<div class="commentContent" th:text="${reply.content}">${reply.content}</div>
+											<!--AfterComment(413464231,0)-->
+											<div class="clear"></div>
+										</div>
+									</div>
+									<!-- commentList close -->
+									<form method="post" th:action="@{/article-reply/edit-form-submit}" style="margin: 0">
+										<div class="reply-write">
+											<p class="clear">
+												<textarea id="article-reply-content" name="content" rows="3"></textarea>
+												<script type="text/javascript">
+													//<![CDATA[
+													 CKEDITOR.replace( 'article-reply-content',{
+														 height: "60px",
+														 toolbar:
+																[
+																	['Styles','Format','Font','FontSize']
+																]
+														 } );
+													//]]>
+												</script>
+											</p>
+											<p>
+												<input type="hidden" name="articleId" th:value="${article.id}" />
+												<input type="submit" value="댓글 달기" class="btn btn-small btn-primary" />
+											</p>
+										</div><!-- commentWrite close -->
+									</form>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</section>
+				
+			</article>
+		</div>
+	</div>
+	<!-- #main-container -->
+	<div id="footer-container">
+		<footer class="wrapper">
+			<h3>footer</h3>
+		</footer>
+	</div>
+</body>
+</html>

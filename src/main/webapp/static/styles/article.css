@@ -1,0 +1,95 @@
+
+/* article-common */
+#main article {
+	float: left;
+	width: 100%;
+}
+
+/*content */
+.article-header {
+	border-bottom: 1px solid #f16529;
+	font-weight: bolder;
+	white-space: nowrap;
+}
+.article-header .article-writer {
+	border-bottom: #f16529;
+	float: right;
+	font-size: 11px;
+}
+.article-body {
+	height: 280px; 
+	border-bottom: 1px solid #f16529
+}
+
+.article-footer {
+	padding-top: 3px;
+	padding-bottom: 4px;
+}
+
+
+/* list */
+
+.active-area .article-list {
+	height: 300px;
+	overflow-y: scroll;
+}
+
+.active-area .page-group {
+	width: 95%;
+}
+
+.active-area .new-write {
+	float: right;
+}
+
+.article-reply .replyItem {
+	background-color: #FFFFFF;
+	padding: .6em .8em .6em .6em;
+	line-height: 1.25em;
+	clear: both;
+	border: 1px dotted #f16529;
+	padding-bottom: 2px;
+	list-style: none;
+}
+
+.article-reply p {
+	display: inline;
+}
+
+.article-reply .author {
+	float: left;
+	padding: 0 .3em 0 0;
+	color: #3074a5;
+	margin: 0 .3em .5em 0;
+}
+
+.article-reply .date {
+	float: right;
+	font: .8em Tahoma;
+	color: #cccccc;
+	margin: .3em 0 .5em 0;
+}
+
+.article-reply .replyOption {
+	height: 20px;
+	float: right;
+	white-space: nowrap;
+	margin-left: .2em;
+}
+
+.article-reply .replyOption img {
+	vertical-align: middle;
+}
+
+.article-reply .replyContent {
+	clear: left;
+}
+
+.article-reply .replyContent p {
+	display: block;
+}
+
+.article-reply .reply {
+	background-color: #F4F4F4;
+	border-bottom: 1px dotted #DDDDDD;
+}

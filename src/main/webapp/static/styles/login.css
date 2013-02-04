@@ -1,0 +1,22 @@
+@CHARSET "EUC-KR";
+
+#login-section .signup {
+	display: block;
+	border-top: 20px solid #e44d26;
+	background: #f16529;
+	color: white;
+	padding: 0px 5% 10px;
+	-webkit-box-shadow: 0 5px 10px #aaa;
+	-moz-box-shadow: 0 5px 10px #aaa;
+	box-shadow: 0 5px 10px #aaa;
+	width: 55%;
+	margin: 0 auto;
+}
+
+#login-section fieldset {
+	margin-bottom: 15px;
+}
+
+#login-section .signup form {
+	margin-bottom: 1px;
+}

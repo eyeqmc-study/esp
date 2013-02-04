@@ -1,0 +1,150 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<!--<![endif]-->
+<head>
+<!-- layout 템플릿 내용 시작 -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<title th:text="#{title.tab}">ESP</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" 
+	th:href="@{/static/bootstrap/css/bootstrap.css}" />
+<link rel="stylesheet" href="../static/bootstrap/css/bootstrap-responsive.css" 
+	th:href="@{/static/bootstrap/css/bootstrap-responsive.css}" />
+	
+<link rel="stylesheet" href="./static/styles/initializr-style.css"
+	th:href="@{/static/styles/initializr-style.css}" />
+	
+<link rel="stylesheet" href="./static/styles/esp-main.css"
+	th:href="@{/static/styles/esp-main.css}" />
+	
+<script type="text/javascript"
+	src="./static/scripts/modernizr-latest.js"
+	th:src="@{/static/scripts/modernizr-latest.js}"></script>
+<script type="text/javascript" src="./static/scripts/esp-main.js"
+	th:src="@{/static/scripts/esp-main.js}"></script>
+
+<script type="text/javascript" src="./static/jquery/jquery-1.8.3.js"
+	th:src="@{/static/jquery/jquery-1.8.3.js}"></script>
+	
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	var adjustMainContainerHeight = function() {
+		var mainContainerQuery = $("#main-container");
+		var headerContainerQuery = $("#header-container");
+		var footerContainerQuery = $("#footer-container");
+		if (headerContainerQuery.size() > 0 && footerContainerQuery.size() > 0) {
+			var headerContainerHeight = headerContainerQuery.outerHeight();
+			var footerContainerHeight = footerContainerQuery.outerHeight();
+			var documentHeight = document.body.clientHeight;
+			var height = documentHeight - headerContainerHeight - footerContainerHeight;
+			if (height < 400) {
+				height = 400;
+			}
+			mainContainerQuery.height(height);
+		}
+	};
+	$(document).ready(function(){
+		adjustMainContainerHeight();
+		
+		$(window).resize(function(){
+			var timeout = setTimeout(function(){
+				clearTimeout(timeout);
+				adjustMainContainerHeight();
+			}, 300);
+		});
+	});
+/*]]>*/
+</script>
+<!-- layout 템플릿 내용 끝 -->
+</head>
+<body>
+	<div id="doc">
+		<div id="header-container">
+			<header class="wrapper clearfix">
+				<h1 id="title"><a href="main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
+				<nav>
+					<ul>
+						<li th:if="${currentUser != null and currentUser.uid == 'voyaging'}">
+							<a href="pages/admin.html" th:href="@{/admin}" 
+								th:text="#{label.menu.head.admin}">관리</a>
+						</li>
+						<li th:if="${currentUser == null}">
+							<a href="pages/login.html" th:href="@{/login}" 
+								th:text="#{label.menu.head.login}">로그인</a>
+						</li>
+						<li th:if="${currentUser != null}">
+							<a href="/j_spring_security_logout" th:href="@{/j_spring_security_logout}"
+								th:text="#{label.menu.head.logout}">로그아웃</a>
+						</li>
+						<li th:if="${currentUser != null}">
+							<a href="pages/study-reg.html" th:href="@{/reg}" 
+								th:text="#{label.menu.head.studyReg}">등록</a>
+						</li>
+						<!-- 구현전까지 주석처리
+						<li>
+							<a href="pages/schedule.html" th:href="@{/schedule}" 
+								th:text="#{label.menu.head.schedule}">일정</a>
+						</li>
+						<li>
+							<a href="pages/statistics.html" th:href="@{/statistics}" 
+								th:text="#{label.menu.head.statistics}">통계</a>
+						</li>
+						 -->
+					</ul>
+				</nav>
+			</header>
+		</div>
+		<div id="main-container">
+			<div id="main" class="wrapper clearfix">
+				<aside id="user-panel" th:if="${currentUser != null}">
+					<h3 th:text="${currentUser.name}">이름</h3>
+					<h3 th:text="${currentUser.email}">이메일</h3>
+					<h3><a href="#">게시글(<span th:text="${#lists.size(currentUser.articles)}">0</span>)</a></h3>
+					<h3><a href="#">벌점(<span th:text="${currentUser.penaltyScore}">0</span>)</a></h3>
+				</aside>
+				<aside id="user-panel" th:if="${currentUser == null}">
+					<h3>이름</h3>
+					<h3>이메일</h3>
+					<h3><a href="#">게시글(<span>0</span>)</a></h3>
+					<h3><a href="#">벌점(<span>0</span>)</a></h3>
+				</aside>
+				<section layout:fragment="main-content">
+					<!-- 메인 컨텐츠 영역 시작 -->
+					<article>
+					</article>
+					<!-- 메인 컨텐츠 영역 끝 -->
+				</section>
+			</div>
+		</div>
+		<!-- #main-container -->
+	
+		<div id="footer-container">
+			<footer class="wrapper">
+				<h3>footer</h3>
+			</footer>
+		</div>
+	</div>
+	<!-- Google Analytics -->
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-19264570-6']);
+	_gaq.push(['_trackPageview']);
+	
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>
