@@ -16,9 +16,9 @@ import com.eyeq.esp.service.UserManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:00
- * @revision $LastChangedRevision: 5847 $
- * @date $LastChangedDate: 2013-01-24 18:03:35 +0900 (목, 24 1월 2013) $
- * @by $LastChangedBy: jmlim $
+ * @revision $LastChangedRevision: 5923 $
+ * @date $LastChangedDate: 2013-02-04 01:02:47 +0900 (월, 04 2월 2013) $
+ * @by $LastChangedBy: voyaging $
  */
 @Service("userManager")
 @Transactional
@@ -30,7 +30,24 @@ public class UserManagerImpl extends AbstractJpaDaoService implements
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
-	public User getUser(Integer userId) {
+	public User getUser(Integer id) {
+
+		List<User> results = getEntityManager()
+				.createNamedQuery("com.eyeq.esp.model.User@getUser():param.id")
+				.setParameter("id", id).getResultList();
+
+		if (results != null && results.size() > 0) {
+			return results.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * @see com.eyeq.esp.service.UserManager#getUser(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
+	public User getUser(String userId) {
 
 		List<User> results = getEntityManager()
 				.createNamedQuery(
@@ -44,28 +61,13 @@ public class UserManagerImpl extends AbstractJpaDaoService implements
 	}
 
 	/**
-	 * @see com.eyeq.esp.service.UserManager#getUser(java.lang.String)
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly = true)
-	public User getUser(String uid) {
-
-		List<User> results = getEntityManager()
-				.createNamedQuery("com.eyeq.esp.model.User@getUser():param.uId")
-				.setParameter("uId", uid).getResultList();
-
-		if (results != null && results.size() > 0) {
-			return results.get(0);
-		}
-		return null;
-	}
-
-	/**
 	 * @see com.eyeq.esp.service.UserManager#createUser(com.eyeq.esp.model.User)
 	 */
 	public void createUser(User user) {
 		user.setCreatedDate(new Date());
-		user.setEnabled(Boolean.TRUE);
+		if (user.getRole() == null) {
+			user.setRole("ROLE_USER");
+		}
 		getEntityManager().persist(user);
 	}
 
@@ -82,7 +84,8 @@ public class UserManagerImpl extends AbstractJpaDaoService implements
 	 */
 	public void deleteUser(User user) {
 		user.setDeletedDate(new Date());
-		getEntityManager().remove(user);
+		user.setEnabled(false);
+		getEntityManager().merge(user);
 	}
 
 	/**

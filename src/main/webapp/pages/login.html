@@ -3,35 +3,18 @@
 <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="pages/commons/layout">
 <!--<![endif]-->
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-<title th:text="#{title.tab}">ESP</title>
-
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-
-<link rel="stylesheet" href="../static/styles/initializr-style.css"
-	th:href="@{/static/styles/initializr-style.css}" />
-<link rel="stylesheet" href="../static/styles/esp-main.css"
-	th:href="@{/static/styles/esp-main.css}" />
-
-<script type="text/javascript"
-	src="./static/scripts/modernizr-latest.js"
-	th:src="@{/static/scripts/modernizr-latest.js}"></script>
-<script type="text/javascript" src="./static/scripts/esp-main.js"
-	th:src="@{/static/scripts/esp-main.js}"></script>
+<link rel="stylesheet" type="text/css" href="../static/styles/login.css"
+	th:href="@{/static/styles/login.css}" />
 </head>
 <body>
-	<div id="header-container">
-		<header class="wrapper clearfix">
-			<h1 id="title"><a href="/main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
-		</header>
-	</div>
-	<div id="main-container">
-		<div id="main" class="wrapper clearfix">
+	<section id="login-section" layout:fragment="main-content">
+		<article>
 			<div class="signup">
 				<form action="/j_spring_security_check" th:action="@{/j_spring_security_check}"
 					method="post" class="well" th:object="${user}">
@@ -48,14 +31,7 @@
 					<input type="submit" class="btn" value="Authenticate" th:value="#{label.login.authentication}" />
 				</form>
 			</div>
-		</div>
-	</div>
-	<!-- #main-container -->
-
-	<div id="footer-container">
-		<footer class="wrapper">
-			<h3>footer</h3>
-		</footer>
-	</div>
+		</article>
+	</section>
 </body>
 </html>

@@ -1,7 +1,7 @@
 package com.eyeq.esp.web.controller;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,16 +18,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.eyeq.esp.model.Article;
+import com.eyeq.esp.model.StudyRoom;
 import com.eyeq.esp.model.User;
 import com.eyeq.esp.service.ArticleManager;
+import com.eyeq.esp.service.StudyRoomManager;
 import com.eyeq.esp.service.UserManager;
 
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:33
- * @revision $LastChangedRevision: 5854 $
- * @date $LastChangedDate: 2013-01-26 02:17:59 +0900 (토, 26 1월 2013) $
+ * @revision $LastChangedRevision: 5921 $
+ * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
  * @by $LastChangedBy: voyaging $
  */
 @Controller
@@ -42,9 +43,31 @@ public class MainController {
 	@Autowired
 	private UserManager ownerManager;
 
-	@ModelAttribute("allArticles")
-	public List<Article> populateArticles() {
-		return this.articleManager.getArticles();
+	@Autowired
+	private StudyRoomManager roomManager;
+
+	@ModelAttribute("allStudyRooms")
+	public List<StudyRoom> populateStudyTooms() {
+		return this.roomManager.getStudyRooms();
+	}
+
+	@ModelAttribute("enabledStudyRoom")
+	public StudyRoom enabledStudyRoom() {
+		List<StudyRoom> rooms = this.roomManager.getStudyRooms();
+		StudyRoom studyRoom = null;
+		if (rooms != null) {
+			for (StudyRoom room : rooms) {
+				if (room.getEnabled()) {
+					studyRoom = room;
+					break;
+				}
+			}
+			if (studyRoom == null) {
+				studyRoom = new StudyRoom();
+			}
+		}
+
+		return studyRoom;
 	}
 
 	@InitBinder
@@ -60,22 +83,26 @@ public class MainController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String welcomeHandler(Model model, HttpSession httpSession) {
 		User user = (User) httpSession.getAttribute("user");
-		if (user != null) {
-			model.addAttribute("currentUser", user);
-		} else {
-			model.addAttribute("currentUser", new User(null, null, null, null,
-					true, "이름", "이메일", null, null, 0, null, null));
-		}
+		model.addAttribute("currentUser", user);
 		return "main";
 	}
 
-	@RequestMapping(value = "/editor")
-	public String editorPageHandler(Model model) {
-		return "/pages/editor";
+	@RequestMapping(value = "/admin")
+	public String adminPageHandler(Model model, HttpSession httpSession) {
+		return "/pages/admin";
 	}
 
-	@RequestMapping(value = "/admin")
-	public String adminPageHandler(Model model) {
-		return "/pages/admin";
+	@RequestMapping(value = "/reg")
+	public String studyRegPageHandler(Model model, HttpSession httpSession) {
+		User user = (User) httpSession.getAttribute("user");
+		model.addAttribute("currentUser", user);
+		return "/pages/study-reg";
+	}
+
+	@RequestMapping(value = "/study")
+	public String studyPageHandler(Model model, HttpSession httpSession) {
+		User user = (User) httpSession.getAttribute("user");
+		model.addAttribute("currentUser", user);
+		return "/pages/study-main";
 	}
 }

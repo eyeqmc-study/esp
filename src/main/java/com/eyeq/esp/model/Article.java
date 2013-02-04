@@ -1,6 +1,7 @@
 package com.eyeq.esp.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,9 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,16 +21,16 @@ import javax.persistence.TemporalType;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:14:29
- * @revision $LastChangedRevision: 5847 $
- * @date $LastChangedDate: 2013-01-24 18:03:35 +0900 (목, 24 1월 2013) $
+ * @revision $LastChangedRevision: 5925 $
+ * @date $LastChangedDate: 2013-02-04 05:53:57 +0900 (월, 04 2월 2013) $
  * @by $LastChangedBy: jmlim $
  */
 @Entity
 @Table(name = "ARTICLES")
 @NamedQueries({
-	@NamedQuery(name = "com.eyeq.esp.model.Article@getArticles():param.userId", query = "from Article as article where ID = :userId"),
-	@NamedQuery(name = "com.eyeq.esp.model.Article@getArticles()", query = "from Article as article")})
-public class Article {// extends BaseEntity {
+		@NamedQuery(name = "com.eyeq.esp.model.Article@getArticle(articleId)", query = "from Article as article where ID = :articleId"),
+		@NamedQuery(name = "com.eyeq.esp.model.Article@getArticles()", query = "from Article as article order by ID desc") })
+public class Article {
 
 	@Id
 	@GeneratedValue
@@ -35,14 +38,19 @@ public class Article {// extends BaseEntity {
 	private Integer id;
 
 	@ManyToOne(cascade = { CascadeType.ALL })
+	// 임시
 	@JoinColumn(name = "owner")
 	private User owner;
 
-	// lazy
+	@Lob
+	@Column
 	private String content;
 
 	@Column(name = "TITLE")
 	private String title;
+
+	@OneToMany(targetEntity = ArticleReply.class, mappedBy = "article", cascade = CascadeType.ALL)
+	private List<ArticleReply> articleReplies;
 
 	@ManyToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "STUDYROOM_ID")
@@ -61,7 +69,7 @@ public class Article {// extends BaseEntity {
 	private Date deletedDate;
 
 	@Column(name = "ENABLED")
-	private Boolean enabled;
+	private Boolean enabled = true;
 
 	public Article() {
 	}
@@ -127,6 +135,21 @@ public class Article {// extends BaseEntity {
 	 */
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	/**
+	 * @return the articleReplies
+	 */
+	public List<ArticleReply> getArticleReplies() {
+		return articleReplies;
+	}
+
+	/**
+	 * @param articleReplies
+	 *            the articleReplies to set
+	 */
+	public void setArticleReplies(List<ArticleReply> articleReplies) {
+		this.articleReplies = articleReplies;
 	}
 
 	/**

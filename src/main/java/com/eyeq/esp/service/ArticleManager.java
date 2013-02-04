@@ -3,14 +3,14 @@ package com.eyeq.esp.service;
 import java.util.List;
 
 import com.eyeq.esp.model.Article;
-import com.eyeq.esp.model.User;
+import com.eyeq.esp.model.ArticleReply;
 
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:15:10
- * @revision $LastChangedRevision: 5808 $
- * @date $LastChangedDate: 2013-01-21 07:20:31 +0900 (월, 21 1월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 5925 $
+ * @date $LastChangedDate: 2013-02-04 05:53:57 +0900 (월, 04 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 public interface ArticleManager {
 
@@ -24,5 +24,11 @@ public interface ArticleManager {
 
 	public List<Article> getArticles();
 
-	public List<Article> getArticles(User user);
+	ArticleReply getArticleReply(Integer articleReplyId);
+
+	void createArticleReply(ArticleReply reply);
+
+	void updateArticleReply(ArticleReply reply);
+
+	void deleteArticleReply(ArticleReply reply);
 }

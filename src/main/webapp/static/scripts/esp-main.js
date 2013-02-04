@@ -1,3 +1,9 @@
-if (window.hana) {
-	window.hana.blog = new Object();
+if (window.esp) {
+	window.esp = new Object();
 }
+
+var esp = {
+	adjustMainContainerHeight : function() {
+		
+	}
+};

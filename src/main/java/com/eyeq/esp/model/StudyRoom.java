@@ -15,6 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -27,13 +30,17 @@ import org.springframework.beans.support.PropertyComparator;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:14:54
- * @revision $LastChangedRevision: 5840 $
- * @date $LastChangedDate: 2013-01-24 00:01:12 +0900 (목, 24 1월 2013) $
- * @by $LastChangedBy: jmlim $
+ * @revision $LastChangedRevision: 5921 $
+ * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
+ * @by $LastChangedBy: voyaging $
  */
 @Entity
 @Table(name = "STUDYROOMS")
-public class StudyRoom {// extends BaseEntity {
+@NamedQueries({
+		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms():param.ownerId", query = "from StudyRoom as studyRoom where OWNER = :ownerId"),
+		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms():param.enabled", query = "from StudyRoom as studyRoom where ENABLED = :enabled"),
+		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms()", query = "from StudyRoom as studyRoom") })
+public class StudyRoom {
 
 	@Id
 	@GeneratedValue
@@ -43,14 +50,15 @@ public class StudyRoom {// extends BaseEntity {
 	@Column(name = "NAME")
 	private String name;
 
-	@Column(name = "DESCRIPTION", length = 256)
+	@Column(name = "DESCRIPTION", length = 1024)
 	private String description;
 
 	@ManyToMany
 	@JoinTable(name = "USER_STUDYROOM", joinColumns = { @JoinColumn(name = "STUDYROOM_ID") }, inverseJoinColumns = { @JoinColumn(name = "USER_ID") })
 	private Set<User> members;
 
-	@OneToOne(mappedBy = "ownStudy")
+	@ManyToOne
+	@JoinColumn(name = "ownerId")
 	private User owner;
 
 	@Column(name = "START_DATE")
@@ -64,12 +72,12 @@ public class StudyRoom {// extends BaseEntity {
 	@OneToMany(targetEntity = Article.class, mappedBy = "studyRoom", cascade = CascadeType.ALL)
 	private Set<Article> articles;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "studyPlace")
+	@OneToOne
+	@JoinColumn(name = "placeId")
 	private Place studyPlace;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "studyImage")
+	@OneToOne
+	@JoinColumn(name = "imageId")
 	private Image studyImage;
 
 	@Column(name = "CREATED_DATE")
@@ -85,51 +93,22 @@ public class StudyRoom {// extends BaseEntity {
 	private Date deletedDate;
 
 	@Column(name = "ENABLED")
-	private Boolean enabled;
+	private Boolean enabled = false;
 
 	public StudyRoom() {
 	}
 
 	/**
-	 * @param id
-	 * @param createdDate
-	 * @param modifiedDate
-	 * @param deletedDate
-	 * @param enabled
-	 * @param name
-	 * @param description
-	 * @param members
-	 * @param owner
-	 * @param startDate
-	 * @param endDate
-	 * @param articles
-	 * @param studyPlace
-	 * @param studyImage
+	 * @return the id
 	 */
-	public StudyRoom(Integer id, Date createdDate, Date modifiedDate,
-			Date deletedDate, Boolean enabled, String name, String description,
-			Set<User> members, User owner, Date startDate, Date endDate,
-			Set<Article> articles, Place studyPlace, Image studyImage) {
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.members = members;
-		this.owner = owner;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.articles = articles;
-		this.studyPlace = studyPlace;
-		this.studyImage = studyImage;
-		this.createdDate = createdDate;
-		this.modifiedDate = modifiedDate;
-		this.deletedDate = deletedDate;
-		this.enabled = enabled;
-	}
-
 	public Integer getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 *            the id to set
+	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -165,65 +144,20 @@ public class StudyRoom {// extends BaseEntity {
 	}
 
 	/**
-	 * @return
+	 * @return the members
 	 */
-	protected Set<User> getMembersInternal() {
-		if (this.members == null) {
+	public Set<User> getMembers() {
+		if (members == null) {
 			this.members = new HashSet<User>();
 		}
 		return members;
 	}
 
 	/**
-	 * @param members
-	 */
-	protected void setMembersInternal(Set<User> members) {
-		this.members = members;
-	}
-
-	/**
-	 * @return
-	 */
-	public List<User> getMembers() {
-		List<User> sortedMembers = new ArrayList<User>(getMembersInternal());
-		PropertyComparator.sort(sortedMembers, new MutableSortDefinition("id",
-				true, true));
-		return Collections.unmodifiableList(sortedMembers);
-	}
-
-	/**
 	 * @param member
 	 */
 	public void addMember(User member) {
-		getMembersInternal().add(member);
-		member.addStudyRoom(this);
-	}
-
-	/**
-	 * @param member
-	 * @return
-	 */
-	public User getMember(User member) {
-		List<User> members = getMembers();
-		int idx = members.indexOf(member);
-		if (idx != -1) {
-			return members.get(idx);
-		}
-		return null;
-	}
-
-	/**
-	 * @param memberId
-	 * @return
-	 */
-	public User getMember(Integer memberId) {
-		for (User member : getMembersInternal()) {
-			if (member.getId().equals(memberId)
-					&& member.getStudyRoom(this).equals(this)) {
-				return member;
-			}
-		}
-		return null;
+		getMembers().add(member);
 	}
 
 	/**
@@ -365,36 +299,80 @@ public class StudyRoom {// extends BaseEntity {
 		this.studyImage = studyImage;
 	}
 
+	/**
+	 * @return the createdDate
+	 */
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 
+	/**
+	 * @return the modifiedDate
+	 */
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
 
+	/**
+	 * @param modifiedDate
+	 *            the modifiedDate to set
+	 */
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 
+	/**
+	 * @return the deletedDate
+	 */
 	public Date getDeletedDate() {
 		return deletedDate;
 	}
 
+	/**
+	 * @param deletedDate
+	 *            the deletedDate to set
+	 */
 	public void setDeletedDate(Date deletedDate) {
 		this.deletedDate = deletedDate;
 	}
 
+	/**
+	 * @return the enabled
+	 */
 	public Boolean getEnabled() {
 		return enabled;
 	}
 
+	/**
+	 * @param enabled
+	 *            the enabled to set
+	 */
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	/**
+	 * @param members
+	 *            the members to set
+	 */
+	public void setMembers(Set<User> members) {
+		this.members = members;
+	}
+
+	/**
+	 * @param articles
+	 *            the articles to set
+	 */
+	public void setArticles(Set<Article> articles) {
+		this.articles = articles;
 	}
 
 }

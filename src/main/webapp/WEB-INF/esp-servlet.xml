@@ -12,8 +12,22 @@
 	<!-- SPRING ANNOTATION PROCESSING -->
 	<!-- **************************************************************** -->
 	<context:component-scan base-package="com.eyeq.esp.web.controller" />
-	<mvc:annotation-driven />
-	
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>image/jpeg</value>
+						<value>image/png</value>
+						<value>image/jpg</value>
+						<value>image/gif</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
 	<!-- **************************************************************** -->
 	<!-- RESOURCE FOLDERS CONFIGURATION -->
 	<!-- Dispatcher configuration for serving static resources -->
@@ -21,6 +35,10 @@
 	<mvc:resources location="/static/images/" mapping="/static/images/**" />
 	<mvc:resources location="/static/scripts/" mapping="/static/scripts/**" />
 	<mvc:resources location="/static/styles/" mapping="/static/styles/**" />
+	<mvc:resources location="/static/jquery/" mapping="/static/jquery/**" />
+	<mvc:resources location="/static/json/" mapping="/static/json/**" />
+	<mvc:resources location="/static/bootstrap/" mapping="/static/bootstrap/**" />
+	<mvc:resources location="/ckeditor/" mapping="/ckeditor/**" />
 
 	<!-- **************************************************************** -->
 	<!-- MESSAGE EXTERNALIZATION/INTERNATIONALIZATION -->
@@ -29,8 +47,9 @@
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basename" value="Messages" />
+		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
-	
+
 	<!-- **************************************************************** -->
 	<!-- THYMELEAF-SPECIFIC ARTIFACTS -->
 	<!-- TemplateResolver <- TemplateEngine <- ViewResolver -->
@@ -40,14 +59,18 @@
 		<property name="prefix" value="/" />
 		<property name="suffix" value=".html" />
 		<property name="templateMode" value="HTML5" />
+		<property name="cacheable" value="false" />
+		<property name="characterEncoding" value="UTF-8" />
 	</bean>
 
 	<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
 		<property name="templateResolver" ref="templateResolver" />
+		<property name="messageSource" ref="messageSource" />
 	</bean>
 
 	<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
 		<property name="templateEngine" ref="templateEngine" />
 		<property name="characterEncoding" value="UTF-8" />
 	</bean>
+
 </beans>

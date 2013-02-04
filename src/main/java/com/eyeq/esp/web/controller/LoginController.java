@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.eyeq.esp.model.User;
+import com.eyeq.esp.service.UserManager;
 
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:27
- * @revision $LastChangedRevision: 5854 $
- * @date $LastChangedDate: 2013-01-26 02:17:59 +0900 (토, 26 1월 2013) $
+ * @revision $LastChangedRevision: 5921 $
+ * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
  * @by $LastChangedBy: voyaging $
  */
 @Controller
@@ -29,6 +30,9 @@ public class LoginController {
 
 	@Autowired(required = false)
 	private UserDetailsManager detailsManager;
+	
+	@Autowired
+	private UserManager ownerManager;
 
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
 	public String loginPageHandler(Model model) {
@@ -50,9 +54,18 @@ public class LoginController {
 			user.setUid(inetOrgPerson.getUid());
 			user.setName(inetOrgPerson.getCn()[0]);
 			user.setEmail(inetOrgPerson.getMail());
+			
+			if (!userExsit(inetOrgPerson.getUid())) {
+				ownerManager.createUser(user);
+			}
 		}
 
 		return "redirect:/";
+	}
+	
+	private Boolean userExsit(String uid) {
+		User user = ownerManager.getUser(uid);
+		return user != null;
 	}
 
 	@RequestMapping(value = { "/dummy/authentication" })
@@ -60,6 +73,8 @@ public class LoginController {
 		user.setUid("guest");
 		user.setName("게스트");
 		user.setEmail("guest@eyeq.co.kr");
+		user.setRole("ROLE_GUEST");
+		ownerManager.createUser(user);
 		return "redirect:/";
 	}
 }

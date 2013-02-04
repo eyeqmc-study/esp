@@ -1,10 +1,7 @@
 package com.eyeq.esp.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -23,30 +20,27 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
-
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:11:00
- * @revision $LastChangedRevision: 5847 $
- * @date $LastChangedDate: 2013-01-24 18:03:35 +0900 (목, 24 1월 2013) $
- * @by $LastChangedBy: jmlim $
+ * @revision $LastChangedRevision: 5921 $
+ * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
+ * @by $LastChangedBy: voyaging $
  */
 @Entity
 @Table(name = "USERS")
 @NamedQueries({
-	@NamedQuery(name = "com.eyeq.esp.model.User@getUser():param.userId", query = "from User as user where ID = :userId"),
-	@NamedQuery(name = "com.eyeq.esp.model.User@getUser():param.uId", query = "from User as user where U_ID = :uId"),
-	@NamedQuery(name = "com.eyeq.esp.model.User@getUsers()", query = "from User as user")})
-public class User {// extends BaseEntity {
+		@NamedQuery(name = "com.eyeq.esp.model.User@getUser():param.userId", query = "from User as user where ID = :userId"),
+		@NamedQuery(name = "com.eyeq.esp.model.User@getUser():param.uId", query = "from User as user where U_ID = :uId"),
+		@NamedQuery(name = "com.eyeq.esp.model.User@getUsers()", query = "from User as user") })
+public class User {
 
 	@Id
 	@GeneratedValue
 	@Column(name = "ID")
 	private Integer id;
 
-	 //uid 를 부적합한 식별자 때문에 변경하였음.
+	// uid 를 부적합한 식별자 때문에 변경하였음.
 	@Column(name = "U_ID")
 	private String uid;
 
@@ -69,10 +63,6 @@ public class User {// extends BaseEntity {
 	@JoinTable(name = "USER_STUDYROOM", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "STUDYROOM_ID") })
 	private Set<StudyRoom> studyRooms;
 
-	@OneToOne
-	@JoinColumn(name = "ownStudy")
-	private StudyRoom ownStudy;
-
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userImage")
 	private Image userImage;
@@ -90,46 +80,36 @@ public class User {// extends BaseEntity {
 	private Date deletedDate;
 
 	@Column(name = "ENABLED")
-	private Boolean enabled;
+	private Boolean enabled = true;
+
+	@Column(name = "ROLE")
+	private String role;
 
 	public User() {
 	}
 
 	/**
-	 * @param id
-	 * @param createdDate
-	 * @param modifiedDate
-	 * @param deletedDate
-	 * @param enabled
+	 * @param uid
 	 * @param name
 	 * @param email
-	 * @param password
-	 * @param articles
-	 * @param penaltyScore
-	 * @param userImage
 	 */
-	public User(Integer id, Date createdDate, Date modifiedDate,
-			Date deletedDate, Boolean enabled, String name, String email,
-			String password, Set<Article> articles, Integer penaltyScore,
-			Image userImage, StudyRoom ownStudy) {
-		this.id = id;
-		this.createdDate = createdDate;
-		this.modifiedDate = modifiedDate;
-		this.deletedDate = deletedDate;
-		this.enabled = enabled;
+	public User(String uid, String name, String email) {
+		this.uid = uid;
 		this.name = name;
 		this.email = email;
-		this.password = password;
-		this.articles = articles;
-		this.penaltyScore = penaltyScore;
-		this.userImage = userImage;
-		this.ownStudy = ownStudy;
 	}
 
+	/**
+	 * @return the id
+	 */
 	public Integer getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 *            the id to set
+	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -150,130 +130,37 @@ public class User {// extends BaseEntity {
 	}
 
 	/**
-	 * @return the article
+	 * @return the articles
 	 */
-	protected Set<Article> getArticlesInternal() {
+	public Set<Article> getArticles() {
 		if (this.articles == null) {
 			this.articles = new HashSet<Article>();
 		}
-		return articles;
-	}
-
-	/**
-	 * @param article
-	 *            the article to set
-	 */
-	protected void setArticlesInternal(Set<Article> articles) {
-		this.articles = articles;
-	}
-
-	/**
-	 * @return
-	 */
-	public List<Article> getArticles() {
-		List<Article> sortedArticles = new ArrayList<Article>(
-				getArticlesInternal());
-		PropertyComparator.sort(sortedArticles, new MutableSortDefinition("id",
-				true, true));
-		return Collections.unmodifiableList(sortedArticles);
+		return this.articles;
 	}
 
 	/**
 	 * @param article
 	 */
 	public void addArticle(Article article) {
-		getArticlesInternal().add(article);
-		article.setOwner(this);
+		getArticles().add(article);
 	}
 
 	/**
-	 * @param article
-	 * @return
+	 * @return the studyRooms
 	 */
-	public Article getArticle(Article article) {
-		List<Article> articles = getArticles();
-		int idx = articles.indexOf(article);
-		if (idx != -1) {
-			return articles.get(idx);
-		}
-		return null;
-	}
-
-	/**
-	 * @param articleId
-	 * @return
-	 */
-	public Article getArticle(Integer articleId) {
-		for (Article article : getArticlesInternal()) {
-			if (article.getId().equals(articleId)
-					&& article.getOwner().equals(this)) {
-				return article;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @return
-	 */
-	protected Set<StudyRoom> getStudyRoomsInternal() {
+	public Set<StudyRoom> getStudyRooms() {
 		if (this.studyRooms == null) {
 			this.studyRooms = new HashSet<StudyRoom>();
 		}
-		return studyRooms;
-	}
-
-	/**
-	 * @param studyRooms
-	 */
-	protected void setStudyRoomsInternal(Set<StudyRoom> studyRooms) {
-		this.studyRooms = studyRooms;
-	}
-
-	/**
-	 * @return
-	 */
-	public List<StudyRoom> getStudyRooms() {
-		List<StudyRoom> sortedStudyRooms = new ArrayList<StudyRoom>(
-				getStudyRoomsInternal());
-		PropertyComparator.sort(sortedStudyRooms, new MutableSortDefinition(
-				"id", true, true));
-		return Collections.unmodifiableList(sortedStudyRooms);
+		return this.studyRooms;
 	}
 
 	/**
 	 * @param studyRoom
 	 */
 	public void addStudyRoom(StudyRoom studyRoom) {
-		getStudyRoomsInternal().add(studyRoom);
-		studyRoom.setOwner(this);
-	}
-
-	/**
-	 * @param studyRoom
-	 * @return
-	 */
-	public StudyRoom getStudyRoom(StudyRoom studyRoom) {
-		List<StudyRoom> StudyRooms = getStudyRooms();
-		int idx = StudyRooms.indexOf(studyRoom);
-		if (idx != -1) {
-			return StudyRooms.get(idx);
-		}
-		return null;
-	}
-
-	/**
-	 * @param StudyRoomId
-	 * @return
-	 */
-	public StudyRoom getStudyRoom(Integer StudyRoomId) {
-		for (StudyRoom article : getStudyRoomsInternal()) {
-			if (article.getId().equals(StudyRoomId)
-					&& article.getOwner().equals(this)) {
-				return article;
-			}
-		}
-		return null;
+		getStudyRooms().add(studyRoom);
 	}
 
 	/**
@@ -352,50 +239,94 @@ public class User {// extends BaseEntity {
 	}
 
 	/**
-	 * @return the ownStudy
+	 * @return the createdDate
 	 */
-	public StudyRoom getOwnStudy() {
-		return ownStudy;
-	}
-
-	/**
-	 * @param ownStudy
-	 *            the ownStudy to set
-	 */
-	public void setOwnStudy(StudyRoom ownStudy) {
-		this.ownStudy = ownStudy;
-	}
-
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 
+	/**
+	 * @return the modifiedDate
+	 */
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
 
+	/**
+	 * @param modifiedDate
+	 *            the modifiedDate to set
+	 */
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 
+	/**
+	 * @return the deletedDate
+	 */
 	public Date getDeletedDate() {
 		return deletedDate;
 	}
 
+	/**
+	 * @param deletedDate
+	 *            the deletedDate to set
+	 */
 	public void setDeletedDate(Date deletedDate) {
 		this.deletedDate = deletedDate;
 	}
 
+	/**
+	 * @return the enabled
+	 */
 	public Boolean getEnabled() {
 		return enabled;
 	}
 
+	/**
+	 * @param enabled
+	 *            the enabled to set
+	 */
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	/**
+	 * @param articles
+	 *            the articles to set
+	 */
+	public void setArticles(Set<Article> articles) {
+		this.articles = articles;
+	}
+
+	/**
+	 * @param studyRooms
+	 *            the studyRooms to set
+	 */
+	public void setStudyRooms(Set<StudyRoom> studyRooms) {
+		this.studyRooms = studyRooms;
+	}
+
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
+
+	/**
+	 * @param role
+	 *            the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	/**

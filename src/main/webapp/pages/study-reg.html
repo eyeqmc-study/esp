@@ -3,108 +3,230 @@
 <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="pages/commons/layout">
 <!--<![endif]-->
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<link rel="stylesheet" href="../static/jquery/plugins/file-upload/css/bootstrap-image-gallery.css" 
+	th:href="@{/static/jquery/plugins/file-upload/css/bootstrap-image-gallery.css}" />
 
-<title th:text="#{title.tab}">ESP - 신규스터디 등록</title>
+<link rel="stylesheet" href="../static/jquery/plugins/file-upload/css/jquery.fileupload-ui.css" 
+	th:href="@{/static/jquery/plugins/file-upload/css/jquery.fileupload-ui.css}" />
+<link rel="stylesheet" href="../static/jquery/plugins/file-upload/css/style.css" 
+	th:href="@{/static/jquery/plugins/file-upload/css/style.css}" />
 
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" type="text/css" href="../static/styles/study-reg.css"
+	th:href="@{/static/styles/study-reg.css}" />
+<link rel="stylesheet" href="../static/jquery/ui/themes/base/jquery-ui.css" 
+	th:href="@{/static/jquery/ui/themes/base/jquery-ui.css}" />
 
-<link rel="stylesheet" href="../static/styles/initializr-style.css"
-	th:href="@{/static/styles/initializr-style.css}" />
-<link rel="stylesheet" href="../static/styles/esp-main.css"
-	th:href="@{/static/styles/esp-main.css}" />
+<script type="text/javascript" src="../static/jquery/ui/jquery-ui.js"
+	th:src="@{/static/jquery/ui/jquery-ui.js}"></script>
+	
+<script type="text/javascript" src="../static/jquery/plugins/file-upload/extends/tmpl.js"
+	th:src="@{/static/jquery/plugins/file-upload/extends/tmpl.js}"></script>
+<script type="text/javascript" src="../static/jquery/plugins/file-upload/extends/load-image.js"
+	th:src="@{/static/jquery/plugins/file-upload/extends/load-image.js}"></script>
+<script type="text/javascript" src="../static/jquery/plugins/file-upload/extends/canvas-to-blob.js"
+	th:src="@{/static/jquery/plugins/file-upload/extends/canvas-to-blob.js}"></script>
+<script type="text/javascript" src="../static/jquery/plugins/file-upload/js/jquery.iframe-transport.js"
+	th:src="@{/static/jquery/plugins/file-upload/js/jquery.iframe-transport.js}"></script>
+<script type="text/javascript" src="../static/jquery/plugins/file-upload/js/jquery.fileupload.js"
+	th:src="@{/static/jquery/plugins/file-upload/js/jquery.fileupload.js}"></script>
+<script type="text/javascript" src="../static/jquery/plugins/file-upload/js/jquery.fileupload-fp.js"
+	th:src="@{/static/jquery/plugins/file-upload/js/jquery.fileupload-fp.js}"></script>
+<script type="text/javascript" src="../static/jquery/plugins/file-upload/js/jquery.fileupload-ui.js"
+	th:src="@{/static/jquery/plugins/file-upload/js/jquery.fileupload-ui.js}"></script>
 
-<script type="text/javascript"
-	src="./static/scripts/modernizr-latest.js"
-	th:src="@{/static/scripts/modernizr-latest.js}"></script>
-<script type="text/javascript" src="./static/scripts/esp-main.js"
-	th:src="@{/static/scripts/esp-main.js}"></script>
+ <script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	$(document).ready(function() {
+		$.getJSON("/esp/static/json/datepicker_options_ko.json", function(data){
+		}).success(function(data, textStatus, jqXHR){
+			$("#s_fdate").datepicker(data);
+			$("#s_tdate").datepicker(data);
+		}).error(function(data, textStatus, jqXHR){
+			var reason = "=== Datepicker options data load error ===\n";
+			reason += " - reason : " + textStatus + "\n";
+			reason += "==========================================\n";
+			reason += " - Date picker load with default options.\n";
+			reason += "==========================================";
+			if (console.log) {
+				console.log(reason);
+			} else {
+				alert(reason);
+			}
+			$("#s_fdate").datepicker();
+			$("#s_tdate").datepicker();
+		});
+		
+		$("#fileupload").fileupload({
+			url : '/esp/upload',
+			dataType : 'json',
+			type: 'POST',
+			maxFileSize : 5000000,
+			maxNumberOfFiles : 1,
+			acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
+			done: function (e, data) {
+				alert("업로드 완료");
+            },
+			stop: function (e) {
+	            var that = $(this).data('blueimp-fileupload') ||
+	                    $(this).data('fileupload'),
+	                deferred = that._addFinishedDeferreds();
+	            $.when.apply($, that._getFinishedDeferreds())
+	                .done(function () {
+	                    that._trigger('stopped', e);
+	                });
+	            that._transition($(this).find('.fileupload-progress')).done(
+	                function () {
+	                    deferred.resolve();
+	                }
+	            );
+	        },
+	        destroy: function (e, data) {
+	            var that = $(this).data('blueimp-fileupload') ||
+	                    $(this).data('fileupload');
+	            if (data.url) {
+	                $.ajax(data);
+	            }
+	            that._adjustMaxNumberOfFiles(1);
+	            that._transition($(this).find('.fileupload-progress')).done(
+	                function () {
+	                	$(this).find('.progress')
+	                    .attr('aria-valuenow', '0')
+	                    .find('.bar').css('width', '0%');
+	                	$(this).find('.progress-extended').html('&nbsp;');
+	                }
+	            );
+	            that._transition(data.context).done(
+	                function () {
+	                    $(this).remove();
+	                    that._trigger('destroyed', e, data);
+	                }
+	            );
+	        }
+		});
+	});
+/*]]>*/
+</script>
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+	{% for (var i=0, file; file=o.files[i]; i++) { %}
+	    <tr class="template-upload fade">
+	        <td class="preview">
+				<span class="fade"></span>
+			</td>
+			<td class="name">filename : <span>{%=file.name%}</span></td>
+			<td class="size">filesize : <span>{%=o.formatFileSize(file.size)%}</span></td>
+	        {% if (file.error) { %}
+	            <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
+	        {% } %}
+			<td class="start hide">{% if (!o.options.autoUpload) { %}
+                <button class="btn btn-primary">
+                    <i class="icon-upload icon-white"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}</td>
+			<td class="cancel hide">{% if (!i) { %}
+            	<button class="btn btn-warning">
+                	<i class="icon-ban-circle icon-white"></i>
+                	<span>Cancel</span>
+            	</button>
+			{% } %}</td>
+	    </tr>
+	{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+	{% for (var i=0, file; file=o.files[i]; i++) { %}
+	    <tr class="template-download fade">
+	        <td class="preview">
+				<span class="fade"></span>
+			</td>
+			<td class="name">name : <span>{%=file.name%}</span></td>
+			<td class="size">size : <span>{%=o.formatFileSize(file.size)%}</span></td>
+	        {% if (file.error) { %}
+	            <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
+	        {% } %}
+			<td class="delete">
+            	<button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+	                <i class="icon-trash icon-white"></i>
+                	<span>Delete</span>
+            	</button>
+        	</td>
+	    </tr>
+	{% } %}
+</script>
 </head>
 <body>
-	<div id="header-container">
-		<header class="wrapper clearfix">
-			<h1 id="title"><a href="../main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
-			<nav>
-				<ul>
-					<li>
-						<a href="pages/login.html" th:href="@{/login}" 
-							th:if="${#strings.isEmpty(currentUser.id)}"
-							th:text="#{label.menu.head.login}">로그인</a>
-					</li>
-					<!-- 
-					<li>
-						<a href="/j_spring_security_logout" th:href="@{/j_spring_security_logout}"
-							th:if="${!#strings.isEmpty(currentUser.id)}"
-							th:text="#{label.menu.head.logout}">로그아웃</a>
-					</li>
-					 -->
-					<li>
-						<a href="pages/schedule.html" th:href="@{/schedule}" 
-							th:text="#{label.menu.head.schedule}">일정</a>
-					</li>
-					<li>
-						<a href="pages/statistics.html" th:href="@{/statistics}" 
-							th:text="#{label.menu.head.statistics}">통계</a>
-					</li>
-					<li>
-						<a href="pages/admin.html" th:href="@{/admin}" 
-							th:text="#{label.menu.head.admin}">관리</a>
-					</li>
-				</ul>
-			</nav>
-		</header>
-	</div>
-	<div id="main-container">
-		<div id="main" class="wrapper clearfix">
-			<aside id="user-panel">
-				<h3 th:text="${currentUser.name}">이름</h3>
-				<h3 th:text="${currentUser.email}">이메일</h3>
-				<h3><a href="#">게시글(<span th:text="${#lists.size(currentUser.contents)}">0</span>)</a></h3>
-				<h3><a href="#">벌점(<span th:text="${currentUser.penaltyScore}">0</span>)</a></h3>
-			</aside>
-			<p></p>
-			<article th:if="${#lists.isEmpty(allArticles)}">
-				<div class="std-reg">
-					<form action="" method="post" class="well">
-						<fieldset>
-							<label>스터디명</label>
-								<input id="s_nm" name="s_nm"
-									type="text" required="required" autofocus="autofocus"
-									class="input span3" placeholder="스터디명"/>
-							<label>시작일</label>
-								<input id="s_fdate" name="s_fdate"
-									type="date" required="required" autofocus="autofocus"
-									class="input span3" placeholder="날짜"/>
-							<label>종료일</label>
-								<input id="s_tdate" name="s_tdate"
-									type="date" required="required" autofocus="autofocus"
-									class="input span3" placeholder="날짜"/>
+	<section layout:fragment="main-content">
+		<article>
+			<div class="std-reg">
+				<div class="table">
+					<div class="tr">
+						<div class="td">
+							<form action="/study/reg" th:action="@{/study/reg}" method="POST" class="well" th:object="${studyRoom}">
+									<div class="td">
+										<label>스터디명</label>
+										<input id="s_nm" name="name"
+											type="text" required="required" autofocus="autofocus"
+											class="input span3" placeholder="스터디명" />
+										<label>시작일</label>
+										<input id="s_fdate" name="startDate"
+											type="text" required="required"
+											class="input span3" placeholder="날짜 선택" />
+										<label>종료일</label>
+										<input id="s_tdate" name="endDate"
+											type="text" required="required"
+											class="input span3" placeholder="날짜 선택" />
+										<label>소개글</label>
+										<textarea name="description" class="input span3" maxlength="100"
+											rows="3" cols="33" 
+											placeholder="입력가능 한 글자는 100자 입니다."></textarea>		
+									</div>
+								<p></p>
+								<input type="submit" class="btn" value="등록" />
+							</form>
+						</div>
+						<div class="td">
 							<label>아이콘</label>
-								<input id="s_icon" name="s_icon"
-									type="file" required="required" autofocus="autofocus"
-									class="input span3" placeholder="아이콘"/>
-							<label>소개글</label>
-								<textarea class="input span3" maxlength="100"
-									rows="3" cols="33" 
-									placeholder="입력가능 한 글자는 100자 입니다."></textarea>
-						</fieldset>
-						<p></p>
-						<input type="submit" class="btn" value="등록"/>
-					</form>
+							<form id="fileupload" action="/upload" th:action="@{/upload}" method="POST"
+								enctype="multipart/form-data" th:object="${image}">
+								<div class="row fileupload-buttonbar">
+						            <div>
+						                <span class="btn btn-success fileinput-button">
+						                    <i class="icon-plus icon-white"></i>
+						                    <span>Add</span>
+						                    <input type="file" name="file" multiple="multiple"/>
+						                </span>
+						                <button type="submit" class="btn btn-primary start">
+						                    <i class="icon-upload icon-white"></i>
+						                    <span>Start</span>
+						                </button>
+						                <button type="reset" class="btn btn-warning cancel">
+						                    <i class="icon-ban-circle icon-white"></i>
+						                    <span>Cancel</span>
+						                </button>
+						            </div>
+						            <div class="fileupload-progress">
+						                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+						                    <div class="bar" style="width:0%;"></div>
+						                </div>
+						                <div class="progress-extended"></div>
+						            </div>
+						        </div>
+						        <table role="presentation" class="table table-striped upload-table">
+						        	<tbody class="files" data-toggle="modal-gallery" 
+						        		data-target="#modal-gallery"></tbody>
+						        </table>
+							</form>
+						</div>
+					</div>
 				</div>
-			</article>
-		</div>
-	</div>
-	<!-- #main-container -->
-
-	<div id="footer-container">
-		<footer class="wrapper">
-			<h3>footer</h3>
-		</footer>
-	</div>
+			</div>
+		</article>
+	</section>
 </body>
 </html>

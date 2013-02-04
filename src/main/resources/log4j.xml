@@ -12,7 +12,7 @@
 	
 	<!-- Application Loggers -->
 	<logger name="com.eyeq.esp">
-		<level value="info" />
+		<level value="debug" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
@@ -30,6 +30,11 @@
 
 	<logger name="org.springframework.web">
 		<level value="info" />
+	</logger>
+	
+	<!-- hibernate 의 show_sql 설정과 관계없이 log 설정에 의해 볼수있음 -->
+	<logger name="org.hibernate.tool.hbm2ddl">
+		<level value="debug" />
 	</logger>
 
 	<!-- Root Logger -->

@@ -4,7 +4,7 @@
 	<groupId>com.eyeq.esp</groupId>
 	<artifactId>esp</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.2</version>
+	<version>0.1.1</version>
 	<name>ESP Project</name>
 	<url>http://dev.eyeq.co.kr/esp/</url>
 	<properties>
@@ -15,17 +15,19 @@
 		<junit.version>4.11</junit.version>
 		<mysql.connector.version>5.1.22</mysql.connector.version>
 		<c.logging.version>1.1.1</c.logging.version>
-		<c.lang.version>3.1</c.lang.version>
 		<c.dbcp.version>1.4</c.dbcp.version>
 		<c.pool.version>1.6</c.pool.version>
-		<h.core.version>4.1.9.Final</h.core.version>
-		<h.validator.version>4.3.1.Final</h.validator.version>
-		<h.entitymanager.version>3.4.0.GA</h.entitymanager.version>
+		<c.fileupload.version>1.2.2</c.fileupload.version>
+		<c.io.version>2.4</c.io.version>
+		<h.entitymanager.version>3.6.10.Final</h.entitymanager.version>
 		<c3p0.version>0.9.1.2</c3p0.version>
-		<thymeleaf.version>2.0.14</thymeleaf.version>
+		<thymeleaf.version>2.0.15</thymeleaf.version>
 		<cglib.version>2.2.2</cglib.version>
-		<jsp.version>2.1</jsp.version>
-		<jstl.version>1.2</jstl.version>
+		<hsqldb.version>2.2.9</hsqldb.version>
+		<ojdbc.version>10.2.0.4.0</ojdbc.version>
+		<slf4j.version>1.6.1</slf4j.version>
+		<jackson.mapper.version>1.9.11</jackson.mapper.version>
+		<thymeleaf.layout.version>1.0.5</thymeleaf.layout.version>
 	</properties>
 
 	<repositories>
@@ -123,22 +125,6 @@
 			<version>${s.security.version}</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.springframework.ldap</groupId> <artifactId>spring-ldap-core</artifactId> 
-			<version>${spring.ldap.version}</version> </dependency> <dependency> <groupId>org.springframework.ldap</groupId> 
-			<artifactId>spring-ldap-core-tiger</artifactId> <version>${spring.ldap.version}</version> 
-			</dependency> <dependency> <groupId>org.springframework.ldap</groupId> <artifactId>spring-ldap-odm</artifactId> 
-			<version>${spring.ldap.version}</version> </dependency> <dependency> <groupId>org.springframework.ldap</groupId> 
-			<artifactId>spring-ldap-ldif-core</artifactId> <version>${spring.ldap.version}</version> 
-			</dependency> <dependency> <groupId>org.springframework.ldap</groupId> <artifactId>spring-ldap-ldif-batch</artifactId> 
-			<version>${spring.ldap.version}</version> </dependency> -->
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -149,11 +135,6 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>${c.logging.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>${c.lang.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>
@@ -182,7 +163,7 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${h.entitymanager.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>c3p0</groupId>
 			<artifactId>c3p0</artifactId>
@@ -196,29 +177,54 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>${jsp.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>${jstl.version}</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.1</version>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>${ojdbc.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${jackson.mapper.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${c.fileupload.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${c.io.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>${hsqldb.version}</version>
 			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc14</artifactId>
-			<version>10.2.0.4.0</version>
+			<groupId>nz.net.ultraq.web.thymeleaf</groupId>
+			<artifactId>thymeleaf-layout-dialect</artifactId>
+			<version>${thymeleaf.layout.version}</version>
 		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>esp</finalName>
@@ -228,7 +234,9 @@
 version
 0.0.1 : Start
 
-0.0.2 : Add LDAP login integration.</description>
+0.1.0 : Add LDAP login integration.
+
+0.1.1 : Study Registration.</description>
 	<organization>
 		<name>Hana Lee</name>
 		<url>http://dev.eyeq.co.kr/wp/hana</url>

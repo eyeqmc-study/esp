@@ -3,147 +3,156 @@
 <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="pages/commons/layout">
 <!--<![endif]-->
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-<title th:text="#{title.tab}">ESP</title>
-
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-
-<link rel="stylesheet" href="./static/styles/initializr-style.css"
-	th:href="@{/static/styles/initializr-style.css}" />
-<link rel="stylesheet" href="./static/styles/esp-main.css"
-	th:href="@{/static/styles/esp-main.css}" />
-<link rel="stylesheet" type="text/css" href="./static/styles/common.css"
-	th:href="@{/static/styles/common.css}">
-
-<script type="text/javascript"
-	src="./static/scripts/modernizr-latest.js"
-	th:src="@{/static/scripts/modernizr-latest.js}"></script>
-<script type="text/javascript" src="./static/scripts/esp-main.js"
-	th:src="@{/static/scripts/esp-main.js}"></script>
+<link rel="stylesheet" type="text/css" href="./static/jquery/plugins/qtip2/jquery.qtip.css"
+	th:href="@{/static/jquery/plugins/qtip2/jquery.qtip.css}" />
+	
+<link rel="stylesheet" type="text/css" href="./static/styles/qtip-custom.css"
+	th:href="@{/static/styles/qtip-custom.css}" />
+<link rel="stylesheet" type="text/css" href="./static/jquery/plugins/ParallaxContentSlider/css/parallax-custom-style.css"
+	th:href="@{/static/jquery/plugins/ParallaxContentSlider/css/parallax-custom-style.css}" />
+	
+<script type="text/javascript" src="./static/jquery/plugins/qtip2/jquery.qtip.js"
+	th:src="@{/static/jquery/plugins/qtip2/jquery.qtip.js}"></script>
+<script type="text/javascript" src="./static/jquery/plugins/ParallaxContentSlider/js/jquery.cslider.js"
+	th:src="@{/static/jquery/plugins/ParallaxContentSlider/js/jquery.cslider.js}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#no-study img.preview").qtip({
+		content: '<img src="./static/images/red-x-icon.jpg"/>',
+		show: 'mouseover',
+		hide: 'mouseout',
+		style : {
+			classes : 'esp-qtip-custom'
+		}
+	});
+	$(".da-link").qtip({
+		content: '제목 테스트 입니다.',
+		show: 'mouseover',
+		hide: 'mouseout',
+		position: {
+			at: 'bottom center'
+		}
+	});
+	$('#da-slider').cslider({
+		current : 0,
+		autoplay: true,
+		interval: 4000
+	});
+});
+</script>
 </head>
 <body>
-
-	<div id="header-container">
-		<header class="wrapper clearfix">
-			<h1 id="title"><a href="main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
-			<nav>
-				<ul>
-					<li class="e-hide-display">
-						<a href="pages/login.html" th:href="@{/login}" 
-							th:if="${#strings.isEmpty(currentUser.id)}"
-							th:text="#{label.menu.head.login}">로그인</a>
-					</li>
-					<li>
-						<a href="/j_spring_security_logout" th:href="@{/j_spring_security_logout}"
-							th:if="${!#strings.isEmpty(currentUser.id)}"
-							th:text="#{label.menu.head.logout}">로그아웃</a>
-					</li>
-					<li>
-						<a href="pages/schedule.html" th:href="@{/schedule}" 
-							th:text="#{label.menu.head.schedule}">일정</a>
-					</li>
-					<li>
-						<a href="pages/statistics.html" th:href="@{/statistics}" 
-							th:text="#{label.menu.head.statistics}">통계</a>
-					</li>
-					<li>
-						<a href="pages/admin.html" th:href="@{/admin}" 
-							th:text="#{label.menu.head.admin}">관리</a>
-					</li>
-				</ul>
-			</nav>
-		</header>
-	</div>
-	<div id="main-container">
-		
-		<div id="main" class="wrapper clearfix">
-			<aside id="user-panel">
-				<h3 th:text="${currentUser.name}">이름</h3>
-				<h3 th:text="${currentUser.email}">이메일</h3>
-				<h3><a href="#">게시글(<span th:text="${#lists.size(currentUser.articles)}">0</span>)</a></h3>
-				<h3><a href="#">벌점(<span th:text="${currentUser.penaltyScore}">0</span>)</a></h3>
-			</aside>
-			<p></p>
-			<article th:if="${#lists.isEmpty(allArticles)}">
-				<header class="ct-bg-e44d26">
-					<b>진행중</b>
-				</header>
-				<table class="wd10 ct-box-e44d26" border="1">
-					<tbody>
-						<tr>
-							<th class="wd4">
-								<div>아이콘영역</div>
-								<div>TOGA 설치</div>
-								<div class="radius-box-5 reg-study-outer">
-									<a href="pages/study-reg.html" class="radius-box-5 reg-study">등록</a>
+	<section id="study-room" layout:fragment="main-content">
+		<article th:if="${enabledStudyRoom != null}">
+			<header class="ct-bg-e44d26">
+				<b>진행중</b>
+			</header>
+			<table class="study-schedule wd10 ct-box-f16529">
+				<tbody>
+					<tr>
+						<td class="wd6">
+							<div id="study-room" class="da-slider">
+								<div class="da-slide da-slide-current">
+									<div class="da-img"><img src="/uploaded/images/?id=1" th:src="${enabledStudyRoom.studyImage.url}" /></div>
+									<h2 class="hide"></h2>
+									<a href="pages/study-main.html" th:href="@{/study}" class="ellipsis da-link" th:text="${enabledStudyRoom.name}" onclick="javascript:alert('왜 클릭질임?')">No Study</a>
+									<p class="p1" th:text="#{label.study.ongoing.presenter(${enabledStudyRoom.owner.name})}">진행자 : -</p>
+									<p class="p2" th:text="#{label.study.ongoing.startDate(${#dates.format(enabledStudyRoom.startDate, 'yyyy-MM-dd')})}">시작일 : -</p>
+									<p class="p3" th:text="#{label.study.ongoing.endDate(${#dates.format(enabledStudyRoom.endDate,'yyyy-MM-dd')})}">종료일 : -</p>
+									<p class="p4" th:text="#{label.study.ongoing.memberCnt(${#lists.size(enabledStudyRoom.members)})}">참여자 : -</p>
 								</div>
-							</th>
-							<td class="wd6">
-								<div class="table wd10 ct-box">
-									<div class="tr">
-										<div class="td wd3">진행자</div><div class="td wd7">이하나</div>
-									</div>
-									<div class="tr">
-										<div class="td wd3">시작일</div><div class="td wd7">-</div>
-									</div>
-									<div class="tr">
-										<div class="td wd3">종료일</div><div class="td wd7">-</div>
-									</div>
-									<div class="tr">
-										<div class="td wd3">참여자</div><div class="td wd7">-</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>				
-			</article>
-			<article th:if="${#lists.isEmpty(allArticles)}">
-				<header class="ct-bg-f16529">
-					<b>진행예정</b>
-				</header>
-				
-				<table class="wd10 ct-box-f16529">
-					<tbody>
-						<tr>
-							<th class="wd4">
-								<div>아이콘영역</div>
-								<div>타이틀영역</div>
-							</th>
-							<td class="wd6">
-								<div class="table wd10 ct-box">
-									<div class="tr">
-										<div class="td wd3">진행예정자</div><div class="td wd7">임정묵</div>
-									</div>
-									<div class="tr">
-										<div class="td wd3">시작예정일</div><div class="td wd7">-</div>
-									</div>
-									<div class="tr">
-										<div class="td wd3">종료예정일</div><div class="td wd7">-</div>
-									</div>
-									<div class="tr">
-										<div class="td wd3">참여예정자</div><div class="td wd7">-</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>				
-			</article>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</article>
+		<article th:if="${#lists.isEmpty(allStudyRooms)}">
+			<header class="ct-bg-f16529">
+				<b>등록된 스터디 없음!</b>
+			</header>
 			
-		</div>
-	</div>
-	<!-- #main-container -->
-
-	<div id="footer-container">
-		<footer class="wrapper">
-			<h3>footer</h3>
-		</footer>
-	</div>
+			<table class="study-schedule wd10 ct-box-f16529">
+				<tbody>
+					<tr>
+						<td class="wd6">
+							<div id="no-study" class="da-slider">
+								<div class="da-slide da-slide-current">
+									<div class="da-img"><img class="preview" src="./static/images/red-x-icon.jpg"/></div>
+									<h2 class="hide"></h2>
+									<a href="pages/study-main.html" th:href="@{/study}" class="ellipsis da-link" onclick="javascript:alert('왜 클릭질임?')">No Study</a>
+									<p class="p1" th:text="#{label.study.ongoing.presenter('-')}">진행자 : -</p>
+									<p class="p2" th:text="#{label.study.ongoing.startDate('-')}">시작일 : -</p>
+									<p class="p3" th:text="#{label.study.ongoing.endDate('-')}">종료일 : -</p>
+									<p class="p4" th:text="#{label.study.ongoing.memberCnt('-')}">참여자 : -</p>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</article>
+		<article>
+			<header class="ct-bg-f16529">
+				<b>진행예정</b>
+			</header>
+			
+			<table class="study-schedule wd10 ct-box-f16529">
+				<tbody>
+					<tr>
+						<td class="wd6">
+							<div id="da-slider" class="da-slider">
+								<div class="da-slide">
+									<div class="da-img"><img src="./static/images/red-x-icon.jpg"/></div>
+									<h2 class="hide"></h2>
+									<a href="#" class="ellipsis da-link">제목 테스트 입니다.</a>
+									<p class="p1" th:text="#{label.study.waiting.presenter('이하나')}">진행예정자 : 이하나</p>
+									<p class="p2" th:text="#{label.study.waiting.startDate('2013년 3월 19일')}">시작예정일 : 2013년 3월 19일</p>
+									<p class="p3" th:text="#{label.study.waiting.endDate('2013년 4월 1일')}">종료예정일 : 2013년 4월 4일</p>
+									<p class="p4" th:text="#{label.study.waiting.memberCnt(5)}">참여예정자 : 5명</p>
+								</div>
+								<div class="da-slide">
+									<div class="da-img"><img src="./static/images/red-x-icon.jpg"/></div>
+									<h2 class="hide"></h2>
+									<a href="#" class="ellipsis da-link">제목 테스트 입니다.</a>
+									<p class="p1" th:text="#{label.study.waiting.presenter('림기영')}">진행예정자 : 이하나</p>
+									<p class="p2" th:text="#{label.study.waiting.startDate('2013년 4월 9일')}">시작예정일 : 2013년 3월 19일</p>
+									<p class="p3" th:text="#{label.study.waiting.endDate('2013년 4월 21일')}">종료예정일 : 2013년 4월 4일</p>
+									<p class="p4" th:text="#{label.study.waiting.memberCnt(10)}">참여예정자 : 5명</p>
+								</div>
+								<div class="da-slide">
+									<div class="da-img"><img src="./static/images/red-x-icon.jpg"/></div>
+									<h2 class="hide"></h2>
+									<a href="#" class="ellipsis da-link">제목 테스트 입니다.</a>
+									<p class="p1" th:text="#{label.study.waiting.presenter('나삼광')}">진행예정자 : 이하나</p>
+									<p class="p2" th:text="#{label.study.waiting.startDate('2013년 5월 5일')}">시작예정일 : 2013년 3월 19일</p>
+									<p class="p3" th:text="#{label.study.waiting.endDate('2013년 5월 31일')}">종료예정일 : 2013년 4월 4일</p>
+									<p class="p4" th:text="#{label.study.waiting.memberCnt(3)}">참여예정자 : 5명</p>
+								</div>
+								<div class="da-slide">
+									<div class="da-img"><img src="./static/images/red-x-icon.jpg"/></div>
+									<h2 class="hide"></h2>
+									<a href="#" class="ellipsis da-link">제목 테스트 입니다.</a>
+									<p class="p1" th:text="#{label.study.waiting.presenter('조기태')}">진행예정자 : 이하나</p>
+									<p class="p2" th:text="#{label.study.waiting.startDate('2013년 6월 1일')}">시작예정일 : 2013년 3월 19일</p>
+									<p class="p3" th:text="#{label.study.waiting.endDate('2013년 6월 25일')}">종료예정일 : 2013년 4월 4일</p>
+									<p class="p4" th:text="#{label.study.waiting.memberCnt(7)}">참여예정자 : 5명</p>
+								</div>
+								<nav class="da-arrows">
+									<span class="da-arrows-prev"></span>
+									<span class="da-arrows-next"></span>
+								</nav>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</article>
+	</section>
 </body>
 </html>

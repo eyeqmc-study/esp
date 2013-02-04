@@ -1,20 +1,21 @@
 package com.eyeq.esp.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eyeq.esp.model.Article;
-import com.eyeq.esp.model.User;
+import com.eyeq.esp.model.ArticleReply;
 import com.eyeq.esp.service.AbstractJpaDaoService;
 import com.eyeq.esp.service.ArticleManager;
 
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:15:55
- * @revision $LastChangedRevision: 5847 $
- * @date $LastChangedDate: 2013-01-24 18:03:35 +0900 (목, 24 1월 2013) $
+ * @revision $LastChangedRevision: 5927 $
+ * @date $LastChangedDate: 2013-02-04 12:14:31 +0900 (월, 04 2월 2013) $
  * @by $LastChangedBy: jmlim $
  */
 @Service("articleManager")
@@ -34,13 +35,16 @@ public class ArticleManagerImpl extends AbstractJpaDaoService implements
 	 * @see com.eyeq.esp.service.ArticleManager#deleteArticle(com.eyeq.esp.model.Article)
 	 */
 	public void deleteArticle(Article article) {
-		getEntityManager().remove(article);
+		article.setDeletedDate(new Date());
+		article.setEnabled(false);
+		getEntityManager().merge(article);
 	}
 
 	/**
 	 * @see com.eyeq.esp.service.ArticleManager#updateArticle(com.eyeq.esp.model.Article)
 	 */
 	public void updateArticle(Article article) {
+		article.setModifiedDate(new Date());
 		getEntityManager().merge(article);
 	}
 
@@ -48,7 +52,8 @@ public class ArticleManagerImpl extends AbstractJpaDaoService implements
 	 * @see com.eyeq.esp.service.ArticleManager#createArticle(com.eyeq.esp.model.Article)
 	 */
 	public void createArticle(Article article) {
-		getEntityManager().persist(article);
+		article.setCreatedDate(new Date());
+		getEntityManager().merge(article);
 	}
 
 	/**
@@ -69,20 +74,35 @@ public class ArticleManagerImpl extends AbstractJpaDaoService implements
 	}
 
 	/**
-	 * @see com.eyeq.esp.service.ArticleManager#getArticles(com.eyeq.esp.model.User)
+	 * @see com.eyeq.esp.service.ArticleManager#getArticleReply(java.lang.Integer)
 	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly = true)
-	public List<Article> getArticles(User user) {
-		List<Article> results = getEntityManager()
-				.createNamedQuery(
-						"com.eyeq.esp.model.Article@getArticles():param.userId")
-				.setParameter(0, user.getId()).getResultList();
-
-		if (results != null && results.size() > 0) {
-			return results;
-		}
-		return null;
+	public ArticleReply getArticleReply(Integer articleReplyId) {
+		// TODO Auto-generated method stub
+		return getEntityManager().find(ArticleReply.class, articleReplyId);
 	}
 
+	/**
+	 * @see com.eyeq.esp.service.ArticleManager#createArticleReply(com.eyeq.esp.model.ArticleReply)
+	 */
+	public void createArticleReply(ArticleReply reply) {
+		reply.setCreatedDate(new Date());
+		getEntityManager().merge(reply);
+	}
+
+	/**
+	 * @see com.eyeq.esp.service.ArticleManager#updateArticleReply(com.eyeq.esp.model.ArticleReply)
+	 */
+	public void updateArticleReply(ArticleReply reply) {
+		reply.setModifiedDate(new Date());
+		getEntityManager().merge(reply);
+	}
+
+	/**
+	 * @see com.eyeq.esp.service.ArticleManager#deleteArticleReply(com.eyeq.esp.model.ArticleReply)
+	 */
+	public void deleteArticleReply(ArticleReply reply) {
+		reply.setDeletedDate(new Date());
+		reply.setEnabled(false);
+		getEntityManager().merge(reply);
+	}
 }

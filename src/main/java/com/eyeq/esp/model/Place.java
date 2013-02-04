@@ -13,13 +13,13 @@ import javax.persistence.TemporalType;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:14:48
- * @revision $LastChangedRevision: 5840 $
- * @date $LastChangedDate: 2013-01-24 00:01:12 +0900 (목, 24 1월 2013) $
- * @by $LastChangedBy: jmlim $
+ * @revision $LastChangedRevision: 5921 $
+ * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
+ * @by $LastChangedBy: voyaging $
  */
 @Entity
 @Table(name = "PLACES")
-public class Place {// extends BaseEntity {
+public class Place {
 
 	@Id
 	@GeneratedValue
@@ -51,29 +51,21 @@ public class Place {// extends BaseEntity {
 	private Date deletedDate;
 
 	@Column(name = "ENABLED")
-	private Boolean enabled;
+	private Boolean enabled = true;
 
 	public Place() {
 	}
 
-	public Place(Integer id, Date createdDate, Date modifiedDate,
-			Date deletedDate, Boolean enabled, String name, String address,
-			String longitude, String latitude) {
-		this.id = id;
-		this.name = name;
-		this.address = address;
-		this.longitude = longitude;
-		this.latitude = latitude;
-		this.createdDate = createdDate;
-		this.modifiedDate = modifiedDate;
-		this.deletedDate = deletedDate;
-		this.enabled = enabled;
-	}
-
+	/**
+	 * @return the id
+	 */
 	public Integer getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -138,36 +130,63 @@ public class Place {// extends BaseEntity {
 		this.latitude = latitude;
 	}
 
+	/**
+	 * @return the createdDate
+	 */
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 
+	/**
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 
+	/**
+	 * @return the modifiedDate
+	 */
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
 
+	/**
+	 * @param modifiedDate
+	 *            the modifiedDate to set
+	 */
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 
+	/**
+	 * @return the deletedDate
+	 */
 	public Date getDeletedDate() {
 		return deletedDate;
 	}
 
+	/**
+	 * @param deletedDate
+	 *            the deletedDate to set
+	 */
 	public void setDeletedDate(Date deletedDate) {
 		this.deletedDate = deletedDate;
 	}
 
+	/**
+	 * @return the enabled
+	 */
 	public Boolean getEnabled() {
 		return enabled;
 	}
 
+	/**
+	 * @param enabled
+	 *            the enabled to set
+	 */
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
-
 }

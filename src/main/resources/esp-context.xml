@@ -12,14 +12,23 @@
 	<context:component-scan base-package="com.eyeq.esp" />
 
 	<!-- Data Source Declaration -->
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	<bean id="dataSource_oracle" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url"
-			value="jdbc:oracle:thin:@www.dropletsap.com:1521:orcl" />
+		<property name="url" value="jdbc:hsqldb:file:testdb" />
 		<property name="username" value="esp" />
 		<property name="password" value="esp" />
 		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="org.hsqldb.jdbc.JDBCDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:esp_test" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+		<property name="validationQuery"
+			value="select 1 from INFORMATION_SCHEMA.SYSTEM_USERS" />
 	</bean>
 
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
@@ -30,7 +39,9 @@
 	<bean id="jpaVendorAdapter"
 		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 		<property name="showSql" value="true" />
-		<property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect" />
+		<property name="generateDdl" value="false" />
+		<!-- <property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect" /> -->
+		<property name="databasePlatform" value="org.hibernate.dialect.HSQLDialect" />
 	</bean>
 
 	<bean id="entityManagerFactory"
@@ -53,5 +64,10 @@
 	<!-- Exporter that exposes the Hibernate statistics service via JMX. Autodetects 
 		the service MBean, using its bean name as JMX object name. -->
 	<context:mbean-export />
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="5000000" />
+	</bean>
 
 </beans>

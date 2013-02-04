@@ -3,9 +3,12 @@
 <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="pages/commons/layout">
 <!--<![endif]-->
 <head>
+<!-- layout 템플릿 내용 시작 (페이지 완성 후 삭제 필요) -->
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
@@ -15,72 +18,94 @@
 
 <link rel="stylesheet" href="../static/styles/initializr-style.css"
 	th:href="@{/static/styles/initializr-style.css}" />
+	
 <link rel="stylesheet" href="../static/styles/esp-main.css"
 	th:href="@{/static/styles/esp-main.css}" />
-
+	
 <script type="text/javascript"
 	src="./static/scripts/modernizr-latest.js"
 	th:src="@{/static/scripts/modernizr-latest.js}"></script>
-<script type="text/javascript" src="./static/scripts/esp-main.js"
+<script type="text/javascript" src="../static/scripts/esp-main.js"
 	th:src="@{/static/scripts/esp-main.js}"></script>
+
+<script type="text/javascript" src="../static/jquery/jquery-1.8.3.js"
+	th:src="@{/static/jquery/jquery-1.8.3.js}"></script>
+<!-- layout 템플릿 내용 끝 -->
 </head>
 <body>
-
-	<div id="header-container">
-		<header class="wrapper clearfix">
-			<h1 id="title" th:text="#{title.esp}">h1#title</h1>
-			<nav>
-				<ul>
-					<li>
-						<a href="pages/login.html" th:href="@{/login}" 
-							th:if="${#strings.isEmpty(currentUser.id)}"
-							th:text="#{label.menu.head.login}">로그인</a>
-					</li>
-					<!-- 
-					<li>
-						<a href="/j_spring_security_logout" th:href="@{/j_spring_security_logout}"
-							th:if="${!#strings.isEmpty(currentUser.id)}"
-							th:text="#{label.menu.head.logout}">로그아웃</a>
-					</li>
-					 -->
-					<li>
-						<a href="pages/schedule.html" th:href="@{/schedule}" 
-							th:text="#{label.menu.head.schedule}">일정</a>
-					</li>
-					<li>
-						<a href="pages/statistics.html" th:href="@{/statistics}" 
-							th:text="#{label.menu.head.statistics}">통계</a>
-					</li>
-					<li>
-						<a href="pages/admin.html" th:href="@{/admin}" 
-							th:text="#{label.menu.head.admin}">관리</a>
-					</li>
-				</ul>
-			</nav>
-		</header>
-	</div>
-	<div id="main-container">
-		<div id="main" class="wrapper clearfix">
-			<aside>
-				<h3 th:text="${currentUser.name}">이름</h3>
-				<h3 th:text="${currentUser.email}">이메일</h3>
-				<h3>게시글(<span th:text="${#lists.size(currentUser.contents)}">0</span>)</h3>
-				<h3>벌점(<span th:text="${currentUser.penaltyScore}">0</span>)</h3>
-			</aside>
-			
-			<article th:if="${#lists.isEmpty(allArticles)}">
-				<section>
-					
-				</section>
-			</article>
-		</div>
-	</div>
-	<!-- #main-container -->
-
-	<div id="footer-container">
-		<footer class="wrapper">
-			<h3>footer</h3>
-		</footer>
-	</div>
+	<section layout:fragment="main-content">
+		<article>
+			<div class="td adm-cls">
+				<h3>스터디원 이름</h3>
+				<div class="tr">
+					<div class="td "><input type="radio" id="chk_name01" name="radio_name"/></div>
+					<div class="td indent"><label for="chk_name01">이하나</label></div>
+				</div>
+				<div class="tr">
+					<div class="td"><input type="radio" id="chk_name02" name="radio_name"/></div>
+					<div class="td indent"><label for="chk_name02">임정묵</label></div>
+				</div>
+				<div class="tr">
+					<div class="td"><input type="radio" id="chk_name03" name="radio_name"/></div>
+					<div class="td indent"><label for="chk_name03">김주찬</label></div>
+				</div>
+				<div class="tr">
+					<div class="td"><input type="radio" id="chk_name04" name="radio_name" checked="checked"/></div>
+					<div class="td indent"><label for="chk_name04">나삼광</label></div>
+				</div>
+				<div class="tr">
+					<div class="td"><input type="radio" id="chk_name05" name="radio_name"/></div>
+					<div class="td indent"><label for="chk_name05">배석화</label></div>
+				</div>
+				<div class="tr">
+					<div class="td"><input type="radio" id="chk_name06" name="radio_name"/></div>
+					<div class="td indent"><label for="chk_name06">송일근</label></div>
+				</div>
+				<div class="tr">
+					<div class="td"><input type="radio" id="chk_name07" name="radio_name"/></div>
+					<div class="td indent"><label for="chk_name07">임기영</label></div>
+				</div>
+			</div>
+			<div class="td adm-content">
+				<h3>나삼광</h3>
+				<table class="width300">
+					<thead class="ct-bg-f16529">
+						<tr>
+							<th class="wd5">벌점이유</th>
+							<th class="wd2">점수</th>
+							<th class="wd2">누계</th>
+							<th class="wd1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="ct-border-f16529">연락 후 불참</td>
+							<td class="ct-border-f16529">1</td>
+							<td class="ct-border-f16529">1</td>
+							<td class="ct-border-f16529"><input type="button" value="수정"/></td>
+						</tr>
+						<tr>
+							<td class="ct-border-f16529">연락 후 불참</td>
+							<td class="ct-border-f16529">1</td>
+							<td class="ct-border-f16529">2</td>
+							<td class="ct-border-f16529"><input type="button" value="수정"/></td>
+						</tr>
+						<tr>
+							<td class="ct-border-f16529">연락 후 불참</td>
+							<td class="ct-border-f16529">1</td>
+							<td class="ct-border-f16529">3</td>
+							<td class="ct-border-f16529"><input type="button" value="수정"/></td>
+						</tr>
+						<tr>
+							<td class="ct-border-f16529"><input type="text" class="width150"/></td>
+							<td class="ct-border-f16529"><input type="text" class="width50"/></td>
+							<td class="ct-border-f16529"></td>
+							<td class="ct-border-f16529"><input type="button" value="추가"/></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</article>
+	</section>
 </body>
 </html>
