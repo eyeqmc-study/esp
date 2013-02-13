@@ -10,6 +10,7 @@
 		<config>src/main/resources/esp-context.xml</config>
 		<config>src/main/resources/esp-security-context.xml</config>
 		<config>src/main/webapp/WEB-INF/esp-servlet.xml</config>
+		<config>src/test/resources/esp-test-context.xml</config>
 	</configs>
 	<configSets>
 	</configSets>

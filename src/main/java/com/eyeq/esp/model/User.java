@@ -23,16 +23,16 @@ import javax.persistence.TemporalType;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:11:00
- * @revision $LastChangedRevision: 5921 $
- * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 6000 $
+ * @date $LastChangedDate: 2013-02-12 21:09:28 +0900 (화, 12 2월 2013) $
+ * @by $LastChangedBy: samkwang.na $
  */
 @Entity
 @Table(name = "USERS")
 @NamedQueries({
 		@NamedQuery(name = "com.eyeq.esp.model.User@getUser():param.userId", query = "from User as user where ID = :userId"),
 		@NamedQuery(name = "com.eyeq.esp.model.User@getUser():param.uId", query = "from User as user where U_ID = :uId"),
-		@NamedQuery(name = "com.eyeq.esp.model.User@getUsers()", query = "from User as user") })
+		@NamedQuery(name = "com.eyeq.esp.model.User@getUser()", query = "from User as user") })
 public class User {
 
 	@Id
@@ -84,6 +84,9 @@ public class User {
 
 	@Column(name = "ROLE")
 	private String role;
+
+	@OneToMany(targetEntity = Penalty.class, cascade = CascadeType.ALL)
+	private Set<Penalty> penalties;
 
 	public User() {
 	}
@@ -142,8 +145,33 @@ public class User {
 	/**
 	 * @param article
 	 */
-	public void addArticle(Article article) {
+	protected void addArticle(Article article) {
 		getArticles().add(article);
+	}
+
+	/**
+	 * @param penalty
+	 */
+	protected void addPenalty(Penalty penalty) {
+		getPenalties().add(penalty);
+	}
+
+	/**
+	 * @return the penalties
+	 */
+	public Set<Penalty> getPenalties() {
+		if (this.penalties == null) {
+			this.penalties = new HashSet<Penalty>();
+		}
+		return this.penalties;
+	}
+
+	/**
+	 * @param penalties
+	 *            the penalties to set
+	 */
+	public void setPenalties(Set<Penalty> penalties) {
+		this.penalties = penalties;
 	}
 
 	/**

@@ -1,0 +1,133 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="pages/commons/layout">
+<!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html;" charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<title th:text="#{title.tab}">ESP</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" type="text/css" href="../static/css3_tabbed_nav/css/esp-custom-style.css"
+	th:href="@{/static/css3_tabbed_nav/css/esp-custom-style.css}" />
+<link rel="stylesheet" type="text/css" href="../static/styles/study-main.css"
+	th:href="@{/static/styles/study-main.css}" />
+<link rel="stylesheet" type="text/css" href="../../static/styles/article.css"
+th:href="@{/static/styles/article.css}" />
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#tab-menu .tab-list a.active").removeClass("active");
+		$("#tab-menu .tab-list a.study-board").addClass("active");
+	});
+</script>
+
+<style type="text/css">
+#tab-main {
+	height: auto;
+}
+
+#tab-content p {
+	margin: 5px;
+}
+</style>
+</head>
+<body>
+	<section layout:fragment="main-content">
+		<article>
+		   	<div id="tab-wrapper">
+				<div id="tab-content">
+					<div id="tab-menu" th:include="pages/study-main :: tab-menu">
+					</div>
+					
+					<div id="tab-main">
+						<div id="study-article">
+							<div class="article-header well well-small article-well ellipsis">
+								<span class="article-title"><a th:text="${article.title}">제목</a></span>
+								<span class="article-writer" th:text="${article.owner.uid}">이름</span>
+							</div>
+							<div class="article-body">
+								<textarea id="article-content" name="content" rows="10" cols="50" th:text="${article} ? ${article.content} : ''">content</textarea>
+								<script type="text/javascript">
+									//<![CDATA[
+									 CKEDITOR.replace( 'article-content',{
+										 height: "200px",
+										 readOnly: true,
+										 toolbar:[]
+										 } );
+									//]]>
+								</script>
+							</div>
+							<div class="article-footer">
+								<a th:href="@{/study-article/edit-form(articleId=${article.id},studyRoomId=${studyRoomId})}" class="btn btn-info btn-mini">
+									글수정
+								</a>
+								<a th:href="@{/study-article/delete(articleId=${article.id},studyRoomId=${studyRoomId})}" class="btn btn-mini btn-info">
+									글삭제
+								</a>
+								<a th:href="@{/study-article/list(studyRoomId=${studyRoomId})}" class="btn btn-mini btn-info">
+									<span>목록</span>
+								</a>
+							</div>
+							
+							<div class="article-reply">
+								<!-- commentList close -->
+								<form method="post" th:action="@{/study-article-reply/edit-form-submit}" style="margin: 0">
+									<div class="reply-write">
+										<p class="clear">
+											<textarea id="article-reply-content" name="content" rows="3"></textarea>
+											<script type="text/javascript">
+												//<![CDATA[
+												 CKEDITOR.replace( 'article-reply-content',{
+													 height: "60px",
+													 toolbar:
+															[
+																[]
+															]
+													 } );
+												//]]>
+											</script>
+										</p>
+										<p>
+											<input type="hidden" name="articleId" th:value="${article.id}" />
+											<input type="hidden" name="studyRoomId" th:value="${studyRoomId}"/>
+											<input type="submit" value="댓글 달기" class="btn btn-mini btn-primary" />
+										</p>
+									</div><!-- commentWrite close -->
+								</form>
+								
+
+								<ul class="reple_list">
+									<li th:each="reply : ${articleReplies}">
+										<div class="user_info">
+											<a th:text="${reply.owner.uid}">임정묵</a><span th:text="${reply.createdDate}">12.06 13:20</span> 
+											<a th:href="@{/study-article-reply/delete(articleId=${article.id},articleReplyId=${reply.articleReplyId},studyRoomId=${studyRoomId})}"
+												class="icon-remove" title="삭제"></a>
+										</div>
+										<div class="arrow_parent">
+											<div th:utext="${reply.content}" class="reply_content">
+											내용
+											</div>
+											<span class="arrow_l"></span>
+										</div>
+									</li>
+								</ul>
+								
+							</div>
+						</div>
+					</div>
+					
+					<div class="side-title" th:include="pages/study-main :: side-title">
+					</div>
+				</div>
+			</div>
+		</article>
+	</section>
+</body>
+</html>

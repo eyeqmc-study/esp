@@ -1,10 +1,7 @@
 package com.eyeq.esp.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -20,25 +17,23 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
-
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:14:54
- * @revision $LastChangedRevision: 5921 $
- * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
+ * @revision $LastChangedRevision: 5999 $
+ * @date $LastChangedDate: 2013-02-12 07:22:21 +0900 (화, 12 2월 2013) $
  * @by $LastChangedBy: voyaging $
  */
 @Entity
 @Table(name = "STUDYROOMS")
 @NamedQueries({
-		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms():param.ownerId", query = "from StudyRoom as studyRoom where OWNER = :ownerId"),
-		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms():param.enabled", query = "from StudyRoom as studyRoom where ENABLED = :enabled"),
+		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms(ownerId)", query = "from StudyRoom as studyRoom where OWNER = :ownerId"),
+		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms(enabled)", query = "from StudyRoom as studyRoom where ENABLED = :enabled"),
 		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms()", query = "from StudyRoom as studyRoom") })
 public class StudyRoom {
 
@@ -70,6 +65,7 @@ public class StudyRoom {
 	private Date endDate;
 
 	@OneToMany(targetEntity = Article.class, mappedBy = "studyRoom", cascade = CascadeType.ALL)
+	@OrderBy("id desc")
 	private Set<Article> articles;
 
 	@OneToOne
@@ -206,67 +202,20 @@ public class StudyRoom {
 	}
 
 	/**
-	 * @return the article
+	 * @return the articles
 	 */
-	protected Set<Article> getArticlesInternal() {
-		if (this.articles == null) {
+	public Set<Article> getArticles() {
+		if (articles == null) {
 			this.articles = new HashSet<Article>();
 		}
-		return articles;
+		return this.articles;
 	}
 
 	/**
-	 * @param article
-	 *            the article to set
-	 */
-	protected void setArticlesInternal(Set<Article> articles) {
-		this.articles = articles;
-	}
-
-	/**
-	 * @return
-	 */
-	public List<Article> getArticles() {
-		List<Article> sortedArticles = new ArrayList<Article>(
-				getArticlesInternal());
-		PropertyComparator.sort(sortedArticles, new MutableSortDefinition("id",
-				true, true));
-		return Collections.unmodifiableList(sortedArticles);
-	}
-
-	/**
-	 * @param article
+	 * @param member
 	 */
 	public void addArticle(Article article) {
-		getArticlesInternal().add(article);
-		article.setStudyRoom(this);
-	}
-
-	/**
-	 * @param article
-	 * @return
-	 */
-	public Article getArticle(Article article) {
-		List<Article> articles = getArticles();
-		int idx = articles.indexOf(article);
-		if (idx != -1) {
-			return articles.get(idx);
-		}
-		return null;
-	}
-
-	/**
-	 * @param articleId
-	 * @return
-	 */
-	public Article getArticle(Integer articleId) {
-		for (Article article : getArticlesInternal()) {
-			if (article.getId().equals(articleId)
-					&& article.getStudyRoom().equals(this)) {
-				return article;
-			}
-		}
-		return null;
+		getArticles().add(article);
 	}
 
 	/**

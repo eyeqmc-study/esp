@@ -31,8 +31,8 @@ import com.eyeq.esp.service.ImageManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:20
- * @revision $LastChangedRevision: 5917 $
- * @date $LastChangedDate: 2013-02-03 08:41:40 +0900 (일, 03 2월 2013) $
+ * @revision $LastChangedRevision: 5974 $
+ * @date $LastChangedDate: 2013-02-08 03:37:09 +0900 (금, 08 2월 2013) $
  * @by $LastChangedBy: voyaging $
  */
 @Controller
@@ -44,7 +44,7 @@ public class ImageController {
 	@Autowired
 	private ImageManager imageManager;
 
-	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	@RequestMapping(value = "/image/upload", method = RequestMethod.POST)
 	public @ResponseBody
 	Object uploadHandler(Model model, @RequestParam("file") MultipartFile file,
 			HttpSession httpSession) throws IllegalStateException, IOException {
@@ -82,9 +82,9 @@ public class ImageController {
 		return info;
 	}
 
-	@RequestMapping(value = "/uploaded/image/", method = RequestMethod.GET)
+	@RequestMapping(value = "/image/uploaded", method = RequestMethod.GET)
 	@ResponseBody
-	public void imageShowHandler(@RequestParam("id") Integer imageId,
+	public void imageShowHandler(@RequestParam("imageId") Integer imageId,
 			HttpServletResponse response) throws IOException {
 		Image image = imageManager.getImage(imageId);
 		String path = image.getPath() + image.getName();
@@ -95,9 +95,9 @@ public class ImageController {
 
 	protected String getImageUrl(Image image) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("/esp/uploaded/image/");
+		sb.append("/esp/image/uploaded/");
 		sb.append("?");
-		sb.append("id");
+		sb.append("imageId");
 		sb.append("=");
 		sb.append(image.getId());
 		return sb.toString();

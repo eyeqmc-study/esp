@@ -39,75 +39,12 @@
 <script type="text/javascript" src="../static/jquery/plugins/file-upload/js/jquery.fileupload-ui.js"
 	th:src="@{/static/jquery/plugins/file-upload/js/jquery.fileupload-ui.js}"></script>
 
+<script type="text/javascript" src="http://apis.daum.net/maps/maps3.js?apikey=8870ab8bb69996dd65f45e98474784616a84f80e"></script>
+<script type="text/javascript" src="../static/scripts/study-reg.js" th:src="@{/static/scripts/study-reg.js}"></script>
  <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 	$(document).ready(function() {
-		$.getJSON("/esp/static/json/datepicker_options_ko.json", function(data){
-		}).success(function(data, textStatus, jqXHR){
-			$("#s_fdate").datepicker(data);
-			$("#s_tdate").datepicker(data);
-		}).error(function(data, textStatus, jqXHR){
-			var reason = "=== Datepicker options data load error ===\n";
-			reason += " - reason : " + textStatus + "\n";
-			reason += "==========================================\n";
-			reason += " - Date picker load with default options.\n";
-			reason += "==========================================";
-			if (console.log) {
-				console.log(reason);
-			} else {
-				alert(reason);
-			}
-			$("#s_fdate").datepicker();
-			$("#s_tdate").datepicker();
-		});
-		
-		$("#fileupload").fileupload({
-			url : '/esp/upload',
-			dataType : 'json',
-			type: 'POST',
-			maxFileSize : 5000000,
-			maxNumberOfFiles : 1,
-			acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
-			done: function (e, data) {
-				alert("업로드 완료");
-            },
-			stop: function (e) {
-	            var that = $(this).data('blueimp-fileupload') ||
-	                    $(this).data('fileupload'),
-	                deferred = that._addFinishedDeferreds();
-	            $.when.apply($, that._getFinishedDeferreds())
-	                .done(function () {
-	                    that._trigger('stopped', e);
-	                });
-	            that._transition($(this).find('.fileupload-progress')).done(
-	                function () {
-	                    deferred.resolve();
-	                }
-	            );
-	        },
-	        destroy: function (e, data) {
-	            var that = $(this).data('blueimp-fileupload') ||
-	                    $(this).data('fileupload');
-	            if (data.url) {
-	                $.ajax(data);
-	            }
-	            that._adjustMaxNumberOfFiles(1);
-	            that._transition($(this).find('.fileupload-progress')).done(
-	                function () {
-	                	$(this).find('.progress')
-	                    .attr('aria-valuenow', '0')
-	                    .find('.bar').css('width', '0%');
-	                	$(this).find('.progress-extended').html('&nbsp;');
-	                }
-	            );
-	            that._transition(data.context).done(
-	                function () {
-	                    $(this).remove();
-	                    that._trigger('destroyed', e, data);
-	                }
-	            );
-	        }
-		});
+		esp.pageInit("reg");
 	});
 /*]]>*/
 </script>
@@ -161,70 +98,105 @@
 </script>
 </head>
 <body>
-	<section layout:fragment="main-content">
+	<section id="study-reg-section" layout:fragment="main-content">
 		<article>
+			<header class="ct-bg-e44d26">
+				<b>스터디 등록</b>
+			</header>
 			<div class="std-reg">
 				<div class="table">
 					<div class="tr">
-						<div class="td">
-							<form action="/study/reg" th:action="@{/study/reg}" method="POST" class="well" th:object="${studyRoom}">
-									<div class="td">
-										<label>스터디명</label>
-										<input id="s_nm" name="name"
-											type="text" required="required" autofocus="autofocus"
-											class="input span3" placeholder="스터디명" />
-										<label>시작일</label>
-										<input id="s_fdate" name="startDate"
-											type="text" required="required"
-											class="input span3" placeholder="날짜 선택" />
-										<label>종료일</label>
-										<input id="s_tdate" name="endDate"
-											type="text" required="required"
-											class="input span3" placeholder="날짜 선택" />
-										<label>소개글</label>
-										<textarea name="description" class="input span3" maxlength="100"
-											rows="3" cols="33" 
-											placeholder="입력가능 한 글자는 100자 입니다."></textarea>		
-									</div>
+						<div class="td wd4">
+							<form action="/study/add" th:action="@{/study/add}" method="POST" 
+								class="reg-form well" th:object="${studyRoom}">
+								<div class="td">
+									<label>스터디명</label>
+									<input id="s_nm" name="name"
+										type="text" required="required" autofocus="autofocus"
+										class="input span3" placeholder="스터디명" />
+									<label>시작일</label>
+									<input id="s_fdate" name="startDate"
+										type="text" required="required"
+										class="input span3" placeholder="날짜 선택" />
+									<label>종료일</label>
+									<input id="s_tdate" name="endDate"
+										type="text" required="required"
+										class="input span3" placeholder="날짜 선택" />
+									<label>소개글</label>
+									<textarea name="description" class="input span3" maxlength="100"
+										rows="3" cols="33" 
+										placeholder="스터디 소개글을 입력해주세요."></textarea>		
+								</div>
 								<p></p>
 								<input type="submit" class="btn" value="등록" />
 							</form>
 						</div>
 						<div class="td">
-							<label>아이콘</label>
-							<form id="fileupload" action="/upload" th:action="@{/upload}" method="POST"
-								enctype="multipart/form-data" th:object="${image}">
-								<div class="row fileupload-buttonbar">
-						            <div>
-						                <span class="btn btn-success fileinput-button">
-						                    <i class="icon-plus icon-white"></i>
-						                    <span>Add</span>
-						                    <input type="file" name="file" multiple="multiple"/>
-						                </span>
-						                <button type="submit" class="btn btn-primary start">
-						                    <i class="icon-upload icon-white"></i>
-						                    <span>Start</span>
-						                </button>
-						                <button type="reset" class="btn btn-warning cancel">
-						                    <i class="icon-ban-circle icon-white"></i>
-						                    <span>Cancel</span>
-						                </button>
-						            </div>
-						            <div class="fileupload-progress">
-						                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-						                    <div class="bar" style="width:0%;"></div>
-						                </div>
-						                <div class="progress-extended"></div>
-						            </div>
-						        </div>
-						        <table role="presentation" class="table table-striped upload-table">
-						        	<tbody class="files" data-toggle="modal-gallery" 
-						        		data-target="#modal-gallery"></tbody>
-						        </table>
-							</form>
+							<div id="upload-container">
+								<label>아이콘 등록</label>
+								<form id="fileupload" action="/image/upload" th:action="@{/image/upload}" method="POST"
+									enctype="multipart/form-data" th:object="${image}">
+									<div class="row fileupload-buttonbar">
+							            <div>
+							                <span class="btn btn-success fileinput-button">
+							                    <i class="icon-plus icon-white"></i>
+							                    <span>Add</span>
+							                    <input type="file" name="file" multiple="multiple"/>
+							                </span>
+							                <button type="submit" class="btn btn-primary start">
+							                    <i class="icon-upload icon-white"></i>
+							                    <span>Start</span>
+							                </button>
+							                <button type="reset" class="btn btn-warning cancel">
+							                    <i class="icon-ban-circle icon-white"></i>
+							                    <span>Cancel</span>
+							                </button>
+							            </div>
+							            <div class="fileupload-progress">
+							                <div class="progress progress-success progress-striped active" 
+							                	role="progressbar" aria-valuemin="0" aria-valuemax="100">
+							                    <div class="bar" style="width:0%;"></div>
+							                </div>
+							                <div class="progress-extended"></div>
+							            </div>
+							        </div>
+							        <table role="presentation" class="table table-striped upload-table">
+							        	<tbody class="files" data-toggle="modal-gallery" 
+							        		data-target="#modal-gallery"></tbody>
+							        </table>
+								</form>
+							</div>
+							<div id="place-container">
+								<div class="place-btnbar">
+									<label class="title">장소 등록</label>
+									<span class="btn btn-success fileinput-button place-add-btn">
+					                    <i class="icon-plus icon-white"></i>
+					                    <span>Add</span>
+					                    <input class="place-add-btn" type="button" name="add" />
+					                </span>
+								</div>
+								<div class="place-infobar">
+									<span class="place-name">이름 : </span><div class="ellipsis place-name">토즈 강남 타워점</div>
+									<span class="place-addr">주소 : </span><div class="ellipsis place-addr">서울 강남구 강남동 123-12</div>
+									<input id="latitude" type="hidden" />
+									<input id="longitude" type="hidden" />
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
+			</div>
+			<div id="place-selector" class="hide">
+				<div id="map-search-view">
+					<div class="search-input">
+						<input class="search-word" type="text" placeholder="주소검색"></input>
+						<input class="btn-success search-btn" type="button" value="검색"></input>
+					</div>
+					<div class="search-result-count"></div>
+					<div class="search-result">
+					</div>
+				</div>
+				<div id="study-place-map" class="ct-box"></div>
 			</div>
 		</article>
 	</section>

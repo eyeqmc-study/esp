@@ -8,8 +8,8 @@ import com.eyeq.esp.model.ArticleReply;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:15:10
- * @revision $LastChangedRevision: 5925 $
- * @date $LastChangedDate: 2013-02-04 05:53:57 +0900 (월, 04 2월 2013) $
+ * @revision $LastChangedRevision: 5984 $
+ * @date $LastChangedDate: 2013-02-09 05:11:03 +0900 (토, 09 2월 2013) $
  * @by $LastChangedBy: jmlim $
  */
 public interface ArticleManager {
@@ -24,6 +24,8 @@ public interface ArticleManager {
 
 	public List<Article> getArticles();
 
+	public List<Article> getEnabledArticles(Integer studyRoomId);
+
 	ArticleReply getArticleReply(Integer articleReplyId);
 
 	void createArticleReply(ArticleReply reply);
@@ -31,4 +33,6 @@ public interface ArticleManager {
 	void updateArticleReply(ArticleReply reply);
 
 	void deleteArticleReply(ArticleReply reply);
+
+	List<ArticleReply> getEnabledArticleReplies(Integer articleId);
 }

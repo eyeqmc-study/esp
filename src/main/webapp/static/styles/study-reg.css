@@ -1,22 +1,36 @@
 @CHARSET "UTF-8";
 
-.upload-table {
-	background-color: #F16529 !important;
+#study-reg-section .reg-form {
+	background-color: #f9f9f9;
+	margin-top: 20px;
+	-webkit-box-shadow: 0 5px 10px #aaa;
+	-moz-box-shadow: 0 5px 10px #aaa;
+	-o-box-shadow: 0 5px 10px #aaa;
+	box-shadow: 0 5px 10px #aaa;
+	width: 224px;
 }
 
-.upload-table .preview {
-	background-color: #F16529 !important;
-	border: none !important;
+.std-reg {
+	color: #000000;
+	padding: 0px 5%;
+	-webkit-box-shadow: 0 5px 10px #aaa;
+	-moz-box-shadow: 0 5px 10px #aaa;
+	box-shadow: 0 5px 10px #aaa;
+	border: 2px solid #f16529;
+	border-top: none;
 }
 
-.upload-table .name {
-	background-color: #F16529 !important;
-	border: none !important;
-}
-
-.upload-table .size {
-	background-color: #F16529 !important;
-	border: none !important;
+#upload-container {
+	-webkit-box-shadow: 0 5px 10px #aaaaaa;
+	width: 90%;
+	padding: 5px;
+	margin-left: 30px;
+	height: auto;
+	min-height: 220px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	background-color: #f9f9f9;
 }
 
 #fileupload .row {
@@ -29,4 +43,86 @@
 
 input.span3, textarea.span3, .uneditable-input.span3 {
 	width: 206px;
+}
+
+#place-container {
+	-webkit-box-shadow: 0 5px 10px #aaaaaa;
+	width: 90%;
+	padding: 5px;
+	margin-left: 30px;
+	margin-top: 13px;
+	height: 87px;
+	min-height: 80px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	background-color: #f9f9f9;
+}
+
+#place-container label.title {
+	float: left;
+}
+
+#place-container .fileinput-button {
+	margin-left: 20px;
+}
+
+#place-container .place-infobar {
+	margin-top: 35px;
+}
+
+#place-container .place-infobar span {
+	float: left;
+}
+
+#place-container .place-infobar div {
+	width: 250px;
+}
+
+#place-selector {
+	padding: 0.3em 0.3em;
+}
+
+#place-selector .search-word {
+	width: 193px;
+}
+
+#place-selector .search-btn {
+	margin-left: 10px;
+}
+
+#place-selector .search-result {
+	border: 1px solid lightgray;
+	height: 370px;
+}
+
+#place-selector .search-result-count {
+	border: 1px solid lightgray;
+	height: 24px;
+	margin-bottom: 3px;
+}
+
+#map-search-view {
+	float: left;
+	width: 260px
+}
+
+#map-search-view .search-btn {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#study-place-map {
+	float: right;
+	width: 413px;
+	height: 432px;
+	margin-bottom: 0;
+}
+
+#place-selector button.reg {
+	float: right;
+	margin-right: 5px;
+	margin-top: 3px;
+	font-size: 12px;
+	font-weight: bold;
 }

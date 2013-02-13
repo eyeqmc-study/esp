@@ -8,7 +8,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <!--<![endif]-->
 <head>
-<!-- layout 템플릿 내용 시작 -->
+<!-- layout head 템플릿 내용 시작 -->
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
@@ -33,9 +33,14 @@
 <script type="text/javascript" src="./static/scripts/esp-main.js"
 	th:src="@{/static/scripts/esp-main.js}"></script>
 
+<script type="text/javascript" src="./ckeditor/ckeditor.js"
+	th:src="@{/ckeditor/ckeditor.js}"></script>
+
 <script type="text/javascript" src="./static/jquery/jquery-1.8.3.js"
 	th:src="@{/static/jquery/jquery-1.8.3.js}"></script>
-	
+<script type="text/javascript" src="./static/jquery/plugins/jquery.cookie.js"
+	th:src="@{/static/jquery/plugins/jquery.cookie.js}"></script>
+<link href='http://fonts.googleapis.com/css?family=Economica:700,400' rel='stylesheet' type='text/css' />
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 	var adjustMainContainerHeight = function() {
@@ -65,7 +70,7 @@
 	});
 /*]]>*/
 </script>
-<!-- layout 템플릿 내용 끝 -->
+<!-- layout head 템플릿 내용 끝 -->
 </head>
 <body>
 	<div id="doc">
@@ -74,27 +79,27 @@
 				<h1 id="title"><a href="main.html" th:href="@{/}" th:text="#{title.esp}">h1#title</a></h1>
 				<nav>
 					<ul>
-						<li th:if="${currentUser != null and currentUser.uid == 'voyaging'}">
+						<li th:if="${session.user != null and session.user.role == 'ROLE_ADMIN'}">
 							<a href="pages/admin.html" th:href="@{/admin}" 
 								th:text="#{label.menu.head.admin}">관리</a>
 						</li>
-						<li th:if="${currentUser == null}">
+						<li th:if="${session.user == null}">
 							<a href="pages/login.html" th:href="@{/login}" 
 								th:text="#{label.menu.head.login}">로그인</a>
 						</li>
-						<li th:if="${currentUser != null}">
+						<li th:if="${session.user != null}">
 							<a href="/j_spring_security_logout" th:href="@{/j_spring_security_logout}"
 								th:text="#{label.menu.head.logout}">로그아웃</a>
 						</li>
-						<li th:if="${currentUser != null}">
-							<a href="pages/study-reg.html" th:href="@{/reg}" 
+						<li th:if="${session.user != null}">
+							<a href="pages/study-reg.html" th:href="@{/study/reg}" 
 								th:text="#{label.menu.head.studyReg}">등록</a>
 						</li>
-						<!-- 구현전까지 주석처리
 						<li>
 							<a href="pages/schedule.html" th:href="@{/schedule}" 
 								th:text="#{label.menu.head.schedule}">일정</a>
 						</li>
+						<!-- 구현전까지 주석처리
 						<li>
 							<a href="pages/statistics.html" th:href="@{/statistics}" 
 								th:text="#{label.menu.head.statistics}">통계</a>
@@ -106,13 +111,13 @@
 		</div>
 		<div id="main-container">
 			<div id="main" class="wrapper clearfix">
-				<aside id="user-panel" th:if="${currentUser != null}">
-					<h3 th:text="${currentUser.name}">이름</h3>
-					<h3 th:text="${currentUser.email}">이메일</h3>
-					<h3><a href="#">게시글(<span th:text="${#lists.size(currentUser.articles)}">0</span>)</a></h3>
-					<h3><a href="#">벌점(<span th:text="${currentUser.penaltyScore}">0</span>)</a></h3>
+				<aside id="user-panel" th:if="${session.user != null}" layout:fragment="user-panel-content">
+					<h3 th:text="${session.user.name}">이름</h3>
+					<h3 th:text="${session.user.email}">이메일</h3>
+					<h3><a href="#">게시글(<span th:text="${#lists.size(session.user.articles)}">0</span>)</a></h3>
+					<h3><a href="#">벌점(<span th:text="${session.user.penaltyScore}">0</span>)</a></h3>
 				</aside>
-				<aside id="user-panel" th:if="${currentUser == null}">
+				<aside id="user-panel" th:if="${session.user == null}">
 					<h3>이름</h3>
 					<h3>이메일</h3>
 					<h3><a href="#">게시글(<span>0</span>)</a></h3>
@@ -134,7 +139,7 @@
 			</footer>
 		</div>
 	</div>
-	<!-- Google Analytics -->
+	<!-- Google Analytics 절대 제거 및 수정 하지 말것 -->
 	<script type="text/javascript">
 	var _gaq = _gaq || [];
 	_gaq.push(['_setAccount', 'UA-19264570-6']);

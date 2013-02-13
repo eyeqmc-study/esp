@@ -15,23 +15,36 @@
 	th:href="@{/static/styles/qtip-custom.css}" />
 <link rel="stylesheet" type="text/css" href="./static/jquery/plugins/ParallaxContentSlider/css/parallax-custom-style.css"
 	th:href="@{/static/jquery/plugins/ParallaxContentSlider/css/parallax-custom-style.css}" />
-	
+<link rel="stylesheet"
+	href="../../static/jquery/ui/themes/base/jquery-ui.css"
+	th:href="@{/static/jquery/ui/themes/base/jquery-ui.css}" />
+
+<script type="text/javascript" src="../../static/jquery/ui/jquery-ui.js"
+	th:src="@{/static/jquery/ui/jquery-ui.js}"></script>
 <script type="text/javascript" src="./static/jquery/plugins/qtip2/jquery.qtip.js"
 	th:src="@{/static/jquery/plugins/qtip2/jquery.qtip.js}"></script>
 <script type="text/javascript" src="./static/jquery/plugins/ParallaxContentSlider/js/jquery.cslider.js"
 	th:src="@{/static/jquery/plugins/ParallaxContentSlider/js/jquery.cslider.js}"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-	$("#no-study img.preview").qtip({
-		content: '<img src="./static/images/red-x-icon.jpg"/>',
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+window.onload = function(){
+	var imgQuery = $("#study-room img.preview");
+	if (imgQuery.length === 0) {
+		imgQuery = $("#no-study img.preview");
+	}
+	var imgSrc = imgQuery.attr("src");
+	var imgPreviewContent = '<img src="' + imgSrc + '"/>';
+	
+	imgQuery.qtip({
+		content: imgPreviewContent,
 		show: 'mouseover',
 		hide: 'mouseout',
 		style : {
 			classes : 'esp-qtip-custom'
 		}
 	});
-	$(".da-link").qtip({
-		content: '제목 테스트 입니다.',
+	$("#study-room .da-link").qtip({
+		content: '관심있으면 클릭!',
 		show: 'mouseover',
 		hide: 'mouseout',
 		position: {
@@ -43,12 +56,59 @@ $(document).ready(function(){
 		autoplay: true,
 		interval: 4000
 	});
-});
+	
+	$(".join-study").click(function(event){
+		var e = window.event || event;
+		e.preventDefault();
+		var user = /*[[${session.user}]]*/;
+		if (user === null || user === undefined) {
+			alert("로그인 후 스터디에 참여 할 수 있습니다.");
+			return;
+		}
+		$("#join-confirm-dialog").dialog({
+			resizable : false,
+			modal : true,
+			height: 180,
+			width: 306,
+			buttons : {
+				"수락" : function() {
+					$(this).dialog("close");
+					var url = "/esp/study/join";
+					var userId = user.uid;
+					var studyId = $("#study-room input[type='hidden']").val();
+					var sendData = { uid : userId, studyId : studyId };
+					$.ajax({
+						url : url,
+						type : "POST",
+						dataType : "json",
+						data : sendData,
+						error : function(jqXHR, textStatus, errorThrown) {
+							alert("스터디 참여 실패. 관리자에게 문의를...");
+						},
+						success : function(data, textStatus, jqXHR) {
+							if (data == "success") {
+								alert("스터디 참여에 성공 하였습니다.");
+							} else if (data == "already") {
+								alert("이미 참여 중입니다.");
+							} else {
+								alert("스터디 참여 실패. 관리자에게 문의를...");
+							}
+						}
+					});
+				},
+				"취소" : function() {
+					$(this).dialog("close");
+				}
+			}
+		});
+	});
+}
+/*]]>*/
 </script>
 </head>
 <body>
-	<section id="study-room" layout:fragment="main-content">
-		<article th:if="${enabledStudyRoom != null}">
+	<section id="study-room-section" layout:fragment="main-content">
+		<article id="study-room" th:if="${enabledStudyRoom != null}">
 			<header class="ct-bg-e44d26">
 				<b>진행중</b>
 			</header>
@@ -56,15 +116,17 @@ $(document).ready(function(){
 				<tbody>
 					<tr>
 						<td class="wd6">
-							<div id="study-room" class="da-slider">
+							<div class="da-slider">
 								<div class="da-slide da-slide-current">
-									<div class="da-img"><img src="/uploaded/images/?id=1" th:src="${enabledStudyRoom.studyImage.url}" /></div>
+									<div class="da-img"><img class="preview" src="/uploaded/images/?id=1" th:src="${enabledStudyRoom.studyImage.url}" /></div>
 									<h2 class="hide"></h2>
-									<a href="pages/study-main.html" th:href="@{/study}" class="ellipsis da-link" th:text="${enabledStudyRoom.name}" onclick="javascript:alert('왜 클릭질임?')">No Study</a>
+									<a href="pages/study-main.html" th:href="@{/study(studyRoomId=${enabledStudyRoom.id})}" class="ellipsis da-link" th:utext="${enabledStudyRoom.name}">No Study</a>
 									<p class="p1" th:text="#{label.study.ongoing.presenter(${enabledStudyRoom.owner.name})}">진행자 : -</p>
 									<p class="p2" th:text="#{label.study.ongoing.startDate(${#dates.format(enabledStudyRoom.startDate, 'yyyy-MM-dd')})}">시작일 : -</p>
 									<p class="p3" th:text="#{label.study.ongoing.endDate(${#dates.format(enabledStudyRoom.endDate,'yyyy-MM-dd')})}">종료일 : -</p>
 									<p class="p4" th:text="#{label.study.ongoing.memberCnt(${#lists.size(enabledStudyRoom.members)})}">참여자 : -</p>
+									<button class="btn join-study">참여하기</button>
+									<input type="hidden" th:value="${enabledStudyRoom.id}" />
 								</div>
 							</div>
 						</td>
@@ -72,7 +134,7 @@ $(document).ready(function(){
 				</tbody>
 			</table>
 		</article>
-		<article th:if="${#lists.isEmpty(allStudyRooms)}">
+		<article id="no-study" th:if="${enabledStudyRoom == null}">
 			<header class="ct-bg-f16529">
 				<b>등록된 스터디 없음!</b>
 			</header>
@@ -81,11 +143,11 @@ $(document).ready(function(){
 				<tbody>
 					<tr>
 						<td class="wd6">
-							<div id="no-study" class="da-slider">
+							<div class="da-slider">
 								<div class="da-slide da-slide-current">
 									<div class="da-img"><img class="preview" src="./static/images/red-x-icon.jpg"/></div>
 									<h2 class="hide"></h2>
-									<a href="pages/study-main.html" th:href="@{/study}" class="ellipsis da-link" onclick="javascript:alert('왜 클릭질임?')">No Study</a>
+									<a href="#" class="ellipsis da-link">No Study</a>
 									<p class="p1" th:text="#{label.study.ongoing.presenter('-')}">진행자 : -</p>
 									<p class="p2" th:text="#{label.study.ongoing.startDate('-')}">시작일 : -</p>
 									<p class="p3" th:text="#{label.study.ongoing.endDate('-')}">종료일 : -</p>
@@ -97,7 +159,7 @@ $(document).ready(function(){
 				</tbody>
 			</table>
 		</article>
-		<article>
+		<article id="study-waiting">
 			<header class="ct-bg-f16529">
 				<b>진행예정</b>
 			</header>
@@ -153,6 +215,13 @@ $(document).ready(function(){
 				</tbody>
 			</table>
 		</article>
+		<div id="join-confirm-dialog" class="hide" title="스터디 참여">
+				<p>
+					<span class="ui-icon ui-icon-alert"
+						style="float: left;"></span>
+						스터디에 참여 하시겠습니까?
+				</p>
+			</div>
 	</section>
 </body>
 </html>

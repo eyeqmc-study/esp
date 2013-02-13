@@ -4,12 +4,12 @@
 	<groupId>com.eyeq.esp</groupId>
 	<artifactId>esp</artifactId>
 	<packaging>war</packaging>
-	<version>0.1.1</version>
+	<version>0.3.1</version>
 	<name>ESP Project</name>
 	<url>http://dev.eyeq.co.kr/esp/</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.version>3.1.3.RELEASE</spring.version>
+		<spring.version>3.2.1.RELEASE</spring.version>
 		<s.security.version>3.1.3.RELEASE</s.security.version>
 		<spring.ldap.version>1.3.1.RELEASE</spring.ldap.version>
 		<junit.version>4.11</junit.version>
@@ -25,9 +25,12 @@
 		<cglib.version>2.2.2</cglib.version>
 		<hsqldb.version>2.2.9</hsqldb.version>
 		<ojdbc.version>10.2.0.4.0</ojdbc.version>
-		<slf4j.version>1.6.1</slf4j.version>
+		<slf4j.version>1.7.2</slf4j.version>
 		<jackson.mapper.version>1.9.11</jackson.mapper.version>
 		<thymeleaf.layout.version>1.0.5</thymeleaf.layout.version>
+		<servlet.version>3.0.1</servlet.version>
+		<!-- Plugins version defined -->
+		<plugin.war.version>2.3</plugin.war.version>
 	</properties>
 
 	<repositories>
@@ -178,6 +181,11 @@
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
@@ -205,7 +213,7 @@
 			<artifactId>commons-io</artifactId>
 			<version>${c.io.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -218,15 +226,31 @@
 			<version>${hsqldb.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>nz.net.ultraq.web.thymeleaf</groupId>
 			<artifactId>thymeleaf-layout-dialect</artifactId>
 			<version>${thymeleaf.layout.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+		</dependency>
+
 	</dependencies>
 	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${plugin.war.version}</version>
+				<configuration>
+					<warname>esp</warname>
+					<failonmissingwebxml>false</failonmissingwebxml>
+				</configuration>
+			</plugin>
+		</plugins>
 		<finalName>esp</finalName>
 	</build>
 	<description>Study integration site for EYEQMC study member
@@ -236,7 +260,17 @@ version
 
 0.1.0 : Add LDAP login integration.
 
-0.1.1 : Study Registration.</description>
+0.1.1 : Study Registration 구현.
+
+0.2.0 : Add Google calendar
+
+0.2.2 : spring 3.0 이후 가능해진 java config 설정 구현 (xml 설정 대신)
+
+0.2.2 : web.xml 을 서블릿 3.0 의 스펙에 따라 spring framework(mvc) 의 도움을 받아  java 설정으로 변경.
+
+0.3.0 : 게시판 기능 추가.
+
+0.3.1 : 다음 지도를 이용한 스터디 장소 등록 기능 추가.</description>
 	<organization>
 		<name>Hana Lee</name>
 		<url>http://dev.eyeq.co.kr/wp/hana</url>

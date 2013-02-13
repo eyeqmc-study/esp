@@ -1,0 +1,76 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="pages/commons/layout">
+<!--<![endif]-->
+<head>
+<link rel="stylesheet" type="text/css" href="../static/css3_tabbed_nav/css/esp-custom-style.css"
+	th:href="@{/static/css3_tabbed_nav/css/esp-custom-style.css}" />
+
+<link rel="stylesheet" href="../static/styles/study-place.css"
+	th:href="@{/static/styles/study-place.css}" />
+
+<script type="text/javascript" src="http://apis.daum.net/maps/maps3.js?apikey=8870ab8bb69996dd65f45e98474784616a84f80e"></script>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	window.onload = function() {
+		$("#tab-menu .tab-list a.active").removeClass("active");
+		$("#tab-menu .tab-list a.study-place").addClass("active");
+		
+		var placeLatitude = /*[[${studyRoom.studyPlace.latitude}]]*/;
+		var placeLongitude = /*[[${studyRoom.studyPlace.longitude}]]*/;
+		var tooltip = /*[[${studyRoom.studyPlace.name}]]*/;
+		var pos = [placeLatitude, placeLongitude];
+		
+		if (!pos || pos.length <= 0) {
+			pos = [37.537123, 127.005523];
+		}
+		var marker;
+		var position = new daum.maps.LatLng(pos[0], pos[1]); 
+		map = new daum.maps.Map(document.getElementById('study-place-map'), { 
+			center: position, 
+			level: 4, 
+			mapTypeId: daum.maps.MapTypeId.ROADMAP 
+		});
+		var zoomControl = new daum.maps.ZoomControl();
+		map.addControl(zoomControl, daum.maps.ControlPosition.RIGHT);
+		var mapTypeControl = new daum.maps.MapTypeControl();
+		map.addControl(mapTypeControl, daum.maps.ControlPosition.TOPRIGHT);
+
+		marker = new daum.maps.Marker({
+			position : position
+		});
+
+		marker.setMap(map);
+		
+		var infowindow = new daum.maps.InfoWindow({
+			content: tooltip
+		});
+		
+		infowindow.open(map, marker);
+	};
+/*]]>*/
+</script>
+</head>
+<body>
+	<section id="study-place-section" layout:fragment="main-content">
+		<article>
+			<div id="tab-wrapper">
+				<div id="tab-content">
+					<div id="tab-menu" th:include="pages/study-main :: tab-menu">
+					</div>
+					<div id="tab-main">
+						<div id="study-place-map" class="ct-box"></div>
+					</div>
+					<div class="side-title" th:include="pages/study-main :: side-title">
+					</div>
+				</div>
+			</div>
+		</article>
+	</section>
+</body>
+</html>

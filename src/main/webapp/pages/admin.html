@@ -31,44 +31,61 @@
 <script type="text/javascript" src="../static/jquery/jquery-1.8.3.js"
 	th:src="@{/static/jquery/jquery-1.8.3.js}"></script>
 <!-- layout 템플릿 내용 끝 -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+function fn_jQueryCallAjax(_url, _method, _param){
+	console.log(_url);
+	var url = _url;
+	var _data = {};
+	jQuery.ajax( {
+  		url : url,
+  		type :_method,
+  		data: _param,
+  		async: false,
+		cache: false,
+  		dataType: 'json',
+  		contentType: 'application/json;charset=UTF-8',
+  		error: function(request, textStatus, errorThrown){
+			_data = textStatus;
+  		},
+  		success : function(data) {
+			_data = data;
+  		}
+ 	});
+	return _data;
+}
+window.onload = function(){
+	$('.study-schedule div.tr').click(function(){
+		var userId = $(this).data("id");
+		$('.study-schedule input[value='+userId+']').attr('checked',true);
+		console.log(fn_jQueryCallAjax('./admin/user-penalty','GET',{'uid':userId}));
+	});
+}
+/*]]>*/
+</script>
 </head>
 <body>
-	<section layout:fragment="main-content">
-		<article>
-			<div class="td adm-cls">
-				<h3>스터디원 이름</h3>
-				<div class="tr">
-					<div class="td "><input type="radio" id="chk_name01" name="radio_name"/></div>
-					<div class="td indent"><label for="chk_name01">이하나</label></div>
-				</div>
-				<div class="tr">
-					<div class="td"><input type="radio" id="chk_name02" name="radio_name"/></div>
-					<div class="td indent"><label for="chk_name02">임정묵</label></div>
-				</div>
-				<div class="tr">
-					<div class="td"><input type="radio" id="chk_name03" name="radio_name"/></div>
-					<div class="td indent"><label for="chk_name03">김주찬</label></div>
-				</div>
-				<div class="tr">
-					<div class="td"><input type="radio" id="chk_name04" name="radio_name" checked="checked"/></div>
-					<div class="td indent"><label for="chk_name04">나삼광</label></div>
-				</div>
-				<div class="tr">
-					<div class="td"><input type="radio" id="chk_name05" name="radio_name"/></div>
-					<div class="td indent"><label for="chk_name05">배석화</label></div>
-				</div>
-				<div class="tr">
-					<div class="td"><input type="radio" id="chk_name06" name="radio_name"/></div>
-					<div class="td indent"><label for="chk_name06">송일근</label></div>
-				</div>
-				<div class="tr">
-					<div class="td"><input type="radio" id="chk_name07" name="radio_name"/></div>
-					<div class="td indent"><label for="chk_name07">임기영</label></div>
+	<section id="penalty-admin" layout:fragment="main-content">
+		<div class="td" style="width:150px">
+			<header class="ct-bg-e44d26">
+				<b>유저 이름</b>
+			</header>
+			<div class="study-schedule ct-box-f16529">
+				<div th:each="user : ${allUserList}">
+					<div class="tr" th:attr="data-id=${user.id}">  
+						<div class="td"><input type="radio" th:value="${user.id}" name="radio_name"/></div>
+						<div class="td indent"><label th:text="${user.name}"></label></div> 
+					</div>
 				</div>
 			</div>
-			<div class="td adm-content">
-				<h3>나삼광</h3>
-				<table class="width300">
+		</div>
+		<div class="td" style="width:20px"></div>
+		<div class="td">
+			<header class="ct-bg-e44d26">
+				<b>벌점 관리</b>
+			</header>
+			<div class="study-schedule ct-box-f16529">
+				<table class="width500">
 					<thead class="ct-bg-f16529">
 						<tr>
 							<th class="wd5">벌점이유</th>
@@ -78,34 +95,22 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td class="ct-border-f16529">연락 후 불참</td>
-							<td class="ct-border-f16529">1</td>
-							<td class="ct-border-f16529">1</td>
-							<td class="ct-border-f16529"><input type="button" value="수정"/></td>
+						<tr class="ct-border-bottom-f16529">
+							<td class="ct-padding-top"><input type="text" class="width150"/></td>
+							<td class="ct-padding-top"><input type="text" class="width50"/></td>
+							<td class="ct-padding-top"></td>
+							<td class="ct-padding-top"><input type="button" value="추가"/></td>
 						</tr>
-						<tr>
-							<td class="ct-border-f16529">연락 후 불참</td>
-							<td class="ct-border-f16529">1</td>
-							<td class="ct-border-f16529">2</td>
-							<td class="ct-border-f16529"><input type="button" value="수정"/></td>
-						</tr>
-						<tr>
-							<td class="ct-border-f16529">연락 후 불참</td>
-							<td class="ct-border-f16529">1</td>
-							<td class="ct-border-f16529">3</td>
-							<td class="ct-border-f16529"><input type="button" value="수정"/></td>
-						</tr>
-						<tr>
-							<td class="ct-border-f16529"><input type="text" class="width150"/></td>
-							<td class="ct-border-f16529"><input type="text" class="width50"/></td>
-							<td class="ct-border-f16529"></td>
-							<td class="ct-border-f16529"><input type="button" value="추가"/></td>
+						<tr class="ct-border-bottom-f16529" id="testId">
+							<td class="ct-padding-top"><div>연락 후 불참</div></td>
+							<td class="ct-padding-top">1</td>
+							<td class="ct-padding-top">1</td>
+							<td class="ct-padding-top"><input type="button" value="수정"/></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
-		</article>
+		</div>
 	</section>
 </body>
 </html>

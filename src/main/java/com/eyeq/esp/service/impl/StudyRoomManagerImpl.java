@@ -14,9 +14,9 @@ import com.eyeq.esp.service.StudyRoomManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:21:48
- * @revision $LastChangedRevision: 5923 $
- * @date $LastChangedDate: 2013-02-04 01:02:47 +0900 (월, 04 2월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 5950 $
+ * @date $LastChangedDate: 2013-02-06 04:17:52 +0900 (수, 06 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 @Service("studyManager")
 @Transactional
@@ -83,7 +83,7 @@ public class StudyRoomManagerImpl extends AbstractJpaDaoService implements
 	public List<StudyRoom> getStudyRooms(User user) {
 		List<StudyRoom> results = getEntityManager()
 				.createNamedQuery(
-						"com.eyeq.esp.model.StudyRoom@getStudyRooms():param.ownerId")
+						"com.eyeq.esp.model.StudyRoom@getStudyRooms(ownerId)")
 				.setParameter("ownerId", user.getId()).getResultList();
 
 		if (results != null && results.size() > 0) {
@@ -100,7 +100,7 @@ public class StudyRoomManagerImpl extends AbstractJpaDaoService implements
 	public List<StudyRoom> getEnabledStudyRooms() {
 		List<StudyRoom> results = getEntityManager()
 				.createNamedQuery(
-						"com.eyeq.esp.model.StudyRoom@getStudyRooms():param.enabled")
+						"com.eyeq.esp.model.StudyRoom@getStudyRooms(enabled)")
 				.setParameter("enabled", true).getResultList();
 
 		if (results != null && results.size() > 0) {

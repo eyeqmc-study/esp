@@ -20,14 +20,14 @@ import javax.persistence.TemporalType;
 /**
  * @author jmlim
  * @since 0.0.2 2013. 2. 4. 오후 12:11:27
- * @revision $LastChangedRevision: 5927 $
- * @date $LastChangedDate: 2013-02-04 12:14:31 +0900 (월, 04 2월 2013) $
+ * @revision $LastChangedRevision: 5984 $
+ * @date $LastChangedDate: 2013-02-09 05:11:03 +0900 (토, 09 2월 2013) $
  * @by $LastChangedBy: jmlim $
  */
 @Entity
 @Table(name = "ARTICLE_REPLIES")
 @NamedQueries({
-		@NamedQuery(name = "com.eyeq.esp.model.ArticleReply@getArticleReplies(articleId)", query = "from ArticleReply as reply where article_id = :articleId order by articleId desc"),
+		@NamedQuery(name = "com.eyeq.esp.model.ArticleReply@getArticleReplies(articleId)", query = "from ArticleReply as reply where article_id = :articleId and ENABLED = 1 order by articleReplyId"),
 		@NamedQuery(name = "com.eyeq.esp.model.ArticleReply@getArticleReply(articleReplyId)", query = "from ArticleReply as reply where articleReplyId = :articleReplyId") })
 public class ArticleReply {
 

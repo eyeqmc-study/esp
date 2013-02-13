@@ -26,8 +26,9 @@
 		<!-- 임시 인증 -->
 		<security:authentication-provider>
 			<security:user-service>
-				<security:user name="guest" password="guest"
+				<security:user name="guest" password="1"
 					authorities="ROLE_USER" />
+				<security:user name="guest1" password="1" authorities="ROLE_USER"/>
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>

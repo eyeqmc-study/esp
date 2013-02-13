@@ -7,58 +7,86 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorator="pages/commons/layout">
 <!--<![endif]-->
+<head>
+<link rel="stylesheet" type="text/css" href="../static/css3_tabbed_nav/css/esp-custom-style.css"
+	th:href="@{/static/css3_tabbed_nav/css/esp-custom-style.css}" />
+<link rel="stylesheet" type="text/css" href="../static/styles/study-main.css"
+	th:href="@{/static/styles/study-main.css}" />
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#tab-menu .tab-list a.active").removeClass("active");
+		$("#tab-menu .tab-list a.study-info").addClass("active");
+	});
+</script>
+</head>
 <body>
-	<section layout:fragment="main-content">
-		<header>
-			<div>
-				<h2>타이틀영역</h2>
-			</div>
-		</header>
+	<section id="study-main-section" layout:fragment="main-content">
 		<article>
-			<div>
-		    	<div id="main-content">
-		        	<ul class="vertical tabs">
-			           <li class="first active">
-			                <a href="study-main.html">info</a>
-			            </li>
-			            <li>
-			               	<a href="study-board.html">게시판</a>
-			            </li>
-			            <li>
-			               	<a href="study-member.html">구성원</a>
-			            </li>
-			            <li>
-			               	<a href="study-schedule.html">일정</a>
-			            </li>
-			            <li>
-			               	<a href="study-meeting.html">모임장</a>
-			            </li>
-			        </ul>
-					<div class="active-area">
-						<div>
-							<div>정보</div>
-							<div>
-								<div class="indent">진행자 : </div>
-								<div class="indent">이하나</div>
-							</div>
-							<div>
-								<div class="indent">시작일 : </div>
-								<div class="indent">-</div>
-							</div>
-							<div>
-								<div class="indent">종료일 : </div>
-								<div class="indent">-</div>
-							</div> 
-							<div>
-								<div class="indent">참여자 : </div>
-								<div class="indent">-</div>
-							</div>
-						</div>
-						<p></p>
-						<div>
-							<div>소개</div>
-							<div class="indent">-</div>
-						</div>
+			<div id="tab-wrapper">
+				<div id="tab-content">
+					<div id="tab-menu" th:fragment="tab-menu">
+						<ul class="tab-list">
+							<li><a href="#" th:href="@{/study(studyRoomId=${studyRoomId})}" title="정보" class="study-info" >정보</a></li>
+							<li><a href="#" th:href="@{/study-article/list(studyRoomId=${studyRoomId})}" title="게시판" class="study-board">게시판</a></li>
+							<li><a href="#" th:href="@{/study-article/list(studyRoomId=${studyRoomId})}" title="구성원" class="study-member">구성원</a></li>
+							<li><a href="#" th:href="@{/study/place(studyRoomId=${studyRoomId})}" title="모임장소" class="study-place">모임장소</a></li>
+						</ul>
+					</div>
+					<div id="tab-main">
+						<table id="study-info-el" class="study-info">
+							<tbody>
+								<tr th:if="${studyRoom != null}">
+									<td class="wd3">
+										<div class="ellipsis study-title" th:text="${studyRoom.name}">토가 설치 스터디</div>
+										<div class="da-img"><img class="preview" th:src="${studyRoom.studyImage.url}" src="./static/images/red-x-icon.jpg"/></div>
+									</td>
+									<td class="wd4">
+										<div class="desc" th:text="${studyRoom.description}">
+											설명.......주저리주저리주저리주저리주젖ㄹ줄자러댜ㅓ
+										</div>
+									</td>
+									<td class="wd3">
+										<div>
+											<p>
+												진행자 : <span th:text="${studyRoom.owner.name}">이하나</span>
+											</p>
+											<p>
+												시작일 : <span th:text="${studyRoom.startDate}">2013-02-16</span>
+											</p>
+											<p>
+												종료일 : <span th:text="${studyRoom.endDate}">2013-02-28</span>
+											</p>
+											<p>참여자 : <span th:text="${studyRoom.members.size()}"></span>명</p>
+										</div>
+									</td>
+								</tr>
+								<tr th:if="${studyRoom == null}">
+									<td class="wd3">
+										<div class="ellipsis study-title">토가 설치 스터디</div>
+										<div class="da-img"><img class="preview" src="./static/images/red-x-icon.jpg"/></div>
+									</td>
+									<td class="wd4">
+										<div class="desc">
+											설명.......주저리주저리주저리주저리주젖ㄹ줄자러댜ㅓ
+										</div>
+									</td>
+									<td class="wd3">
+										<div>
+											<p th:text="#{label.study.ongoing.presenter('-')}">진행자 : 이하나</p>
+											<p th:text="#{label.study.ongoing.startDate('-')}">시작일 : 2013-02-16</p>
+											<p th:text="#{label.study.ongoing.endDate('-')}">종료일 : 2013-02-28</p>
+											<p th:text="#{label.study.ongoing.memberCnt('-')}">참여자 : 5명</p>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div id="study-place-el" class="hide" th:include="pages/study-place :: studyPlace"></div>
+					</div>
+					<div class="side-title" th:fragment="side-title">
+						<b th:if="${studyRoom != null}" th:text="${studyRoom.name}">토가를 설치해 봅시다 스터디.</b>
+						<b th:if="${studyRoom == null}">토가를 설치해 봅시다 스터디.</b>
 					</div>
 				</div>
 			</div>

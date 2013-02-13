@@ -9,6 +9,10 @@
 	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd         
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 
+	<!-- *************************************************************************** -->
+	<!-- 현재 사용하지는 않지만 참조 할 수 있게 xml 설정은 남겨둠. 언젠가 삭제될 운명... -->
+	<!-- *************************************************************************** -->
+
 	<context:component-scan base-package="com.eyeq.esp" />
 
 	<!-- Data Source Declaration -->

@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 /**
  * @author Hana Lee
  * @since 0.1.1 2013. 2. 2. 오후 3:20:29
- * @revision $LastChangedRevision: 5912 $
- * @date $LastChangedDate: 2013-02-03 01:27:27 +0900 (일, 03 2월 2013) $
+ * @revision $LastChangedRevision: 5978 $
+ * @date $LastChangedDate: 2013-02-08 04:21:44 +0900 (금, 08 2월 2013) $
  * @by $LastChangedBy: voyaging $
  */
 @Service(value = "systemSetUp")
 @Order(value = 0)
 public class SystemSetUp {
 
-	private final String ESP_HOME_ENV = "esp_home";
+	private final String ESP_HOME_ENV = "ESP_HOME";
 
 	private final String FILE_SEPARATOR = System.getProperty("file.separator");
 
@@ -49,7 +49,7 @@ public class SystemSetUp {
 	protected void makeHomeResourcesDirectories() {
 		espHomeDir = System.getenv(ESP_HOME_ENV);
 		if (log.isInfoEnabled()) {
-			log.info("esp_home 설정이 되어 있지 않아 기본 설정으로 처리 합니다.");
+			log.info(ESP_HOME_ENV + " 설정이 되어 있지 않아 기본 설정으로 처리 합니다.");
 		}
 		if (StringUtils.isBlank(espHomeDir)) {
 			StringBuffer sb = new StringBuffer();

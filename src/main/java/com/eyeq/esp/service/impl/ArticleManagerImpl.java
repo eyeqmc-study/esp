@@ -14,8 +14,8 @@ import com.eyeq.esp.service.ArticleManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:15:55
- * @revision $LastChangedRevision: 5927 $
- * @date $LastChangedDate: 2013-02-04 12:14:31 +0900 (월, 04 2월 2013) $
+ * @revision $LastChangedRevision: 5984 $
+ * @date $LastChangedDate: 2013-02-09 05:11:03 +0900 (토, 09 2월 2013) $
  * @by $LastChangedBy: jmlim $
  */
 @Service("articleManager")
@@ -74,6 +74,24 @@ public class ArticleManagerImpl extends AbstractJpaDaoService implements
 	}
 
 	/**
+	 * @see com.eyeq.esp.service.ArticleManager#getEnabledArticles(java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
+	public List<Article> getEnabledArticles(Integer studyRoomId) {
+		// TODO Auto-generated method stub
+		List<Article> results = getEntityManager()
+				.createNamedQuery(
+						"com.eyeq.esp.model.Article@getEnabledArticles(studyRooomId)")
+				.setParameter("studyRoomId", studyRoomId).getResultList();
+		if (results != null && results.size() > 0) {
+			return results;
+		}
+
+		return null;
+	}
+
+	/**
 	 * @see com.eyeq.esp.service.ArticleManager#getArticleReply(java.lang.Integer)
 	 */
 	public ArticleReply getArticleReply(Integer articleReplyId) {
@@ -104,5 +122,23 @@ public class ArticleManagerImpl extends AbstractJpaDaoService implements
 		reply.setDeletedDate(new Date());
 		reply.setEnabled(false);
 		getEntityManager().merge(reply);
+	}
+
+	/**
+	 * @see com.eyeq.esp.service.ArticleManager#getEnabledArticleReplies(java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
+	public List<ArticleReply> getEnabledArticleReplies(Integer articleId) {
+		// TODO Auto-generated method stub
+		List<ArticleReply> results = getEntityManager()
+				.createNamedQuery(
+						"com.eyeq.esp.model.ArticleReply@getArticleReplies(articleId)")
+				.setParameter("articleId", articleId).getResultList();
+		if (results != null && results.size() > 0) {
+			return results;
+		}
+
+		return null;
 	}
 }

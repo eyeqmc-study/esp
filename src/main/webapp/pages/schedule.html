@@ -1,0 +1,117 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="pages/commons/layout">
+<!--<![endif]-->
+<head>
+<link rel="stylesheet" type="text/css"
+	href="./static/styles/schedule.css"
+	th:href="@{/static/styles/schedule.css}" />
+<link rel="stylesheet"
+	href="../../static/jquery/ui/themes/base/jquery-ui.css"
+	th:href="@{/static/jquery/ui/themes/base/jquery-ui.css}" />
+
+<script type="text/javascript" src="../../static/jquery/ui/jquery-ui.js"
+	th:src="@{/static/jquery/ui/jquery-ui.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var showAuthDialog = function() {
+		var oAuthState = [[${oAuthState}]];
+		if (oAuthExpired && oAuthState === null && params.access_token === undefined) {
+			$(function() {
+				$("#dialog-confirm").dialog({
+					resizable : false,
+					modal : true,
+					width : 380,
+					buttons : {
+						"수락" : function() {
+							$(this).dialog("close");
+							var url = "https://accounts.google.com/o/oauth2/auth?response_type=token&client_id=734849919114.apps.googleusercontent.com&redirect_uri=http://localhost:8080/esp/oauth2callback&state=success&approval_prompt=force&scope=https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile";
+							location.href = url;
+						},
+						"취소" : function() {
+							$(this).dialog("close");
+						}
+					}
+				});
+			});
+		}
+	}
+	var params = {}, queryString = location.hash.substring(1), regex = /([^&=]+)=([^&]*)/g, m;
+	while (m = regex.exec(queryString)) {
+		params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+	}
+
+	if (params.access_token !== undefined) {
+		var tokenExist = $.cookie('access_token' , params.access_token, { expires : 1, path : '/' });
+		var req = new XMLHttpRequest();
+		req.open('GET', 'http://' + window.location.host + '/esp/oauth2callback?'
+				+ queryString, true);
+	
+		req.onreadystatechange = function(e) {
+			if (req.readyState == 4) {
+				if (req.status == 200) {
+					window.location = "/esp/schedule"
+				} else if (req.status == 400) {
+					alert('There was an error processing the token.')
+				} else {
+					alert('something else other than 200 was returned')
+				}
+			}
+		};
+		req.send(null);
+	}
+	
+	var oAuthExpired = true;
+	var token = $.cookie("access_token");
+	if (token !== undefined) {
+		var tokenCheckUrl = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + token;
+		$.ajax({
+			url : tokenCheckUrl,
+			type: "POST",
+			error : function(data) {
+				showAuthDialog();
+			},
+			success : function(data) {
+				if (data === null || data.user_id === null) {
+					showAuthDialog();
+				} else {
+					oAuthExpired = false;
+					$("#main-content iframe").show();
+				}
+			}
+		});
+	} else {
+		showAuthDialog();
+	}
+	/*]]>*/
+</script>
+</head>
+<body>
+	<section id="scheduler" layout:fragment="main-content">
+		<article>
+			<header class="ct-bg-e44d26">
+				<b>스터디 일정</b>
+			</header>
+			<div id="main-content" class="main-schedule">
+				<iframe class="hide"
+					src="http://www.google.com/calendar/embed?src=eyeq.co.kr_3tkij8kfp1ahv5ll5qsn8bdlp0%40group.calendar.google.com&amp;ctz=Asia/Seoul"
+					style="border: 0" width="100%" height="100%" frameborder="0"
+					scrolling="no"></iframe>
+			</div>
+			<div id="dialog-confirm" class="hide" title="Google oAuth2">
+				<p>
+					<span class="ui-icon ui-icon-alert"
+						style="float: left; margin: 0 7px 90px 0;"></span> 일정에 포함된 구글 캘린더를
+					보려면 EYEQ 메일 계정으로 로그인 및 승인이 필요합니다.<br /> <br /> <b>로그인 하시겠습니까?</b>
+				</p>
+			</div>
+		</article>
+	</section>
+</body>
+</html>

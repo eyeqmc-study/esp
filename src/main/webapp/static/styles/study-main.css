@@ -1,0 +1,17 @@
+@CHARSET "UTF-8";
+
+#study-info-el {
+	height: 312px;
+	width: 100%;
+}
+
+#study-info-el .desc {
+	height: 100%;
+	padding: 15px 5px;
+	border: 1px solid lightgray;
+}
+
+#study-info-el .desc {
+	word-wrap: break-word;
+	white-space: normal;
+}

@@ -16,7 +16,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.eyeq.esp.model.StudyRoom;
 import com.eyeq.esp.model.User;
@@ -27,9 +26,9 @@ import com.eyeq.esp.service.UserManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:33
- * @revision $LastChangedRevision: 5921 $
- * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 5997 $
+ * @date $LastChangedDate: 2013-02-12 01:11:31 +0900 (화, 12 2월 2013) $
+ * @by $LastChangedBy: samkwang.na $
  */
 @Controller
 public class MainController {
@@ -47,7 +46,7 @@ public class MainController {
 	private StudyRoomManager roomManager;
 
 	@ModelAttribute("allStudyRooms")
-	public List<StudyRoom> populateStudyTooms() {
+	public List<StudyRoom> populateStudyRooms() {
 		return this.roomManager.getStudyRooms();
 	}
 
@@ -80,29 +79,11 @@ public class MainController {
 				false));
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/")
 	public String welcomeHandler(Model model, HttpSession httpSession) {
 		User user = (User) httpSession.getAttribute("user");
 		model.addAttribute("currentUser", user);
 		return "main";
 	}
 
-	@RequestMapping(value = "/admin")
-	public String adminPageHandler(Model model, HttpSession httpSession) {
-		return "/pages/admin";
-	}
-
-	@RequestMapping(value = "/reg")
-	public String studyRegPageHandler(Model model, HttpSession httpSession) {
-		User user = (User) httpSession.getAttribute("user");
-		model.addAttribute("currentUser", user);
-		return "/pages/study-reg";
-	}
-
-	@RequestMapping(value = "/study")
-	public String studyPageHandler(Model model, HttpSession httpSession) {
-		User user = (User) httpSession.getAttribute("user");
-		model.addAttribute("currentUser", user);
-		return "/pages/study-main";
-	}
 }

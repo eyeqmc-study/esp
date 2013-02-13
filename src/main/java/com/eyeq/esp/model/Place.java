@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -13,12 +15,13 @@ import javax.persistence.TemporalType;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:14:48
- * @revision $LastChangedRevision: 5921 $
- * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
+ * @revision $LastChangedRevision: 5999 $
+ * @date $LastChangedDate: 2013-02-12 07:22:21 +0900 (화, 12 2월 2013) $
  * @by $LastChangedBy: voyaging $
  */
 @Entity
 @Table(name = "PLACES")
+@NamedQueries({ @NamedQuery(name = "com.eyeq.esp.model.Place@getPlaces()", query = "from Place as place") })
 public class Place {
 
 	@Id
@@ -33,10 +36,10 @@ public class Place {
 	private String address;
 
 	@Column(name = "LONGITUED")
-	private String longitude;
+	private Double longitude;
 
 	@Column(name = "LATITUDE")
-	private String latitude;
+	private Double latitude;
 
 	@Column(name = "CREATED_DATE")
 	@Temporal(TemporalType.DATE)
@@ -103,7 +106,7 @@ public class Place {
 	/**
 	 * @return the longitude
 	 */
-	public String getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
@@ -111,14 +114,14 @@ public class Place {
 	 * @param longitude
 	 *            the longitude to set
 	 */
-	public void setLongitude(String longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
 	/**
 	 * @return the latitude
 	 */
-	public String getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
@@ -126,7 +129,7 @@ public class Place {
 	 * @param latitude
 	 *            the latitude to set
 	 */
-	public void setLatitude(String latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 

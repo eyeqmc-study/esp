@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-html, body {
+html,body {
 	padding: 0 !important;
 	margin: 0;
 	height: 100%;
@@ -43,59 +43,60 @@ input[type="submit"].btn:hover {
 	background-color: #ffffff;
 }
 
-button.btn, input[type="submit"].btn {
+button.btn,input[type="submit"].btn {
 	*padding-top: 2px;
 	*padding-bottom: 2px;
 }
 
-button.btn::-moz-focus-inner, input[type="submit"].btn::-moz-focus-inner {
+button.btn::-moz-focus-inner,input[type="submit"].btn::-moz-focus-inner
+	{
 	padding: 0;
 	border: 0;
 }
 
-button.btn.btn-large, input[type="submit"].btn.btn-large {
+button.btn.btn-large,input[type="submit"].btn.btn-large {
 	*padding-top: 7px;
 	*padding-bottom: 7px;
 }
 
-button.btn.btn-small, input[type="submit"].btn.btn-small {
+button.btn.btn-small,input[type="submit"].btn.btn-small {
 	*padding-top: 3px;
 	*padding-bottom: 3px;
 }
 
-button.btn.btn-mini, input[type="submit"].btn.btn-mini {
+button.btn.btn-mini,input[type="submit"].btn.btn-mini {
 	*padding-top: 1px;
 	*padding-bottom: 1px;
 }
 
-button, input, select {
+button,input,select {
 	margin: 0;
 	font-size: 100%;
 	vertical-align: middle;
 }
 
-button, input {
+button,input {
 	*overflow: visible;
 	line-height: normal;
 }
 
-button::-moz-focus-inner, input::-moz-focus-inner {
+button::-moz-focus-inner,input::-moz-focus-inner {
 	padding: 0;
 	border: 0;
 }
 
-button, input[type="button"], input[type="reset"], input[type="submit"] {
+button,input[type="button"],input[type="reset"],input[type="submit"] {
 	cursor: pointer;
 	-webkit-appearance: button;
 }
 
-label, input, button, select, textarea {
+label,input,button,select,textarea {
 	font-size: 13px;
 	font-weight: normal;
 	line-height: 18px;
 }
 
-input, button, select, textarea {
+input,button,select,textarea {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -104,7 +105,7 @@ label {
 	margin-bottom: 5px;
 }
 
-input, select {
+input,select {
 	display: inline-block;
 	width: 210px;
 	height: 18px;
@@ -119,7 +120,7 @@ input, select {
 	border-radius: 3px;
 }
 
-input[type="button"], input[type="reset"], input[type="submit"] {
+input[type="button"],input[type="reset"],input[type="submit"] {
 	width: auto;
 	height: auto;
 }
@@ -142,9 +143,12 @@ input {
 
 input:focus {
 	border-color: rgba(82, 168, 236, 0.8);
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+		rgba(82, 168, 236, 0.6);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+		rgba(82, 168, 236, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+		rgba(82, 168, 236, 0.6);
 	outline: 0;
 	outline: thin dotted \9;
 	/* IE6-9 */
@@ -167,7 +171,7 @@ select {
 	background-color: #ffffff;
 }
 
-select[multiple], select[size] {
+select[multiple],select[size] {
 	height: auto;
 }
 
@@ -184,12 +188,21 @@ nav a {
 	width: 18%;
 }
 
-#title a, #user-panel a {
+#title a,#user-panel a {
 	text-decoration: none;
 	color: white;
 }
 
-#title a:hover, #user-panel a:hover {
+#title {
+	font: bold 65px/60px Economica, Helvetica, Arial, Sans-serif;
+	text-align: center;
+	color: #eee;
+	text-shadow: 0px 2px 6px #333;
+	margin: 0;
+	padding-top: 5px;
+}
+
+#title a:hover,#user-panel a:hover {
 	text-decoration: underline;
 }
 
@@ -326,7 +339,6 @@ nav a {
 .ct-box-f16529 {
 	min-height: 20px;
 	padding: 19px;
-	margin-bottom: 20px;
 	border-style: solid;
 	border-color: #f16529;
 	border-width: 2px;
@@ -343,7 +355,13 @@ nav a {
 	border-style: solid;
 	border-color: #f16529;
 	border-width: 2px;
-	vertical-align: middle;
+}
+.ct-border-bottom-f16529 {
+	border-bottom: solid 2px;
+	border-color: #f16529;
+}
+.ct-padding-top {
+	padding-top: 12px;
 }
 
 .ct-bg-e44d26 {
@@ -368,16 +386,6 @@ nav a {
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-
-.std-reg {
-	border-top: 20px solid #e44d26;
-	background: #f16529;
-	color: white;
-	padding: 0px 5% 10px;
-	-webkit-box-shadow: 0 5px 10px #aaa;
-	-moz-box-shadow: 0 5px 10px #aaa;
-	box-shadow: 0 5px 10px #aaa;
 }
 
 .adm-cls {
@@ -447,7 +455,8 @@ ul.tabs li.active a {
 }
 
 ul.tabs li.active.loading a {
-	background: url("/images/indicator.gif") no-repeat scroll 95% center #e44d26;
+	background: url("/images/indicator.gif") no-repeat scroll 95% center
+		#e44d26;
 }
 
 ul.tabs li strong {
@@ -516,11 +525,11 @@ a.reg-study:hover {
 	width: 18%;
 }
 
-#study-room img.preview {
+#study-room-section img.preview {
 	height: 80px;
 }
 
-#study-room .da-img img {
+#study-room-section .da-img img {
 	height: 80px;
 }
 
@@ -562,7 +571,7 @@ a.reg-study:hover {
 	top: 75px;
 }
 
-#study-room p, #no-study p {
+#study-room-section p,#no-study p {
 	font-style: normal;
 }
 
@@ -584,4 +593,80 @@ footer {
 
 #main-container {
 	height: 500px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	width: 100%;
+	
+	-webkit-scrollbar-face-color: #000000;
+	scrollbar-shadow-color: #2D2C4D;
+	scrollbar-highlight-color:#7D7E94;
+	scrollbar-3dlight-color: #7D7E94;
+	scrollbar-darkshadow-color: #2D2C4D;
+	scrollbar-track-color: #7D7E94;
+	scrollbar-arrow-color: #C1C1D1;
+}
+
+@media only screen and (min-width: 768px) {
+	#main article {
+		width: 68%;
+	}
+}
+
+#study-room-section article {
+	-webkit-box-shadow: 0 5px 10px #aaa;
+	-moz-box-shadow: 0 5px 10px #aaa;
+	box-shadow: 0 5px 10px #aaa;
+}
+
+#study-waiting {
+	margin-top: 30px;
+}
+
+label {
+	cursor: auto;
+}
+
+/* Chrome, Safari용 스크롤 바 */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	border: 3px solid #fff;
+}
+
+::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment
+	{
+	display: block;
+	height: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: #efefef;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, .2)
+}
+
+::-webkit-scrollbar-thumb {
+	height: 50px;
+	width: 50px;
+	background: rgba(0, 0, 0, .2);
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, .1)
+}
+
+.join-study {
+	float: right;
+}
+
+#no-study p {
+	width: auto;
+}
+
+.ui-front {
+	z-index: 2000 !important;
+}
+
+.study-schedule p {
+	width: auto !important;
 }

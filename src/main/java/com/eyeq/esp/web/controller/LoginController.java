@@ -20,8 +20,8 @@ import com.eyeq.esp.service.UserManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:27
- * @revision $LastChangedRevision: 5921 $
- * @date $LastChangedDate: 2013-02-04 00:57:36 +0900 (월, 04 2월 2013) $
+ * @revision $LastChangedRevision: 5994 $
+ * @date $LastChangedDate: 2013-02-11 15:52:03 +0900 (월, 11 2월 2013) $
  * @by $LastChangedBy: voyaging $
  */
 @Controller
@@ -30,7 +30,7 @@ public class LoginController {
 
 	@Autowired(required = false)
 	private UserDetailsManager detailsManager;
-	
+
 	@Autowired
 	private UserManager ownerManager;
 
@@ -54,7 +54,7 @@ public class LoginController {
 			user.setUid(inetOrgPerson.getUid());
 			user.setName(inetOrgPerson.getCn()[0]);
 			user.setEmail(inetOrgPerson.getMail());
-			
+
 			if (!userExsit(inetOrgPerson.getUid())) {
 				ownerManager.createUser(user);
 			}
@@ -62,7 +62,7 @@ public class LoginController {
 
 		return "redirect:/";
 	}
-	
+
 	private Boolean userExsit(String uid) {
 		User user = ownerManager.getUser(uid);
 		return user != null;
@@ -72,8 +72,8 @@ public class LoginController {
 	public String dummyLoginHandler(@ModelAttribute("user") User user) {
 		user.setUid("guest");
 		user.setName("게스트");
-		user.setEmail("guest@eyeq.co.kr");
-		user.setRole("ROLE_GUEST");
+		user.setEmail("voyaging@eyeq.co.kr");
+		user.setRole("ROLE_ADMIN");
 		ownerManager.createUser(user);
 		return "redirect:/";
 	}

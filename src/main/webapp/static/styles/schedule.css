@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+
+#scheduler header {
+	width: 100%;
+}
+
+div.main-schedule {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	border: 2px solid #f16529;
+	max-height: 500px;
+	min-height: 400px;
+	height: 500px;
+}
