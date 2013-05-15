@@ -27,10 +27,10 @@
 				<div id="tab-content">
 					<div id="tab-menu" th:fragment="tab-menu">
 						<ul class="tab-list">
-							<li><a href="#" th:href="@{/study(studyRoomId=${studyRoomId})}" title="정보" class="study-info" >정보</a></li>
-							<li><a href="#" th:href="@{/study-article/list(studyRoomId=${studyRoomId})}" title="게시판" class="study-board">게시판</a></li>
-							<li><a href="#" th:href="@{/study-article/list(studyRoomId=${studyRoomId})}" title="구성원" class="study-member">구성원</a></li>
-							<li><a href="#" th:href="@{/study/place(studyRoomId=${studyRoomId})}" title="모임장소" class="study-place">모임장소</a></li>
+							<li><a href="#" th:href="@{/study(studyRoomId=${studyRoom.id})}" title="정보" class="study-info" >정보</a></li>
+							<li><a href="#" th:href="@{/study-article/list(studyRoomId=${studyRoom.id})}" title="게시판" class="study-board">게시판</a></li>
+							<li><a href="#" th:href="@{/study-article/list(studyRoomId=${studyRoom.id})}" title="구성원" class="study-member">구성원</a></li>
+							<li><a href="#" th:href="@{/study/place(studyRoomId=${studyRoom.id})}" title="모임장소" class="study-place">모임장소</a></li>
 						</ul>
 					</div>
 					<div id="tab-main">

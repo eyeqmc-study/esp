@@ -13,9 +13,9 @@ import com.eyeq.esp.service.PlaceManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:21:31
- * @revision $LastChangedRevision: 5999 $
- * @date $LastChangedDate: 2013-02-12 07:22:21 +0900 (화, 12 2월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 6070 $
+ * @date $LastChangedDate: 2013-02-16 12:31:02 +0900 (토, 16 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 @Service("placeManager")
 @Transactional
@@ -59,10 +59,10 @@ public class PlaceManagerImpl extends AbstractJpaDaoService implements
 	 * @see com.eyeq.esp.service.PlaceManager#getPlaces()
 	 */
 	@Transactional(readOnly = true)
-	@SuppressWarnings("unchecked")
 	public List<Place> getPlaces() {
 		List<Place> results = getEntityManager().createNamedQuery(
-				"com.eyeq.esp.model.Place@getPlaces()").getResultList();
+				"com.eyeq.esp.model.Place@getPlaces()", Place.class)
+				.getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results;

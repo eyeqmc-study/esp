@@ -1,6 +1,7 @@
 package com.eyeq.esp.web.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -26,9 +27,9 @@ import com.eyeq.esp.service.UserManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:33
- * @revision $LastChangedRevision: 5997 $
- * @date $LastChangedDate: 2013-02-12 01:11:31 +0900 (화, 12 2월 2013) $
- * @by $LastChangedBy: samkwang.na $
+ * @revision $LastChangedRevision: 6035 $
+ * @date $LastChangedDate: 2013-02-15 02:52:03 +0900 (금, 15 2월 2013) $
+ * @by $LastChangedBy: voyaging $
  */
 @Controller
 public class MainController {
@@ -45,9 +46,21 @@ public class MainController {
 	@Autowired
 	private StudyRoomManager roomManager;
 
-	@ModelAttribute("allStudyRooms")
-	public List<StudyRoom> populateStudyRooms() {
-		return this.roomManager.getStudyRooms();
+	@ModelAttribute("disabledStudyRooms")
+	public List<StudyRoom> disabledStudyRooms() {
+		List<StudyRoom> studyRooms = this.roomManager.getStudyRooms();
+		List<StudyRoom> disabledStudyRooms = null;
+		if (studyRooms != null) {
+			for (StudyRoom room : studyRooms) {
+				if (!room.getEnabled()) {
+					if (disabledStudyRooms == null) {
+						disabledStudyRooms = new ArrayList<StudyRoom>();
+					}
+					disabledStudyRooms.add(room);
+				}
+			}
+		}
+		return disabledStudyRooms;
 	}
 
 	@ModelAttribute("enabledStudyRoom")

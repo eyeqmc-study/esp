@@ -27,8 +27,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 /**
  * @author Hana Lee
  * @since 0.1.1 2013. 2. 2. 오후 1:06:46
- * @revision $LastChangedRevision: 6000 $
- * @date $LastChangedDate: 2013-02-12 21:09:28 +0900 (화, 12 2월 2013) $
+ * @revision $LastChangedRevision: 6047 $
+ * @date $LastChangedDate: 2013-02-15 14:18:13 +0900 (금, 15 2월 2013) $
  * @by $LastChangedBy: samkwang.na $
  */
 @Configuration
@@ -72,11 +72,12 @@ public class SpringAppConfig {
 	@Bean
 	public JpaVendorAdapter jpaVendorAdapter() {
 		HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-		/*
-		 * jpaVendorAdapter
-		 * .setDatabasePlatform("org.hibernate.dialect.Oracle10gDialect");
-		 */
-		/* jpaVendorAdapter.setDatabase(Database.ORACLE); */
+
+		/*jpaVendorAdapter
+				.setDatabasePlatform("org.hibernate.dialect.Oracle10gDialect");
+
+		jpaVendorAdapter.setDatabase(Database.ORACLE);*/
+		
 		jpaVendorAdapter
 				.setDatabasePlatform("org.hibernate.dialect.MySQL5Dialect");
 		jpaVendorAdapter.setDatabase(Database.MYSQL);

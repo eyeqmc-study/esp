@@ -27,13 +27,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.eyeq.esp.model.Image;
 import com.eyeq.esp.model.User;
 import com.eyeq.esp.service.ImageManager;
+import com.eyeq.esp.service.UserManager;
 
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:20
- * @revision $LastChangedRevision: 5974 $
- * @date $LastChangedDate: 2013-02-08 03:37:09 +0900 (금, 08 2월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 6111 $
+ * @date $LastChangedDate: 2013-02-22 23:57:37 +0900 (금, 22 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 @Controller
 @SessionAttributes(value = { "image" }, types = { Image.class })
@@ -43,6 +44,9 @@ public class ImageController {
 
 	@Autowired
 	private ImageManager imageManager;
+
+	@Autowired
+	private UserManager userManager;
 
 	@RequestMapping(value = "/image/upload", method = RequestMethod.POST)
 	public @ResponseBody
@@ -69,6 +73,7 @@ public class ImageController {
 		imageManager.updateImage(image);
 
 		model.addAttribute("image", image);
+		httpSession.setAttribute("image", image);
 
 		List<Map<String, Object>> files = new ArrayList<Map<String, Object>>();
 		Map<String, Object> fileInfo = new HashMap<String, Object>();

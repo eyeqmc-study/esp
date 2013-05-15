@@ -7,8 +7,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -25,24 +23,20 @@ import javax.persistence.TemporalType;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:14:54
- * @revision $LastChangedRevision: 5999 $
- * @date $LastChangedDate: 2013-02-12 07:22:21 +0900 (화, 12 2월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 6112 $
+ * @date $LastChangedDate: 2013-02-22 23:59:39 +0900 (금, 22 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 @Entity
 @Table(name = "STUDYROOMS")
 @NamedQueries({
 		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms(ownerId)", query = "from StudyRoom as studyRoom where OWNER = :ownerId"),
 		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms(enabled)", query = "from StudyRoom as studyRoom where ENABLED = :enabled"),
+		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRoom(id)", query = "from StudyRoom as studyRoom where id = :studyRoomId"),
 		@NamedQuery(name = "com.eyeq.esp.model.StudyRoom@getStudyRooms()", query = "from StudyRoom as studyRoom") })
-public class StudyRoom {
+public class StudyRoom extends BaseEntity {
 
-	@Id
-	@GeneratedValue
-	@Column(name = "ID")
-	private Integer id;
-
-	@Column(name = "NAME")
+	@Column(name = "NAME", nullable = false)
 	private String name;
 
 	@Column(name = "DESCRIPTION", length = 1024)
@@ -53,7 +47,7 @@ public class StudyRoom {
 	private Set<User> members;
 
 	@ManyToOne
-	@JoinColumn(name = "ownerId")
+	@JoinColumn(name = "ownerId", nullable = false)
 	private User owner;
 
 	@Column(name = "START_DATE")
@@ -64,7 +58,8 @@ public class StudyRoom {
 	@Temporal(TemporalType.DATE)
 	private Date endDate;
 
-	@OneToMany(targetEntity = Article.class, mappedBy = "studyRoom", cascade = CascadeType.ALL)
+	@OneToMany(targetEntity = Article.class, mappedBy = "studyRoom", cascade = {
+			CascadeType.MERGE, CascadeType.REMOVE })
 	@OrderBy("id desc")
 	private Set<Article> articles;
 
@@ -72,41 +67,11 @@ public class StudyRoom {
 	@JoinColumn(name = "placeId")
 	private Place studyPlace;
 
-	@OneToOne
+	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
 	@JoinColumn(name = "imageId")
 	private Image studyImage;
 
-	@Column(name = "CREATED_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date createdDate;
-
-	@Column(name = "MODIFIED_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date modifiedDate;
-
-	@Column(name = "DELETED_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date deletedDate;
-
-	@Column(name = "ENABLED")
-	private Boolean enabled = false;
-
 	public StudyRoom() {
-	}
-
-	/**
-	 * @return the id
-	 */
-	public Integer getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	/**
@@ -246,66 +211,6 @@ public class StudyRoom {
 	 */
 	public void setStudyImage(Image studyImage) {
 		this.studyImage = studyImage;
-	}
-
-	/**
-	 * @return the createdDate
-	 */
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	/**
-	 * @param createdDate
-	 *            the createdDate to set
-	 */
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	/**
-	 * @return the modifiedDate
-	 */
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	/**
-	 * @param modifiedDate
-	 *            the modifiedDate to set
-	 */
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	/**
-	 * @return the deletedDate
-	 */
-	public Date getDeletedDate() {
-		return deletedDate;
-	}
-
-	/**
-	 * @param deletedDate
-	 *            the deletedDate to set
-	 */
-	public void setDeletedDate(Date deletedDate) {
-		this.deletedDate = deletedDate;
-	}
-
-	/**
-	 * @return the enabled
-	 */
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	/**
-	 * @param enabled
-	 *            the enabled to set
-	 */
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
 	}
 
 	/**

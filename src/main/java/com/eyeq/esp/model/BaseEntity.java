@@ -2,35 +2,40 @@ package com.eyeq.esp.model;
 
 import java.util.Date;
 
-/**
- * @author Hana Lee
- * @since 0.0.2 2013. 1. 21. 오전 7:14:37
- * @revision $LastChangedRevision: 5808 $
- * @date $LastChangedDate: 2013-01-21 07:20:31 +0900 (월, 21 1월 2013) $
- * @by $LastChangedBy: voyaging $
- */
-public class BaseEntity {
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+@MappedSuperclass
+public abstract class BaseEntity {
+
+	@Id
+	@GeneratedValue
+	@Column(name = "ID")
 	private Integer id;
 
+	@Column(name = "CREATED_DATE")
+	@Temporal(TemporalType.DATE)
 	private Date createdDate;
 
+	@Column(name = "MODIFIED_DATE")
+	@Temporal(TemporalType.DATE)
 	private Date modifiedDate;
 
+	@Column(name = "DELETED_DATE")
+	@Temporal(TemporalType.DATE)
 	private Date deletedDate;
 
-	private Boolean enabled;
+	@Column(name = "ENABLED")
+	private Boolean enabled = true;
 
 	public BaseEntity() {
+		super();
 	}
 
-	/**
-	 * @param id
-	 * @param createdDate
-	 * @param modifiedDate
-	 * @param deletedDate
-	 * @param enabled
-	 */
 	public BaseEntity(Integer id, Date createdDate, Date modifiedDate,
 			Date deletedDate, Boolean enabled) {
 		super();
@@ -57,15 +62,15 @@ public class BaseEntity {
 	}
 
 	/**
-	 * @return the createDate
+	 * @return the createdDate
 	 */
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 
 	/**
-	 * @param createDate
-	 *            the createDate to set
+	 * @param createdDate
+	 *            the createdDate to set
 	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
@@ -87,15 +92,15 @@ public class BaseEntity {
 	}
 
 	/**
-	 * @return the deleteDate
+	 * @return the deletedDate
 	 */
 	public Date getDeletedDate() {
 		return deletedDate;
 	}
 
 	/**
-	 * @param deleteDate
-	 *            the deleteDate to set
+	 * @param deletedDate
+	 *            the deletedDate to set
 	 */
 	public void setDeletedDate(Date deletedDate) {
 		this.deletedDate = deletedDate;
@@ -114,10 +119,6 @@ public class BaseEntity {
 	 */
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
-	}
-
-	public boolean isNew() {
-		return (this.id == null);
 	}
 
 }

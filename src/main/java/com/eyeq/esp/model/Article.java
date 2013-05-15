@@ -1,13 +1,11 @@
 package com.eyeq.esp.model;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -15,14 +13,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:14:29
- * @revision $LastChangedRevision: 5983 $
- * @date $LastChangedDate: 2013-02-09 02:38:37 +0900 (토, 09 2월 2013) $
+ * @revision $LastChangedRevision: 6112 $
+ * @date $LastChangedDate: 2013-02-22 23:59:39 +0900 (금, 22 2월 2013) $
  * @by $LastChangedBy: jmlim $
  */
 @Entity
@@ -31,81 +27,29 @@ import javax.persistence.TemporalType;
 		@NamedQuery(name = "com.eyeq.esp.model.Article@getArticle(articleId)", query = "from Article as article where ID = :articleId"),
 		@NamedQuery(name = "com.eyeq.esp.model.Article@getEnabledArticles(studyRooomId)", query = "from Article as article where STUDYROOM_ID = :studyRoomId and ENABLED = 1 order by ID desc"),
 		@NamedQuery(name = "com.eyeq.esp.model.Article@getArticles()", query = "from Article as article order by ID desc") })
-public class Article {
+public class Article extends BaseEntity {
 
-	@Id
-	@GeneratedValue
-	@Column(name = "ID")
-	private Integer id;
-
-	@ManyToOne(cascade = { CascadeType.ALL })
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.LAZY)
 	// 임시
-	@JoinColumn(name = "owner")
+	@JoinColumn(name = "owner", nullable = false)
 	private User owner;
 
 	@Lob
-	@Column
+	@Column(nullable = false)
 	private String content;
 
-	@Column(name = "TITLE")
+	@Column(name = "TITLE", nullable = false)
 	private String title;
 
-	@OneToMany(targetEntity = ArticleReply.class, mappedBy = "article", cascade = CascadeType.ALL)
+	@OneToMany(targetEntity = ArticleReply.class, mappedBy = "article", cascade = {
+			CascadeType.MERGE, CascadeType.REMOVE })
 	private List<ArticleReply> articleReplies;
 
-	@ManyToOne(cascade = { CascadeType.ALL })
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE })
 	@JoinColumn(name = "STUDYROOM_ID")
 	private StudyRoom studyRoom;
 
-	@Column(name = "CREATED_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date createdDate;
-
-	@Column(name = "MODIFIED_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date modifiedDate;
-
-	@Column(name = "DELETED_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date deletedDate;
-
-	@Column(name = "ENABLED")
-	private Boolean enabled = true;
-
 	public Article() {
-	}
-
-	/**
-	 * @param id
-	 * @param createdDate
-	 * @param modifiedDate
-	 * @param deletedDate
-	 * @param enabled
-	 * @param owner
-	 * @param content
-	 * @param title
-	 * @param studyRoom
-	 */
-	public Article(Integer id, Date createdDate, Date modifiedDate,
-			Date deletedDate, Boolean enabled, User owner, String content,
-			String title, StudyRoom studyRoom) {
-		this.id = id;
-		this.owner = owner;
-		this.content = content;
-		this.title = title;
-		this.studyRoom = studyRoom;
-		this.createdDate = createdDate;
-		this.modifiedDate = modifiedDate;
-		this.deletedDate = deletedDate;
-		this.enabled = enabled;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	/**
@@ -181,38 +125,6 @@ public class Article {
 	 */
 	public void setStudyRoom(StudyRoom studyRoom) {
 		this.studyRoom = studyRoom;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	public Date getDeletedDate() {
-		return deletedDate;
-	}
-
-	public void setDeletedDate(Date deletedDate) {
-		this.deletedDate = deletedDate;
-	}
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
 	}
 
 }

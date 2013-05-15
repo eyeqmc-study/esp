@@ -1,31 +1,27 @@
 package com.eyeq.esp.model;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:11:00
- * @revision $LastChangedRevision: 6000 $
- * @date $LastChangedDate: 2013-02-12 21:09:28 +0900 (화, 12 2월 2013) $
- * @by $LastChangedBy: samkwang.na $
+ * @revision $LastChangedRevision: 6112 $
+ * @date $LastChangedDate: 2013-02-22 23:59:39 +0900 (금, 22 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 @Entity
 @Table(name = "USERS")
@@ -33,28 +29,23 @@ import javax.persistence.TemporalType;
 		@NamedQuery(name = "com.eyeq.esp.model.User@getUser():param.userId", query = "from User as user where ID = :userId"),
 		@NamedQuery(name = "com.eyeq.esp.model.User@getUser():param.uId", query = "from User as user where U_ID = :uId"),
 		@NamedQuery(name = "com.eyeq.esp.model.User@getUser()", query = "from User as user") })
-public class User {
-
-	@Id
-	@GeneratedValue
-	@Column(name = "ID")
-	private Integer id;
+public class User extends BaseEntity {
 
 	// uid 를 부적합한 식별자 때문에 변경하였음.
-	@Column(name = "U_ID")
+	@Column(name = "U_ID", nullable = false)
 	private String uid;
 
-	@Column(name = "NAME")
+	@Column(name = "NAME", nullable = false)
 	private String name;
 
-	@Column(name = "EMAIL")
+	@Column(name = "EMAIL", nullable = false)
 	private String email;
 
 	@Column(name = "PASSWORD")
 	private String password;
 
 	@OneToMany(targetEntity = Article.class, mappedBy = "owner", cascade = CascadeType.ALL)
-	private Set<Article> articles;
+	private List<Article> articles;
 
 	@Column(name = "PENALTY")
 	private Integer penaltyScore = 0;
@@ -63,30 +54,11 @@ public class User {
 	@JoinTable(name = "USER_STUDYROOM", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "STUDYROOM_ID") })
 	private Set<StudyRoom> studyRooms;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "userImage")
-	private Image userImage;
-
-	@Column(name = "CREATED_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date createdDate;
-
-	@Column(name = "MODIFIED_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date modifiedDate;
-
-	@Column(name = "DELETED_DATE")
-	@Temporal(TemporalType.DATE)
-	private Date deletedDate;
-
-	@Column(name = "ENABLED")
-	private Boolean enabled = true;
-
 	@Column(name = "ROLE")
 	private String role;
 
 	@OneToMany(targetEntity = Penalty.class, cascade = CascadeType.ALL)
-	private Set<Penalty> penalties;
+	private List<Penalty> penalties;
 
 	public User() {
 	}
@@ -100,21 +72,6 @@ public class User {
 		this.uid = uid;
 		this.name = name;
 		this.email = email;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public Integer getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	/**
@@ -135,9 +92,9 @@ public class User {
 	/**
 	 * @return the articles
 	 */
-	public Set<Article> getArticles() {
+	public List<Article> getArticles() {
 		if (this.articles == null) {
-			this.articles = new HashSet<Article>();
+			this.articles = new ArrayList<Article>();
 		}
 		return this.articles;
 	}
@@ -145,23 +102,23 @@ public class User {
 	/**
 	 * @param article
 	 */
-	protected void addArticle(Article article) {
+	public void addArticle(Article article) {
 		getArticles().add(article);
 	}
 
 	/**
 	 * @param penalty
 	 */
-	protected void addPenalty(Penalty penalty) {
+	public void addPenalty(Penalty penalty) {
 		getPenalties().add(penalty);
 	}
 
 	/**
 	 * @return the penalties
 	 */
-	public Set<Penalty> getPenalties() {
+	public List<Penalty> getPenalties() {
 		if (this.penalties == null) {
-			this.penalties = new HashSet<Penalty>();
+			this.penalties = new ArrayList<Penalty>();
 		}
 		return this.penalties;
 	}
@@ -170,7 +127,7 @@ public class User {
 	 * @param penalties
 	 *            the penalties to set
 	 */
-	public void setPenalties(Set<Penalty> penalties) {
+	public void setPenalties(List<Penalty> penalties) {
 		this.penalties = penalties;
 	}
 
@@ -252,85 +209,10 @@ public class User {
 	}
 
 	/**
-	 * @return the userImage
-	 */
-	public Image getUserImage() {
-		return userImage;
-	}
-
-	/**
-	 * @param userImage
-	 *            the userImage to set
-	 */
-	public void setUserImage(Image userImage) {
-		this.userImage = userImage;
-	}
-
-	/**
-	 * @return the createdDate
-	 */
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	/**
-	 * @param createdDate
-	 *            the createdDate to set
-	 */
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	/**
-	 * @return the modifiedDate
-	 */
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-
-	/**
-	 * @param modifiedDate
-	 *            the modifiedDate to set
-	 */
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	/**
-	 * @return the deletedDate
-	 */
-	public Date getDeletedDate() {
-		return deletedDate;
-	}
-
-	/**
-	 * @param deletedDate
-	 *            the deletedDate to set
-	 */
-	public void setDeletedDate(Date deletedDate) {
-		this.deletedDate = deletedDate;
-	}
-
-	/**
-	 * @return the enabled
-	 */
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	/**
-	 * @param enabled
-	 *            the enabled to set
-	 */
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	/**
 	 * @param articles
 	 *            the articles to set
 	 */
-	public void setArticles(Set<Article> articles) {
+	public void setArticles(List<Article> articles) {
 		this.articles = articles;
 	}
 

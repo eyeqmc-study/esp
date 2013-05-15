@@ -37,25 +37,63 @@ th:href="@{/static/styles/article.css}" />
 					<div id="tab-menu" th:include="pages/study-main :: tab-menu">
 					</div>
 					<div id="tab-main">
-						<form id="article-edit-form" method="post" action="/study-article/edit-form-submit" th:action="@{/study-article/edit-form-submit}">
+						<form id="article-edit-form" method="post" th:object="${article}" action="/study-article/edit-form-submit" th:action="@{/study-article/edit-form-submit}">
 							<div class="write-and-update well well-small article-well">
 								<p class="article">
 									<!-- <label for="title">제목</label> -->
-									<input class="input-xxlarge" type="text" name="title" placeholder="제목" th:value="${article} ? ${article.title} : ''"/>
+									<!-- <input type="text" name="title" placeholder="제목" th:value="${article} ? ${article.title} : ''"/> -->
+									<input class="input-xxlarge" id="article-title" type="text" th:maxlength="50" th:field="*{title}"
+										placeholder="제목"
+										th:class="${#fields.hasErrors('title')}? 'input-xlarge fieldError' : 'input-xlarge'" />
+										<span th:if="${#fields.hasErrors('title')}"  class="text-error"  th:errors="*{title}">title error</span>
 								</p>
+								<div th:if="${#fields.hasErrors('content')}" class="text-error"
+									th:errors="*{content}">content error</div>
 								<p class="article">
-									<textarea id="article-content" name="content" rows="10" cols="50" th:text="${article} ? ${article.content} : ''">content</textarea>
-									<script type="text/javascript">
+									<textarea id="article-content" th:field="*{content}" rows="10" cols="50" th:class="${#fields.hasErrors('title')}? 'fieldError'">content</textarea>
+									<script type="text/javascript" th:inline="javascript">
 										//<![CDATA[
-										 CKEDITOR.replace( 'article-content',{
+										 var contentEditor = CKEDITOR.replace( 'article-content',{
+											 forceSimpleAmpersand: true,
+											 forcePasteAsPlainText: true,
 											 height: "140px"
 											 } );
+
+										 CKEDITOR.add(contentEditor);
+										 window.setTimeout(function() {
+											 CKEDITOR.instances['article-content'].setData([[*{content}]]);
+										 },500);
+										 /*
+										  pbckcode: {
+													    'cls'         : 'prettyprint linenums', // the class(es) added to the pre tag, useful if you use a syntax highlighter (here it is Google Prettify)
+													    'modes'       : [ 
+															["C/C++"        , "c_pp"],
+															["CSS"          , "css"],
+															["Diff"         , "diff"],
+															["HTML"         , "html"],
+															["Java"         , "java"],
+															["JavaScript"   , "javascript"],
+															["JSON"         , "json"],
+															["JSP"          , "jsp"],
+															["Perl"         , "perl"],
+															["PHP"          , "php"],
+															["Python"       , "python"],
+															["R"            , "ruby"],
+															["Scala"        , "scala"],
+															["SQL"          , "sql"],
+															["Text"         , "text"],
+															["XML"          , "xml"]
+													    ], // all the languages you want to deal with in the plugin
+													    'defaultMode' : 'JavaScript', // the default value for the mode select. Well in fact it is the first value of the mode array
+													    'theme' : 'textmate' // the theme of the code editor
+													}
+										 */
 										//]]>
 									</script>
 								</p>
 								<p>
-									<input type="hidden" name="id" th:value="${article} ? ${article.id} : ''"/>
-									<input type="hidden" name="studyRoomId" th:value="${studyRoomId}"/>
+									<input type="hidden" th:field="*{id}"/>
+									<input type="hidden" name="studyRoomId" th:value="${studyRoom.id}"/>
 									<input type="submit" value="전송" class="btn btn-small btn-primary"/>
 								</p>
 							</div><!-- commentWrite close -->

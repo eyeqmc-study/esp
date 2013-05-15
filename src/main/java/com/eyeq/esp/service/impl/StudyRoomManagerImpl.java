@@ -14,8 +14,8 @@ import com.eyeq.esp.service.StudyRoomManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:21:48
- * @revision $LastChangedRevision: 5950 $
- * @date $LastChangedDate: 2013-02-06 04:17:52 +0900 (수, 06 2월 2013) $
+ * @revision $LastChangedRevision: 6070 $
+ * @date $LastChangedDate: 2013-02-16 12:31:02 +0900 (토, 16 2월 2013) $
  * @by $LastChangedBy: jmlim $
  */
 @Service("studyManager")
@@ -62,11 +62,12 @@ public class StudyRoomManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.StudyRoomManager#getStudyRooms()
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<StudyRoom> getStudyRooms() {
-		List<StudyRoom> results = getEntityManager().createNamedQuery(
-				"com.eyeq.esp.model.StudyRoom@getStudyRooms()").getResultList();
+		List<StudyRoom> results = getEntityManager()
+				.createNamedQuery(
+						"com.eyeq.esp.model.StudyRoom@getStudyRooms()",
+						StudyRoom.class).getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results;
@@ -78,13 +79,13 @@ public class StudyRoomManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.StudyRoomManager#getStudyRooms(com.eyeq.esp.model.User)
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<StudyRoom> getStudyRooms(User user) {
 		List<StudyRoom> results = getEntityManager()
 				.createNamedQuery(
-						"com.eyeq.esp.model.StudyRoom@getStudyRooms(ownerId)")
-				.setParameter("ownerId", user.getId()).getResultList();
+						"com.eyeq.esp.model.StudyRoom@getStudyRooms(ownerId)",
+						StudyRoom.class).setParameter("ownerId", user.getId())
+				.getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results;
@@ -93,15 +94,15 @@ public class StudyRoomManagerImpl extends AbstractJpaDaoService implements
 	}
 
 	/**
-	 * @see com.eyeq.esp.service.StudyRoomManager#getStudyRoom(java.lang.Boolean)
+	 * @see com.eyeq.esp.service.StudyRoomManager#getEnabledStudyRooms()
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<StudyRoom> getEnabledStudyRooms() {
 		List<StudyRoom> results = getEntityManager()
 				.createNamedQuery(
-						"com.eyeq.esp.model.StudyRoom@getStudyRooms(enabled)")
-				.setParameter("enabled", true).getResultList();
+						"com.eyeq.esp.model.StudyRoom@getStudyRooms(enabled)",
+						StudyRoom.class).setParameter("enabled", true)
+				.getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results;

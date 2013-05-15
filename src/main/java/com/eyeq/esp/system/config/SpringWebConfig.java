@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.thymeleaf.spring3.SpringTemplateEngine;
 import org.thymeleaf.spring3.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
@@ -26,9 +27,9 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 /**
  * @author Hana Lee
  * @since 0.1.1 2013. 2. 2. 오후 2:09:56
- * @revision $LastChangedRevision: 5972 $
- * @date $LastChangedDate: 2013-02-08 03:14:31 +0900 (금, 08 2월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 6102 $
+ * @date $LastChangedDate: 2013-02-21 21:03:48 +0900 (목, 21 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 @Configuration
 @EnableWebMvc
@@ -125,4 +126,23 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 
 		return resolver;
 	}
+
+	@Bean
+	public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
+		RequestMappingHandlerAdapter requestMappingHandlerAdapter = new RequestMappingHandlerAdapter();
+		requestMappingHandlerAdapter.setSynchronizeOnSession(true);
+		return requestMappingHandlerAdapter;
+	}
+
+	/*
+	 * @Bean public SimpleMappingExceptionResolver
+	 * simpleMappingExceptionResolver() { SimpleMappingExceptionResolver
+	 * exceptionResolver = new SimpleMappingExceptionResolver();
+	 * exceptionResolver.setOrder(2); Properties mappings = new Properties();
+	 * mappings.setProperty(
+	 * "org.springframework.web.HttpSessionRequiredException",
+	 * "redirect:/?articleSubmitDuprecate=problem");
+	 * exceptionResolver.setExceptionMappings(mappings); return
+	 * exceptionResolver; }
+	 */
 }

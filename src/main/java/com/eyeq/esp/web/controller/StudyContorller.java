@@ -2,6 +2,7 @@ package com.eyeq.esp.web.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -34,8 +35,8 @@ import com.eyeq.esp.service.UserManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:40
- * @revision $LastChangedRevision: 5999 $
- * @date $LastChangedDate: 2013-02-12 07:22:21 +0900 (화, 12 2월 2013) $
+ * @revision $LastChangedRevision: 6044 $
+ * @date $LastChangedDate: 2013-02-15 11:33:19 +0900 (금, 15 2월 2013) $
  * @by $LastChangedBy: voyaging $
  */
 @Controller
@@ -100,14 +101,30 @@ public class StudyContorller {
 		Image image = (Image) session.getAttribute("image");
 		Place place = (Place) session.getAttribute("studyPlace");
 
+		List<StudyRoom> rooms = roomManager.getStudyRooms();
+		Boolean existEnabledRoom = false;
+		if (rooms != null) {
+			for (StudyRoom room : rooms) {
+				if (room.getEnabled()) {
+					existEnabledRoom = true;
+					break;
+				}
+			}
+		}
+
 		studyRoom.setStudyImage(image);
 		studyRoom.setStudyPlace(place);
 		studyRoom.setOwner(owner);
 		studyRoom.addMember(owner);
-		studyRoom.setEnabled(true);
+		if (existEnabledRoom) {
+			studyRoom.setEnabled(false);
+		} else {
+			studyRoom.setEnabled(true);
+		}
 
 		roomManager.updateStudyRoom(studyRoom);
 		session.removeAttribute("image");
+		session.removeAttribute("studyPlace");
 		return "redirect:/";
 	}
 

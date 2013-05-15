@@ -14,8 +14,8 @@ import com.eyeq.esp.service.ArticleManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:15:55
- * @revision $LastChangedRevision: 5984 $
- * @date $LastChangedDate: 2013-02-09 05:11:03 +0900 (토, 09 2월 2013) $
+ * @revision $LastChangedRevision: 6070 $
+ * @date $LastChangedDate: 2013-02-16 12:31:02 +0900 (토, 16 2월 2013) $
  * @by $LastChangedBy: jmlim $
  */
 @Service("articleManager")
@@ -59,12 +59,12 @@ public class ArticleManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.ArticleManager#getArticles()
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<Article> getArticles() {
 
 		List<Article> results = getEntityManager().createNamedQuery(
-				"com.eyeq.esp.model.Article@getArticles()").getResultList();
+				"com.eyeq.esp.model.Article@getArticles()", Article.class)
+				.getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results;
@@ -76,14 +76,14 @@ public class ArticleManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.ArticleManager#getEnabledArticles(java.lang.Integer)
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<Article> getEnabledArticles(Integer studyRoomId) {
 		// TODO Auto-generated method stub
 		List<Article> results = getEntityManager()
 				.createNamedQuery(
-						"com.eyeq.esp.model.Article@getEnabledArticles(studyRooomId)")
-				.setParameter("studyRoomId", studyRoomId).getResultList();
+						"com.eyeq.esp.model.Article@getEnabledArticles(studyRooomId)",
+						Article.class).setParameter("studyRoomId", studyRoomId)
+				.getResultList();
 		if (results != null && results.size() > 0) {
 			return results;
 		}
@@ -127,13 +127,13 @@ public class ArticleManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.ArticleManager#getEnabledArticleReplies(java.lang.Integer)
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<ArticleReply> getEnabledArticleReplies(Integer articleId) {
 		// TODO Auto-generated method stub
 		List<ArticleReply> results = getEntityManager()
 				.createNamedQuery(
-						"com.eyeq.esp.model.ArticleReply@getArticleReplies(articleId)")
+						"com.eyeq.esp.model.ArticleReply@getArticleReplies(articleId)",
+						ArticleReply.class)
 				.setParameter("articleId", articleId).getResultList();
 		if (results != null && results.size() > 0) {
 			return results;

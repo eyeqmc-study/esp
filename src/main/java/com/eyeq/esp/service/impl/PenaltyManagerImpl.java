@@ -13,9 +13,9 @@ import com.eyeq.esp.service.PenaltyManager;
 /**
  * @author Samkwang Na
  * @since 0.3.1 2013. 2. 12. 오후 10:34:10
- * @revision $LastChangedRevision: 6010 $
- * @date $LastChangedDate: 2013-02-13 12:48:54 +0900 (수, 13 2월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 6070 $
+ * @date $LastChangedDate: 2013-02-16 12:31:02 +0900 (토, 16 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 @Service("penaltyManager")
 @Transactional
@@ -49,11 +49,12 @@ public class PenaltyManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.PenaltyManager#getPenalties()
 	 */
-	@SuppressWarnings("unchecked")
+
 	@Transactional(readOnly = true)
 	public List<Penalty> getPenalties() {
 		List<Penalty> results = getEntityManager().createNamedQuery(
-				"com.eyeq.esp.model.Penalty@getPenalties()").getResultList();
+				"com.eyeq.esp.model.Penalty@getPenalties()", Penalty.class)
+				.getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results;

@@ -319,6 +319,11 @@ nav a {
 	padding: 2px;
 	white-space: nowrap;
 }
+.width600 {
+	width: 600px;
+	padding: 2px;
+	white-space: nowrap;
+}
 
 .ct-box {
 	border-style: solid;
@@ -530,7 +535,8 @@ a.reg-study:hover {
 }
 
 #study-room-section .da-img img {
-	height: 80px;
+	height: 100px;
+	width: 100px;
 }
 
 @media only screen and (min-width: 480px) {
@@ -655,7 +661,7 @@ label {
 	-webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, .1)
 }
 
-.join-study {
+#study-room .join-study {
 	float: right;
 }
 
@@ -669,4 +675,14 @@ label {
 
 .study-schedule p {
 	width: auto !important;
+}
+
+#study-waiting .p5 {
+	left: 85%;
+}
+
+.penalty-panel{
+-webkit-box-shadow: 0 5px 10px #aaa;
+-moz-box-shadow: 0 5px 10px #aaa;
+box-shadow: 0 5px 10px #aaa;
 }

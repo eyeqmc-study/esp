@@ -21,16 +21,129 @@
 <link rel="stylesheet" type="text/css" href="../../static/styles/article.css"
 th:href="@{/static/styles/article.css}" />
 
-<script type="text/javascript">
-	$(document).ready(function(){
+
+<script type="text/javascript" th:src="@{/static/syntaxhighlighter_3.0.83/scripts/shCore.js}"></script>
+ 
+<!--
+    At least one brush, here we choose JS. You need to include a brush for every 
+    language you want to highlight
+-->
+<script type="text/javascript" th:src="@{/static/syntaxhighlighter_3.0.83/scripts/shAutoloader.js}"></script>
+ 
+<!-- Include *at least* the core style and default theme -->
+<link th:href="@{/static/syntaxhighlighter_3.0.83/styles/shCore.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/static/syntaxhighlighter_3.0.83/styles/shCoreDefault.css}" rel="stylesheet" type="text/css" />
+
+
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	function tabResizeIconPosition(selector) {
+		var width = $("#tab-main").outerWidth() - 4;
+		var height = $("#tab-main").outerHeight() / 2;
+
+		$("#tab-main " + selector).css({
+			"left" : width + "px",
+			"top" : 180 + "px",
+			"position" : "absolute"
+		});
+	}
+
+	$(window).resize(function() {
+		tabResizeIconPosition("#tab-resize-full");
+		tabResizeIconPosition("#tab-resize-small");
+	});
+	
+	function highlighterPath() {
+		var args = arguments,
+		    result = [];
+		     
+		for(var i = 0; i < args.length; i++) {
+		    result.push(args[i].replace("@", [[@{/static/syntaxhighlighter_3.0.83/scripts/}]]));
+		    
+		}
+		return result;
+	};
+	
+	function loadSyntaxHighlighter() {
+		SyntaxHighlighter.autoloader.apply(null, highlighterPath(
+			'applescript            @shBrushAppleScript.js',
+			'actionscript3 as3      @shBrushAS3.js',
+			'bash shell             @shBrushBash.js',
+			'coldfusion cf          @shBrushColdFusion.js',
+			'cpp c                  @shBrushCpp.js',
+			'c# c-sharp csharp      @shBrushCSharp.js',
+			'css                    @shBrushCss.js',
+			'delphi pascal          @shBrushDelphi.js',
+			'diff patch pas         @shBrushDiff.js',
+			'erl erlang             @shBrushErlang.js',
+			'groovy                 @shBrushGroovy.js',
+			'java                   @shBrushJava.js',
+			'jfx javafx             @shBrushJavaFX.js',
+			'js jscript javascript  @shBrushJScript.js',
+			'perl pl                @shBrushPerl.js',
+			'php                    @shBrushPhp.js',
+			'text plain             @shBrushPlain.js',
+			'py python              @shBrushPython.js',
+			'ruby rails ror rb      @shBrushRuby.js',
+			'sass scss              @shBrushSass.js',
+			'scala                  @shBrushScala.js',
+			'sql                    @shBrushSql.js',
+			'vb vbnet               @shBrushVb.js',
+			'xml xhtml xslt html    @shBrushXml.js'
+		));
+		SyntaxHighlighter.all();
+	}
+	
+	$(document).ready(function() {
+		loadSyntaxHighlighter();
+
 		$("#tab-menu .tab-list a.active").removeClass("active");
 		$("#tab-menu .tab-list a.study-board").addClass("active");
+
+		var resizeFull = "#tab-resize-full";
+		var resizeSmall = "#tab-resize-small";
+
+		tabResizeIconPosition(resizeFull);
+
+		$("#tab-main "+resizeFull).click(function() {
+			$("#main").find("article").animate({
+				width : "100%"
+			}, function() {
+				$(resizeSmall).show();
+				tabResizeIconPosition(resizeSmall);
+			}).end().find("aside").hide().end().find(resizeFull).hide();
+		});
+
+		$("#tab-main " + resizeSmall).click(function() {
+			$("#main").find("article").animate({
+				width : "68%"
+			}, function() {
+				$("#main aside").show();
+				$(resizeFull).show();
+				tabResizeIconPosition(resizeFull);
+			}).end().find(resizeSmall).hide();
+		});
+		
+		$("#tab-main .replies-open").click(function() {
+			$(".article-reply").show(500);
+			$("#tab-main .replies-close").show();
+			$("#tab-main .replies-open").hide();
+		});
+		
+		$("#tab-main .replies-close").click(function() {
+			$(".article-reply").hide(500);
+			$("#tab-main .replies-open").show();
+			$("#tab-main .replies-close").hide();
+		});
+		
 	});
+	/*]]>*/
 </script>
 
 <style type="text/css">
 #tab-main {
 	height: auto;
+	position: relative;
 }
 
 #tab-content p {
@@ -47,41 +160,53 @@ th:href="@{/static/styles/article.css}" />
 					</div>
 					
 					<div id="tab-main">
+						<div id="tab-resize-full" class="tab-resize-full"></div>
+						<div id="tab-resize-small" class="tab-resize-small"></div>
 						<div id="study-article">
-							<div class="article-header well well-small article-well ellipsis">
-								<span class="article-title"><a th:text="${article.title}">제목</a></span>
-								<span class="article-writer" th:text="${article.owner.uid}">이름</span>
-							</div>
-							<div class="article-body">
-								<textarea id="article-content" name="content" rows="10" cols="50" th:text="${article} ? ${article.content} : ''">content</textarea>
-								<script type="text/javascript">
-									//<![CDATA[
-									 CKEDITOR.replace( 'article-content',{
-										 height: "200px",
-										 readOnly: true,
-										 toolbar:[]
-										 } );
-									//]]>
-								</script>
-							</div>
-							<div class="article-footer">
-								<a th:href="@{/study-article/edit-form(articleId=${article.id},studyRoomId=${studyRoomId})}" class="btn btn-info btn-mini">
-									글수정
-								</a>
-								<a th:href="@{/study-article/delete(articleId=${article.id},studyRoomId=${studyRoomId})}" class="btn btn-mini btn-info">
-									글삭제
-								</a>
-								<a th:href="@{/study-article/list(studyRoomId=${studyRoomId})}" class="btn btn-mini btn-info">
-									<span>목록</span>
-								</a>
-							</div>
-							
+							<table class="table table-condensed table-bordered">
+								<thead>
+									<tr class="article-header">
+										<th class="article-title"><div class="ellipsis"
+												style="width: 400px">
+												<a th:text="${article.title}" th:title="${article.title}">제목</a>
+											</div></th>
+										<th class="article-writer" th:text="${article.owner.uid}">이름</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td colspan="2"><div class="article-body" th:utext="${article} ? ${article.content} : ''">작성된 글이 없습니다.</div></td>
+									</tr>
+									<tr>
+										<td>
+											<a class="replies-open"><span class="icon-hand-down"></span>댓글열기</a>
+											<a class="replies-close"><span class="icon-hand-up"></span>댓글닫기</a>
+										</td>
+										<td>
+											<div class="article-footer">
+												<span th:if="${session.user != null and article.owner.uid == session.user.uid}">
+													<a th:href="@{/study-article/edit-form(articleId=${article.id},studyRoomId=${studyRoom.id})}" class="btn btn-info btn-mini">
+														글수정
+													</a>
+													<a th:href="@{/study-article/delete(articleId=${article.id},studyRoomId=${studyRoom.id})}" class="btn btn-mini btn-info">
+														글삭제
+													</a>
+												</span>
+												<a th:href="@{/study-article/list(studyRoomId=${studyRoom.id})}" class="btn btn-mini btn-info">
+													<span>목록</span>
+												</a>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
 							<div class="article-reply">
 								<!-- commentList close -->
-								<form method="post" th:action="@{/study-article-reply/edit-form-submit}" style="margin: 0">
-									<div class="reply-write">
+								<form method="post" th:action="@{/study-article-reply/edit-form-submit}" th:object="${articleReply}" style="margin: 0">
+									<div class="reply-write" th:if="${session.user != null}">
 										<p class="clear">
-											<textarea id="article-reply-content" name="content" rows="3"></textarea>
+											<textarea id="article-reply-content" th:field="*{content}" rows="3"></textarea>
 											<script type="text/javascript">
 												//<![CDATA[
 												 CKEDITOR.replace( 'article-reply-content',{
@@ -94,20 +219,24 @@ th:href="@{/static/styles/article.css}" />
 												//]]>
 											</script>
 										</p>
+										<div th:if="${#fields.hasErrors('content')}"
+											class="text-error" th:errors="*{content}">content error</div>
 										<p>
 											<input type="hidden" name="articleId" th:value="${article.id}" />
-											<input type="hidden" name="studyRoomId" th:value="${studyRoomId}"/>
+											<input type="hidden" name="studyRoomId" th:value="${studyRoom.id}"/>
 											<input type="submit" value="댓글 달기" class="btn btn-mini btn-primary" />
 										</p>
 									</div><!-- commentWrite close -->
 								</form>
-								
 
 								<ul class="reple_list">
 									<li th:each="reply : ${articleReplies}">
 										<div class="user_info">
-											<a th:text="${reply.owner.uid}">임정묵</a><span th:text="${reply.createdDate}">12.06 13:20</span> 
-											<a th:href="@{/study-article-reply/delete(articleId=${article.id},articleReplyId=${reply.articleReplyId},studyRoomId=${studyRoomId})}"
+											<a th:text="${reply.owner.uid}">임정묵</a>
+												<span th:text="${reply.createdDate}">12.06 13:20</span> 
+											<a
+												th:if="${session.user != null and reply.owner.uid == session.user.uid}"
+												th:href="@{/study-article-reply/delete(articleId=${article.id},articleReplyId=${reply.id},studyRoomId=${studyRoom.id})}"
 												class="icon-remove" title="삭제"></a>
 										</div>
 										<div class="arrow_parent">

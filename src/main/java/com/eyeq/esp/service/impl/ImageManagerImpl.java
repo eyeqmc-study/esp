@@ -14,9 +14,9 @@ import com.eyeq.esp.service.ImageManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:21:15
- * @revision $LastChangedRevision: 5923 $
- * @date $LastChangedDate: 2013-02-04 01:02:47 +0900 (월, 04 2월 2013) $
- * @by $LastChangedBy: voyaging $
+ * @revision $LastChangedRevision: 6070 $
+ * @date $LastChangedDate: 2013-02-16 12:31:02 +0900 (토, 16 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 @Service("imageManager")
 @Transactional
@@ -34,13 +34,13 @@ public class ImageManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.ImageManager#getImage(com.eyeq.esp.model.User)
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<Image> getImages(User owner) {
 		List<Image> results = getEntityManager()
 				.createNamedQuery(
-						"com.eyeq.esp.model.Image@getImages():param.ownerId")
-				.setParameter("ownerId", owner.getId()).getResultList();
+						"com.eyeq.esp.model.Image@getImages():param.ownerId",
+						Image.class).setParameter("ownerId", owner.getId())
+				.getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results;
@@ -76,10 +76,10 @@ public class ImageManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.ImageManager#getImages()
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Image> getImages() {
 		List<Image> results = getEntityManager().createNamedQuery(
-				"com.eyeq.esp.model.Image@getImages()").getResultList();
+				"com.eyeq.esp.model.Image@getImages()", Image.class)
+				.getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results;

@@ -1,0 +1,110 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="pages/commons/layout">
+<!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html;" charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<title th:text="#{title.tab}">ESP</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" type="text/css" href="../../static/css3_tabbed_nav/css/esp-custom-style.css"
+	th:href="@{/static/css3_tabbed_nav/css/esp-custom-style.css}" />
+<link rel="stylesheet" type="text/css" href="../../static/styles/article.css"
+th:href="@{/static/styles/article.css}" />
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#tab-menu .tab-list a.active").removeClass("active");
+		$("#tab-menu .tab-list a.user-board").addClass("active");
+	});
+</script>
+</head>
+<body>
+	<section layout:fragment="main-content">
+		<article>
+		   	<div id="tab-wrapper">
+				<div id="tab-content">
+					<div id="tab-menu">
+						<ul class="tab-list">
+							<li><a href="#" th:href="@{/user-article/list}" title="내가 쓴 게시물" class="user-board">내가 쓴 게시물</a></li>
+						</ul>
+					</div>
+					<div id="tab-main">
+						<div class="study-info">
+							<div class="search-type well article-well">
+								<div class="input-prepend">
+						            <div class="btn-group">
+							            <button class="btn" tabindex="-1">검색</button>
+							            <button class="btn dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+							            	<span class="caret"></span>
+							            </button>
+							            <ul class="dropdown-menu">
+							                <li><a href="#">Action</a></li>
+							                <li><a href="#">Another action</a></li>
+							                <li><a href="#">Something else here</a></li>
+							                <li class="divider"></li>
+							                <li><a href="#">Separated link</a></li>
+							            </ul>
+							        </div>
+							    	<input type="text"/>
+						        </div>
+							</div>
+							<!-- <div class="page-group">
+								<span class="new-write">
+									<a class="btn btn-small btn-info" th:href="@{/user-article/edit-form(studyRoomId=${studyRoom.id})}">글쓰기</a>
+								</span>
+							</div> -->
+							<table class="table table-condensed table-hover table-striped table-bordered">
+								<thead>
+									<tr class="article-list-header">
+										<th style="width: 30px;">#</th>
+										<th>제목</th>
+										<th style="width: 100px;">최종 수정일</th>
+										<th style="width: 100px;">작성자</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="article : ${articles}"
+										th:unless="${#lists.isEmpty(articles)}" class="article-list">
+										<td th:text="${article.id}">0</td>
+										<td><a class="ellipsis article-list-title"
+											th:href="@{/user-article/content(articleId=${article.id})}"
+											th:text="${article.title}"  th:title="${article.title}">제목</a></td>
+										<td th:text="${article.modifiedDate} ? ${article.modifiedDate} : ${article.createdDate}">2013-01-01</td>
+										<td th:text="${article.owner.uid}">아이디</td>
+									</tr>
+									<tr
+										th:if="${#lists.isEmpty(articles)}" class="article-list">
+										<td colspan="4" class="list-empty">작성된 글이 없습니다.</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="pagination page-group pagination-mini">
+								<ul>
+									<li class="disabled"><a th:if="${offset} &gt; 0"
+										th:href="@{/user-article/list(offset=${offset-1})}">«</a></li>
+									<li class="disabled"
+										th:each="i: ${#numbers.sequence(startCount, pageCount)}">
+										<a class="btn"
+										th:href="@{/user-article/list(page=${i},offset=${offset})}"
+										th:text="${i+1}"></a>
+									</li>
+									<li class="disabled"><a th:if="${offset} &lt; ${maxOffset}"
+										th:href="@{/user-article/list(offset=${offset+1})}">»</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</article>
+	</section>
+</body>
+</html>

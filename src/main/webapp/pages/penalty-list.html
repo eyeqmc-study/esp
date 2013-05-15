@@ -1,0 +1,110 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorator="pages/commons/layout">
+<!--<![endif]-->
+<head>
+<!-- layout 템플릿 내용 시작 (페이지 완성 후 삭제 필요) -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<title th:text="#{title.tab}">ESP</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="stylesheet" href="../static/styles/initializr-style.css"
+	th:href="@{/static/styles/initializr-style.css}" />
+	
+<link rel="stylesheet" href="../static/styles/esp-main.css"
+	th:href="@{/static/styles/esp-main.css}" />
+
+<script type="text/javascript"
+	src="./static/scripts/modernizr-latest.js"
+	th:src="@{/static/scripts/modernizr-latest.js}"></script>
+<script type="text/javascript" src="../static/scripts/esp-main.js"
+	th:src="@{/static/scripts/esp-main.js}"></script>
+
+<script type="text/javascript" src="../static/jquery/jquery-1.8.3.js"
+	th:src="@{/static/jquery/jquery-1.8.3.js}"></script>
+<!-- layout 템플릿 내용 끝 -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+esp.user = /*[[${session.user}]]*/;
+
+esp.page.penalty = {
+	jQueryAjax : function(_url, _param) {
+		var _data = {};
+		$.ajax( {
+	  		url : _url,
+	  		type :'POST',
+	  		data: _param,
+	  		async: false,
+			cache: false,
+	  		dataType: 'json',
+	  		error: function(request, textStatus, errorThrown){
+				_data = textStatus;
+	  		},
+	  		success : function(data) {
+				_data = data;
+	  		}
+	 	});
+		return _data;
+	},
+	appendTable : function(_res) {		
+		var html = [];
+		
+		if($('tr[name="dynamic-table"]').length > 0){
+			$('tr[name="dynamic-table"]').remove();	
+		}
+		for(var i=_res.length-1; 0 <= i; i--){
+			var totalScore = 0;
+			for(var j=i; j >= 0; j--){
+				totalScore += _res[j].score;
+			}
+			html.push('<tr name="dynamic-table" class="ct-border-bottom-f16529" id="tr-uid'+_res[i].id+'" data-uid="'+_res[i].id+'">');
+			html.push('<td class="ct-padding-top"><div id="update-reason'+_res[i].id+'" data-reason="'+_res[i].reason+'">'+_res[i].reason+'</div></td>');
+			html.push('<td class="ct-padding-top"><div id="update-score'+_res[i].id+'" data-score="'+_res[i].score+'">'+_res[i].score+'</div></td>');
+			html.push('<td class="ct-padding-top">'+totalScore+'</td>');
+			html.push('<td class="ct-padding-top"><div id="update-btn-area'+_res[i].id+'"></div></td>');
+			html.push('</tr>');
+			$('#penaltiesList').append(html.join(''));
+			html = [];	
+		}
+	}
+}
+window.onload = function(){
+	var result = esp.page.penalty.jQueryAjax('/esp/admin/user-penalty',{'uid':esp.user.id});
+	esp.page.penalty.appendTable(result);
+}
+/*]]>*/
+</script>
+</head>
+<body class="claro">
+	<section id="penalty-admin" layout:fragment="main-content">
+		<div class="td penalty-panel">
+			<header class="ct-bg-e44d26">
+				<b>벌점</b>
+			</header>
+			<div class="study-schedule ct-box-f16529">
+				<table id="penaltiesList" class="width600">
+					<thead class="ct-bg-f16529">
+						<tr>
+							<th class="wd5">벌점이유</th>
+							<th class="wd2">점수</th>
+							<th class="wd2">누계</th>
+							<th class="wd1"></th>
+						</tr>
+					</thead>
+					<tbody>
+					
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

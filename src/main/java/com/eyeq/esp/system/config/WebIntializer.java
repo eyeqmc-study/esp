@@ -19,9 +19,9 @@ import org.springframework.web.servlet.DispatcherServlet;
 /**
  * @author Hana Lee
  * @since 0.2.0 2013. 2. 8. 오전 1:38:42
- * @revision $LastChangedRevision$
- * @date $LastChangedDate$
- * @by $LastChangedBy$
+ * @revision $LastChangedRevision: 6037 $
+ * @date $LastChangedDate: 2013-02-15 02:55:21 +0900 (금, 15 2월 2013) $
+ * @by $LastChangedBy: voyaging $
  */
 public class WebIntializer implements WebApplicationInitializer {
 

@@ -14,9 +14,9 @@
 <title th:text="#{title.tab}">ESP</title>
 
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="stylesheet" type="text/css" href="../static/css3_tabbed_nav/css/esp-custom-style.css"
+<link rel="stylesheet" type="text/css" href="../../static/css3_tabbed_nav/css/esp-custom-style.css"
 	th:href="@{/static/css3_tabbed_nav/css/esp-custom-style.css}" />
-<link rel="stylesheet" type="text/css" href="../static/styles/study-main.css"
+<link rel="stylesheet" type="text/css" href="../../static/styles/study-main.css"
 	th:href="@{/static/styles/study-main.css}" />
 <link rel="stylesheet" type="text/css" href="../../static/styles/article.css"
 th:href="@{/static/styles/article.css}" />
@@ -56,8 +56,8 @@ th:href="@{/static/styles/article.css}" />
 						        </div>
 							</div>
 							<div class="page-group">
-								<span class="new-write">
-									<a class="btn btn-small btn-info" th:href="@{/study-article/edit-form(studyRoomId=${studyRoomId})}">글쓰기</a>
+								<span class="new-write" th:if="${session.user != null}">
+									<a class="btn btn-small btn-info" th:href="@{/study-article/edit-form(studyRoomId=${studyRoom.id})}">글쓰기</a>
 								</span>
 							</div>
 							<table class="table table-condensed table-hover table-striped table-bordered">
@@ -71,24 +71,33 @@ th:href="@{/static/styles/article.css}" />
 								</thead>
 								<tbody>
 									<tr th:each="article : ${articles}"
-										th:if="${not #lists.isEmpty(articles)}" class="article-list">
+										th:unless="${#lists.isEmpty(articles)}" class="article-list">
 										<td th:text="${article.id}">0</td>
 										<td><a class="ellipsis article-list-title"
-											th:href="@{/study-article/content(articleId=${article.id},studyRoomId=${studyRoomId})}"
-											th:text="${article.title}">제목</a></td>
-										<td th:text="${article.modifiedDate}">2013-01-01</td>
+											th:href="@{/study-article/content(articleId=${article.id},studyRoomId=${studyRoom.id})}"
+											th:text="${article.title}"  th:title="${article.title}">제목</a></td>
+										<td th:text="${article.modifiedDate} ? ${article.modifiedDate} : ${article.createdDate}">2013-01-01</td>
 										<td th:text="${article.owner.uid}">아이디</td>
+									</tr>
+									<tr
+										th:if="${#lists.isEmpty(articles)}" class="article-list">
+										<td colspan="4" class="list-empty">작성된 글이 없습니다.</td>
 									</tr>
 								</tbody>
 							</table>
-							<div class="pagination page-group">
-							  <ul>
-							    <li class="disabled"><a href="#">«</a></li>
-							    <li class="disabled" th:each="i: ${#numbers.sequence(0, pageCount)}">
-									<a class="btn" th:href="@{/study-article/list(page=${i},studyRoomId=${studyRoomId})}" th:text="${i}"></a>
-								</li>
-								 <li class="disabled"><a href="#">»</a></li>
-							  </ul>
+							<div class="pagination page-group pagination-mini">
+								<ul>
+									<li class="disabled"><a th:if="${offset} &gt; 0"
+										th:href="@{/study-article/list(studyRoomId=${studyRoom.id},offset=${offset-1})}">«</a></li>
+									<li class="disabled"
+										th:each="i: ${#numbers.sequence(startCount, pageCount)}">
+										<a class="btn"
+										th:href="@{/study-article/list(page=${i},studyRoomId=${studyRoom.id},offset=${offset})}"
+										th:text="${i+1}"></a>
+									</li>
+									<li class="disabled"><a th:if="${offset} &lt; ${maxOffset}"
+										th:href="@{/study-article/list(studyRoomId=${studyRoom.id},offset=${offset+1})}">»</a></li>
+								</ul>
 							</div>
 						</div>
 					</div>

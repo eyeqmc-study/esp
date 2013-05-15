@@ -857,25 +857,21 @@ function QTip(target, options, id, attr)
 		get: function(notation)
 		{
 			var result, o;
-
-			switch(notation.toLowerCase())
-			{
-				case 'dimensions':
+			
+			if (notation) {
+				var notationStr = notation.toLowerCase();
+				if (notationStr === 'dimentions') {
 					result = {
-						height: tooltip.outerHeight(FALSE),
-						width: tooltip.outerWidth(FALSE)
-					};
-				break;
-
-				case 'offset':
+							height: tooltip.outerHeight(FALSE),
+							width: tooltip.outerWidth(FALSE)
+						};
+				} else if (notationStr === 'offset') {
 					result = PLUGINS.offset(tooltip, options.position.container);
-				break;
-
-				default:
+				} else {
 					o = convertNotation(notation.toLowerCase());
 					result = o[0][ o[1] ];
 					result = result.precedance ? result.string() : result;
-				break;
+				}
 			}
 
 			return result;

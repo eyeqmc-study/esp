@@ -13,8 +13,8 @@
 	
 <link rel="stylesheet" type="text/css" href="./static/styles/qtip-custom.css"
 	th:href="@{/static/styles/qtip-custom.css}" />
-<link rel="stylesheet" type="text/css" href="./static/jquery/plugins/ParallaxContentSlider/css/parallax-custom-style.css"
-	th:href="@{/static/jquery/plugins/ParallaxContentSlider/css/parallax-custom-style.css}" />
+<link rel="stylesheet" type="text/css" href="./static/styles/parallax-custom-style.css"
+	th:href="@{/static/styles/parallax-custom-style.css}" />
 <link rel="stylesheet"
 	href="../../static/jquery/ui/themes/base/jquery-ui.css"
 	th:href="@{/static/jquery/ui/themes/base/jquery-ui.css}" />
@@ -28,80 +28,7 @@
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 window.onload = function(){
-	var imgQuery = $("#study-room img.preview");
-	if (imgQuery.length === 0) {
-		imgQuery = $("#no-study img.preview");
-	}
-	var imgSrc = imgQuery.attr("src");
-	var imgPreviewContent = '<img src="' + imgSrc + '"/>';
-	
-	imgQuery.qtip({
-		content: imgPreviewContent,
-		show: 'mouseover',
-		hide: 'mouseout',
-		style : {
-			classes : 'esp-qtip-custom'
-		}
-	});
-	$("#study-room .da-link").qtip({
-		content: '관심있으면 클릭!',
-		show: 'mouseover',
-		hide: 'mouseout',
-		position: {
-			at: 'bottom center'
-		}
-	});
-	$('#da-slider').cslider({
-		current : 0,
-		autoplay: true,
-		interval: 4000
-	});
-	
-	$(".join-study").click(function(event){
-		var e = window.event || event;
-		e.preventDefault();
-		var user = /*[[${session.user}]]*/;
-		if (user === null || user === undefined) {
-			alert("로그인 후 스터디에 참여 할 수 있습니다.");
-			return;
-		}
-		$("#join-confirm-dialog").dialog({
-			resizable : false,
-			modal : true,
-			height: 180,
-			width: 306,
-			buttons : {
-				"수락" : function() {
-					$(this).dialog("close");
-					var url = "/esp/study/join";
-					var userId = user.uid;
-					var studyId = $("#study-room input[type='hidden']").val();
-					var sendData = { uid : userId, studyId : studyId };
-					$.ajax({
-						url : url,
-						type : "POST",
-						dataType : "json",
-						data : sendData,
-						error : function(jqXHR, textStatus, errorThrown) {
-							alert("스터디 참여 실패. 관리자에게 문의를...");
-						},
-						success : function(data, textStatus, jqXHR) {
-							if (data == "success") {
-								alert("스터디 참여에 성공 하였습니다.");
-							} else if (data == "already") {
-								alert("이미 참여 중입니다.");
-							} else {
-								alert("스터디 참여 실패. 관리자에게 문의를...");
-							}
-						}
-					});
-				},
-				"취소" : function() {
-					$(this).dialog("close");
-				}
-			}
-		});
-	});
+	esp.pageInit('main');
 }
 /*]]>*/
 </script>
@@ -164,7 +91,7 @@ window.onload = function(){
 				<b>진행예정</b>
 			</header>
 			
-			<table class="study-schedule wd10 ct-box-f16529">
+			<table class="study-schedule wd10 ct-box-f16529" th:if="${disabledStudyRooms == null or #lists.isEmpty(disabledStudyRooms)}">
 				<tbody>
 					<tr>
 						<td class="wd6">
@@ -172,11 +99,36 @@ window.onload = function(){
 								<div class="da-slide">
 									<div class="da-img"><img src="./static/images/red-x-icon.jpg"/></div>
 									<h2 class="hide"></h2>
-									<a href="#" class="ellipsis da-link">제목 테스트 입니다.</a>
-									<p class="p1" th:text="#{label.study.waiting.presenter('이하나')}">진행예정자 : 이하나</p>
-									<p class="p2" th:text="#{label.study.waiting.startDate('2013년 3월 19일')}">시작예정일 : 2013년 3월 19일</p>
-									<p class="p3" th:text="#{label.study.waiting.endDate('2013년 4월 1일')}">종료예정일 : 2013년 4월 4일</p>
-									<p class="p4" th:text="#{label.study.waiting.memberCnt(5)}">참여예정자 : 5명</p>
+									<a href="#" class="ellipsis da-link">진행 예정 없음</a>
+									<p class="p1" th:text="#{label.study.waiting.presenter('-')}">진행예정자 : 이하나</p>
+									<p class="p2" th:text="#{label.study.waiting.startDate('-')}">시작예정일 : 2013년 3월 19일</p>
+									<p class="p3" th:text="#{label.study.waiting.endDate('-')}">종료예정일 : 2013년 4월 4일</p>
+									<p class="p4" th:text="#{label.study.waiting.memberCnt(0)}">참여예정자 : 5명</p>
+								</div>
+								<nav class="da-arrows">
+									<span class="da-arrows-prev"></span>
+									<span class="da-arrows-next"></span>
+								</nav>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="study-schedule wd10 ct-box-f16529" th:if="${disabledStudyRooms != null and not #lists.isEmpty(disabledStudyRooms)}">
+				<tbody>
+					<tr>
+						<td class="wd6">
+							<div id="da-slider" class="da-slider" th:remove="all-but-first">
+								<div class="da-slide"  th:each="study,rowStat : ${disabledStudyRooms}">
+									<div class="da-img"><img src="./static/images/red-x-icon.jpg" th:src="${study.studyImage.url}"/></div>
+									<h2 class="hide"></h2>
+									<a href="#" class="ellipsis da-link" th:text="${study.name}">제목 테스트 입니다.</a>
+									<p class="p1" th:text="#{label.study.waiting.presenter(${study.owner.name})}">진행예정자 : 이하나</p>
+									<p class="p2" th:text="#{label.study.ongoing.startDate(${#dates.format(study.startDate, 'yyyy-MM-dd')})}">시작예정일 : 2013년 3월 19일</p>
+									<p class="p3" th:text="#{label.study.ongoing.startDate(${#dates.format(study.endDate, 'yyyy-MM-dd')})}">종료예정일 : 2013년 4월 4일</p>
+									<p class="p4" th:text="#{label.study.ongoing.memberCnt(${#lists.size(study.members)})}">참여예정자 : 5명</p>
+									<p class="p5"><button class="btn join-study">참여하기</button></p>
+									<input type="hidden" th:value="${study.id}" />
 								</div>
 								<div class="da-slide">
 									<div class="da-img"><img src="./static/images/red-x-icon.jpg"/></div>
@@ -186,6 +138,8 @@ window.onload = function(){
 									<p class="p2" th:text="#{label.study.waiting.startDate('2013년 4월 9일')}">시작예정일 : 2013년 3월 19일</p>
 									<p class="p3" th:text="#{label.study.waiting.endDate('2013년 4월 21일')}">종료예정일 : 2013년 4월 4일</p>
 									<p class="p4" th:text="#{label.study.waiting.memberCnt(10)}">참여예정자 : 5명</p>
+									<p class="p5"><button class="btn join-study">참여하기</button></p>
+									<input type="hidden" th:value="1" />
 								</div>
 								<div class="da-slide">
 									<div class="da-img"><img src="./static/images/red-x-icon.jpg"/></div>
@@ -195,6 +149,8 @@ window.onload = function(){
 									<p class="p2" th:text="#{label.study.waiting.startDate('2013년 5월 5일')}">시작예정일 : 2013년 3월 19일</p>
 									<p class="p3" th:text="#{label.study.waiting.endDate('2013년 5월 31일')}">종료예정일 : 2013년 4월 4일</p>
 									<p class="p4" th:text="#{label.study.waiting.memberCnt(3)}">참여예정자 : 5명</p>
+									<p class="p5"><button class="btn join-study">참여하기</button></p>
+									<input type="hidden" th:value="1" />
 								</div>
 								<div class="da-slide">
 									<div class="da-img"><img src="./static/images/red-x-icon.jpg"/></div>
@@ -204,6 +160,8 @@ window.onload = function(){
 									<p class="p2" th:text="#{label.study.waiting.startDate('2013년 6월 1일')}">시작예정일 : 2013년 3월 19일</p>
 									<p class="p3" th:text="#{label.study.waiting.endDate('2013년 6월 25일')}">종료예정일 : 2013년 4월 4일</p>
 									<p class="p4" th:text="#{label.study.waiting.memberCnt(7)}">참여예정자 : 5명</p>
+									<p class="p5"><button class="btn join-study">참여하기</button></p>
+									<input type="hidden" th:value="1" />
 								</div>
 								<nav class="da-arrows">
 									<span class="da-arrows-prev"></span>

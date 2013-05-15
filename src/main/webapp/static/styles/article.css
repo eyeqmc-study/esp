@@ -1,13 +1,41 @@
+.tab-resize-full {
+	background: url('../images/mini-right.gif') no-repeat 0 0;
+	width: 10px;
+	height: 39px;
+}
+
+.tab-resize-small {
+	background: url('../images/mini-left.gif') no-repeat 0 0;
+	width: 10px;
+	height: 39px;
+	display: none;
+}
+
+/*
+edit-form
+*/
+.write-and-update .text-error {
+	font-size: 12px;
+	font-weight: bolder;
+}
+
+#tab-content .write-and-update p {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
 /*content */
 .article-well {
-	background-color: #f9f9f9;
+	background-color: #ffffff;
 	margin-top: 5px;
 	margin-bottom: 10px;
 	padding: 5px !important;
-	-webkit-box-shadow: 0 5px 10px #aaa;
-	-moz-box-shadow: 0 5px 10px #aaa;
-	-o-box-shadow: 0 5px 10px #aaa;
-	box-shadow: 0 5px 10px #aaa;
+	-webkit-box-shadow: 0 5px 5px #aaa;
+	-moz-box-shadow: 0 5px 5px #aaa;
+	-o-box-shadow: 0 5px 5px #aaa;
+	box-shadow: 0 5px 5px #aaa;
 	padding: 5px !important;
 }
 
@@ -17,13 +45,19 @@
 	font-size: 14px;
 }
 
-.article-header .article-title {
-	width: 300px;
+.article-header .article-title a {
+	color: #ff0000;
 }
 
 .article-header .article-writer {
 	float: right;
 	font-size: 12px;
+	width: 100px;
+}
+
+.article-body {
+	height: 300px;
+	overflow: auto;
 }
 
 .article-footer {
@@ -50,8 +84,13 @@
 	font-size: 13px;
 }
 
+.article-list .list-empty {
+	text-align: center;
+}
+
 .page-group {
 	width: 100%;
+	text-align: center;
 }
 
 .page-group ul {
@@ -80,6 +119,10 @@
 
 .article-reply .replyContent div.reply_content {
 	display: block;
+}
+
+.replies-open {
+	display: none;
 }
 
 .reple_list {
@@ -137,7 +180,7 @@
 	color: #555;
 	background-color: #feffee;
 	line-height: 18px;
-	font-size: 13px;	
+	font-size: 13px;
 }
 
 .reple_list li div.reply_content .mobileRe {

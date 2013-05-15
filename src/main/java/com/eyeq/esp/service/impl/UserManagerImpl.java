@@ -16,9 +16,9 @@ import com.eyeq.esp.service.UserManager;
 /**
  * @author Hana Lee
  * @since 0.0.2 2013. 1. 21. 오전 7:16:00
- * @revision $LastChangedRevision: 6000 $
- * @date $LastChangedDate: 2013-02-12 21:09:28 +0900 (화, 12 2월 2013) $
- * @by $LastChangedBy: samkwang.na $
+ * @revision $LastChangedRevision: 6070 $
+ * @date $LastChangedDate: 2013-02-16 12:31:02 +0900 (토, 16 2월 2013) $
+ * @by $LastChangedBy: jmlim $
  */
 @Service("userManager")
 @Transactional
@@ -28,14 +28,13 @@ public class UserManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.UserManager#getUser(java.lang.Integer)
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public User getUser(Integer id) {
 
 		List<User> results = getEntityManager()
 				.createNamedQuery(
-						"com.eyeq.esp.model.User@getUser():param.userId")
-				.setParameter("userId", id).getResultList();
+						"com.eyeq.esp.model.User@getUser():param.userId",
+						User.class).setParameter("userId", id).getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results.get(0);
@@ -46,14 +45,13 @@ public class UserManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.UserManager#getUser(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public User getUser(String userId) {
 
 		List<User> results = getEntityManager()
 				.createNamedQuery(
-						"com.eyeq.esp.model.User@getUser():param.userId")
-				.setParameter("userId", userId).getResultList();
+						"com.eyeq.esp.model.User@getUser():param.uId",
+						User.class).setParameter("uId", userId).getResultList();
 
 		if (results != null && results.size() > 0) {
 			return results.get(0);
@@ -92,12 +90,12 @@ public class UserManagerImpl extends AbstractJpaDaoService implements
 	/**
 	 * @see com.eyeq.esp.service.UserManager#getUsers()
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<User> getUsers() {
 
 		List<User> results = getEntityManager().createNamedQuery(
-				"com.eyeq.esp.model.User@getUser()").getResultList();
+				"com.eyeq.esp.model.User@getUser()", User.class)
+				.getResultList();
 		if (results != null && results.size() > 0) {
 			return results;
 		}

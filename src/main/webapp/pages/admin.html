@@ -21,7 +21,10 @@
 	
 <link rel="stylesheet" href="../static/styles/esp-main.css"
 	th:href="@{/static/styles/esp-main.css}" />
-	
+
+<link rel="stylesheet" href="../static/dijit/themes/claro/claro.css"
+	th:href="@{/static/dijit/themes/claro/claro.css}" />
+
 <script type="text/javascript"
 	src="./static/scripts/modernizr-latest.js"
 	th:src="@{/static/scripts/modernizr-latest.js}"></script>
@@ -31,46 +34,164 @@
 <script type="text/javascript" src="../static/jquery/jquery-1.8.3.js"
 	th:src="@{/static/jquery/jquery-1.8.3.js}"></script>
 <!-- layout 템플릿 내용 끝 -->
+<!-- <script>dojoConfig = {parseOnLoad: true}</script> -->
+<script src='./static/dojo/dojo.js'></script>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.3/dojo/dojo.js"></script> -->
+<!-- <script>require(["dojo/parser", "dijit/InlineEditBox", "dijit/form/TextBox"]);</script> -->
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
-function fn_jQueryCallAjax(_url, _method, _param){
-	console.log(_url);
-	var url = _url;
-	var _data = {};
-	jQuery.ajax( {
-  		url : url,
-  		type :_method,
-  		data: _param,
-  		async: false,
-		cache: false,
-  		dataType: 'json',
-  		contentType: 'application/json;charset=UTF-8',
-  		error: function(request, textStatus, errorThrown){
-			_data = textStatus;
-  		},
-  		success : function(data) {
-			_data = data;
-  		}
- 	});
-	return _data;
+if (!window.esp) {
+	window.esp = new Object();
+}
+
+esp.page = {
+		admin : new Object()
+};
+
+esp.page.admin = {
+	jQueryAjax : function(_url, _param) {
+		var _data = {};
+		$.ajax( {
+	  		url : _url,
+	  		type :'POST',
+	  		data: _param,
+	  		async: false,
+			cache: false,
+	  		dataType: 'json',
+	  		error: function(request, textStatus, errorThrown){
+				_data = textStatus;
+	  		},
+	  		success : function(data) {
+				_data = data;
+	  		}
+	 	});
+		return _data;
+	},
+	changeEvent : function(_obj) {
+		var thisId = _obj.id;
+    	var sel = $(thisId).selector;
+    	var uid = $('td #'+sel).parent().parent().data('uid');
+    	if($('#update-btn'+uid).length == 0){
+    		$('#update-btn-area'+uid).append('<input type="button" value="수정" id="update-btn'+uid+'"/>');	
+    		$('#update-btn'+uid).click(function(){
+    			if($('#update-reason'+uid).text()==''){
+    				alert('경고!! : 벌점 사유를 입력해주세요.');
+    				return;
+    			}
+    			if($('#update-score'+uid).text()==''){
+    				alert('경고!! : 벌점을 입력해주세요.');
+    				return;
+    			}
+    			var data = {};
+    			data.id = $('input[name="radio_name"]:checked').val();
+    			data.reason = $('#update-reason'+uid).text();
+    			data.score = $('#update-score'+uid).text();
+    			data.itemid = uid;
+    			var result = esp.page.admin.jQueryAjax('/esp/admin/penalty/edit',data);
+    			esp.page.admin.appendTable(result);
+    		});
+    	}
+	},
+	appendTable : function(_res) {		
+		var html = [];
+		
+		$('#penaltyReason').val('');
+		$('#penaltyScore').val('');
+		
+		if($('tr[name="dynamic-table"]').length > 0){
+			$('tr[name="dynamic-table"]').remove();	
+		}
+		for(var i=0; i<_res.length; i++){
+			require(["dijit/registry"], function(registry){
+				registry.remove("update-reason"+_res[i].id);
+				registry.remove("update-score"+_res[i].id);
+			});
+		}
+		for(var i=_res.length-1; 0 <= i; i--){
+			var totalScore = 0;
+			for(var j=i; j >= 0; j--){
+				totalScore += _res[j].score;
+			}
+			html.push('<tr name="dynamic-table" class="ct-border-bottom-f16529" id="tr-uid'+_res[i].id+'" data-uid="'+_res[i].id+'">');
+			html.push('<td class="ct-padding-top"><div id="update-reason'+_res[i].id+'" data-reason="'+_res[i].reason+'">'+_res[i].reason+'</div></td>');
+			html.push('<td class="ct-padding-top"><div id="update-score'+_res[i].id+'" data-score="'+_res[i].score+'">'+_res[i].score+'</div></td>');
+			html.push('<td class="ct-padding-top">'+totalScore+'</td>');
+			html.push('<td class="ct-padding-top"><div id="update-btn-area'+_res[i].id+'"></div></td>');
+			html.push('</tr>');
+			$('#penaltiesList').append(html.join(''));
+			html = [];
+			
+			require([
+				"dojo/parser", 
+				"dijit/InlineEditBox", 
+				"dijit/form/TextBox",
+				"dijit/form/NumberSpinner"
+			], function(parser, InlineEditBox, TextBox, NumberSpinner){
+		        new InlineEditBox({
+		            editor: TextBox,
+		            width: 164,
+		            editorParams: {
+		            },
+		            onChange: function(){
+		            	esp.page.admin.changeEvent(this);
+		            },
+		            autoSave: true
+		        }, "update-reason"+_res[i].id);
+		        new InlineEditBox({
+		            editor: NumberSpinner,
+		            width: 70,
+		            editorParams: {
+		            	constraints:{ max:5, min:-5 }
+		            },
+		            onChange: function(){
+		            	esp.page.admin.changeEvent(this);
+		            },
+		            autoSave: true
+		        }, "update-score"+_res[i].id);
+			});			
+		}
+	}
 }
 window.onload = function(){
+	
 	$('.study-schedule div.tr').click(function(){
 		var userId = $(this).data("id");
 		$('.study-schedule input[value='+userId+']').attr('checked',true);
-		console.log(fn_jQueryCallAjax('./admin/user-penalty','GET',{'uid':userId}));
+		var result = esp.page.admin.jQueryAjax('/esp/admin/user-penalty',{'uid':userId});
+		esp.page.admin.appendTable(result);
+	});
+	
+	$('#penaltyAddBtn').click(function(){ 
+		if($('input[name="radio_name"]:checked').length <= 0){
+			alert('경고!! : 유저이름을 선택해주세요.');
+			return;
+		}
+		if($('#penaltyReason').val() == ''){
+			alert('경고!! : 벌점 사유를 입력해주세요.');
+			return;
+		}
+		if($('#penaltyScore').val() == ''){
+			alert('경고!! : 벌점을 입력해주세요.');
+			return;
+		}
+		var data = {};
+		data.id = $('input[name="radio_name"]:checked').val();
+		data.reason = $('#penaltyReason').val();
+		data.score = $('#penaltyScore').val();
+		var result = esp.page.admin.jQueryAjax('/esp/admin/penalty/add',data);
+		esp.page.admin.appendTable(result);
 	});
 }
 /*]]>*/
 </script>
 </head>
-<body>
+<body class="claro">
 	<section id="penalty-admin" layout:fragment="main-content">
 		<div class="td" style="width:150px">
 			<header class="ct-bg-e44d26">
 				<b>유저 이름</b>
 			</header>
-			<div class="study-schedule ct-box-f16529">
+			<div class="study-schedule ct-box-f16529 penalty-panel">
 				<div th:each="user : ${allUserList}">
 					<div class="tr" th:attr="data-id=${user.id}">  
 						<div class="td"><input type="radio" th:value="${user.id}" name="radio_name"/></div>
@@ -84,8 +205,8 @@ window.onload = function(){
 			<header class="ct-bg-e44d26">
 				<b>벌점 관리</b>
 			</header>
-			<div class="study-schedule ct-box-f16529">
-				<table class="width500">
+			<div class="study-schedule ct-box-f16529 penalty-panel">
+				<table id="penaltiesList" class="width500">
 					<thead class="ct-bg-f16529">
 						<tr>
 							<th class="wd5">벌점이유</th>
@@ -96,21 +217,16 @@ window.onload = function(){
 					</thead>
 					<tbody>
 						<tr class="ct-border-bottom-f16529">
-							<td class="ct-padding-top"><input type="text" class="width150"/></td>
-							<td class="ct-padding-top"><input type="text" class="width50"/></td>
+							<td class="ct-padding-top"><input id="penaltyReason" type="text" class="width150"/></td>
+							<td class="ct-padding-top"><input id="penaltyScore" type="text" class="width50"/></td>
 							<td class="ct-padding-top"></td>
-							<td class="ct-padding-top"><input type="button" value="추가"/></td>
-						</tr>
-						<tr class="ct-border-bottom-f16529" id="testId">
-							<td class="ct-padding-top"><div>연락 후 불참</div></td>
-							<td class="ct-padding-top">1</td>
-							<td class="ct-padding-top">1</td>
-							<td class="ct-padding-top"><input type="button" value="수정"/></td>
+							<td class="ct-padding-top"><input id="penaltyAddBtn" type="button" value="추가"/></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
+		<!-- <div data-dojo-type="dijit/InlineEditBox" data-dojo-props="editor:'dijit/form/TextBox'">123</div> -->
 	</section>
 </body>
 </html>

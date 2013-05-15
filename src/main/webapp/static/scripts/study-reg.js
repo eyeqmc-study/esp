@@ -18,7 +18,8 @@ var roadViewAddrHeader = "rvAddr";
 
 var searchViewId = "map-search-view";
 
-var _LOCAL_API_KEY = "69b6253e667bfca8f626d43189e7d040bf1c6ebe";
+//var _LOCAL_API_KEY = "69b6253e667bfca8f626d43189e7d040bf1c6ebe";
+var _LOCAL_API_KEY = "b9b7de587425cf153be35b1c4a224a56f89f557c";
 
 var _DNADEV_API_KEY = "5b90a73d7eeba1b9a11135f8304d0971eddaa196";
 var _DNA_API_KEY = "4f4aa74e5487db73d0fac67496c7ee3fb648d989";
@@ -30,6 +31,24 @@ var po;
 var infoWindow;
 
 esp.page.reg.init = {
+		submitBtnEvent : function() {
+			$('.reg-form input[type="submit"]').click(function(event){
+				var imageQuery = $('#upload-container');
+				var placeQuery = $('#place-container');
+				var placeName = $('.place-name', placeQuery).text();
+				var imageName = $('.fileupload-progress .bar', imageQuery).width();
+				
+				if (!imageName || imageName === 0) {
+					alert("이미지를 등록 해주세요");
+					return false;
+				}
+
+				if (!placeName || placeName === '-' || placeName === '') {
+					alert("장소를 등록 해주세요");
+					return false;
+				}
+			});
+		},
 		datePicker : function() {
 			$.getJSON("/esp/static/json/datepicker_options_ko.json", function(data){
 			}).success(function(data, textStatus, jqXHR){
